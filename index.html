@@ -1,1 +1,1278 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPS — School Management System</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{primary:{50:'#F0FDFA',100:'#CCFBF1',200:'#99F6E4',300:'#5EEAD4',400:'#2DD4BF',500:'#14B8A6',600:'#0D9488',700:'#0F766E',800:'#115E59',900:'#134E4A'},accent:{400:'#FBBF24',500:'#F59E0B',600:'#D97706'},dark:{800:'#1E293B',900:'#0F172A'}}}}}
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#F1F5F9;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+/* Login background shapes */
+.login-bg{position:fixed;inset:0;background:linear-gradient(135deg,#0F172A 0%,#1E293B 50%,#0F172A 100%);overflow:hidden;z-index:0}
+.shape{position:absolute;border-radius:50%;opacity:.07;animation:shapeFloat 25s infinite ease-in-out}
+.shape:nth-child(1){width:400px;height:400px;background:#0D9488;top:-100px;left:-100px;animation-duration:22s}
+.shape:nth-child(2){width:300px;height:300px;background:#F59E0B;bottom:-80px;right:-80px;animation-duration:28s;animation-delay:-5s}
+.shape:nth-child(3){width:200px;height:200px;background:#0D9488;top:50%;right:20%;animation-duration:18s;animation-delay:-10s;border-radius:30%}
+.shape:nth-child(4){width:250px;height:250px;background:#F59E0B;top:20%;left:10%;animation-duration:30s;animation-delay:-3s}
+.shape:nth-child(5){width:150px;height:150px;background:#14B8A6;bottom:30%;left:40%;animation-duration:20s;animation-delay:-8s;border-radius:20%}
+@keyframes shapeFloat{0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}25%{transform:translate(30px,-40px) rotate(90deg) scale(1.1)}50%{transform:translate(-20px,30px) rotate(180deg) scale(.95)}75%{transform:translate(40px,20px) rotate(270deg) scale(1.05)}}
+/* Sidebar */
+#sidebar{transition:width .3s cubic-bezier(.4,0,.2,1),transform .3s cubic-bezier(.4,0,.2,1)}
+#sidebar .nav-text{transition:opacity .2s,transform .2s}
+#sidebar.collapsed .nav-text{opacity:0;transform:translateX(-10px);pointer-events:none;width:0;overflow:hidden}
+#sidebar.collapsed{width:72px!important}
+#sidebar.collapsed .sidebar-header-text{opacity:0;width:0;overflow:hidden}
+#sidebar.collapsed .user-info-text{opacity:0;width:0;overflow:hidden}
+.nav-item{position:relative;transition:all .2s}
+.nav-item::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:0;background:#0D9488;border-radius:0 3px 3px 0;transition:height .2s}
+.nav-item.active::before{height:60%}
+.nav-item.active{background:rgba(13,148,136,.15);color:#2DD4BF}
+.nav-item:hover:not(.active){background:rgba(255,255,255,.05)}
+/* Main content fade */
+#main-content{animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+/* Modal */
+#modal-overlay{transition:opacity .25s}#modal-overlay.hidden{opacity:0;pointer-events:none}
+#modal-box{transition:transform .25s,opacity .25s}#modal-overlay.hidden #modal-box{transform:scale(.95) translateY(10px);opacity:0}
+/* Toast */
+.toast{animation:toastIn .3s ease,toastOut .3s ease 2.7s forwards}
+@keyframes toastIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes toastOut{to{transform:translateX(100%);opacity:0}}
+/* Stat card counter */
+.stat-num{display:inline-block}
+/* Timetable cell */
+.tt-cell{font-size:.75rem;padding:6px 4px;border-radius:6px;text-align:center;font-weight:600;line-height:1.2}
+/* Input focus */
+input:focus,select:focus,textarea:focus{outline:none;border-color:#0D9488;box-shadow:0 0 0 3px rgba(13,148,136,.15)}
+/* Table row hover */
+.data-row:hover{background:#F8FAFC}
+/* Radio/checkbox custom */
+.att-radio{appearance:none;width:20px;height:20px;border:2px solid #CBD5E1;border-radius:50%;cursor:pointer;transition:all .15s;position:relative}
+.att-radio:checked{border-color:#0D9488;background:#0D9488}
+.att-radio:checked::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:white;border-radius:50%}
+.att-radio.late:checked{border-color:#F59E0B;background:#F59E0B}
+.att-radio.absent:checked{border-color:#EF4444;background:#EF4444}
+/* Mobile sidebar overlay */
+#sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:30}
+@media(max-width:768px){
+  #sidebar{transform:translateX(-100%);z-index:40;position:fixed!important}
+  #sidebar.mobile-open{transform:translateX(0)}
+  #sidebar-overlay.show{display:block}
+  #sidebar.collapsed{width:260px!important}
+  #sidebar.collapsed .nav-text,#sidebar.collapsed .sidebar-header-text,#sidebar.collapsed .user-info-text{opacity:1;width:auto}
+}
+/* Print report card */
+@media print{#sidebar,#topbar,#sidebar-overlay{display:none!important}#main-area{margin-left:0!important}#main-content{padding:0!important}}
+</style>
+</head>
+<body>
+
+<!-- ==================== LOGIN SCREEN ==================== -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+  <div class="login-bg">
+    <div class="shape"></div><div class="shape"></div><div class="shape"></div><div class="shape"></div><div class="shape"></div>
+  </div>
+  <div class="relative z-10 w-full max-w-md">
+    <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-600 mb-4 shadow-lg shadow-primary-600/30">
+          <span class="text-2xl font-extrabold text-white">S</span>
+        </div>
+        <h1 class="text-3xl font-extrabold text-white tracking-tight">SPS</h1>
+        <p class="text-slate-400 text-sm mt-1">School Management System</p>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Username</label>
+          <div class="relative">
+            <i class="fas fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input id="login-user" type="text" placeholder="Enter username" class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder-slate-500 text-sm focus:border-primary-400">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+          <div class="relative">
+            <i class="fas fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input id="login-pass" type="password" placeholder="Enter password" class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder-slate-500 text-sm focus:border-primary-400" onkeydown="if(event.key==='Enter')doLogin()">
+          </div>
+        </div>
+        <div id="login-error" class="text-red-400 text-sm hidden"><i class="fas fa-exclamation-circle mr-1"></i><span></span></div>
+        <button onclick="doLogin()" class="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm transition-all hover:shadow-lg hover:shadow-primary-600/25 active:scale-[.98]">Sign In</button>
+      </div>
+      <div class="mt-6 pt-5 border-t border-white/10">
+        <p class="text-slate-500 text-xs text-center mb-3">Demo Credentials</p>
+        <div class="grid grid-cols-3 gap-2 text-xs">
+          <button onclick="fillLogin('admin','admin123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors text-center">
+            <i class="fas fa-user-shield block text-base mb-1 text-primary-400"></i>Admin
+          </button>
+          <button onclick="fillLogin('rajesh.kumar','teacher123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors text-center">
+            <i class="fas fa-chalkboard-teacher block text-base mb-1 text-accent-400"></i>Teacher
+          </button>
+          <button onclick="fillLogin('aarav.sharma','student123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors text-center">
+            <i class="fas fa-user-graduate block text-base mb-1 text-emerald-400"></i>Student
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== APP SHELL ==================== -->
+<div id="app-shell" class="hidden min-h-screen">
+  <div id="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed top-0 left-0 h-full w-[260px] bg-dark-900 flex flex-col z-40">
+    <div class="p-5 flex items-center gap-3 border-b border-white/10">
+      <div class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary-600/20">
+        <span class="text-lg font-extrabold text-white">S</span>
+      </div>
+      <div class="sidebar-header-text transition-opacity">
+        <h2 class="text-white font-bold text-lg leading-tight">SPS</h2>
+        <p class="text-slate-500 text-[10px] uppercase tracking-widest">Management</p>
+      </div>
+      <button onclick="toggleSidebar()" class="ml-auto text-slate-500 hover:text-white transition-colors hidden md:block"><i class="fas fa-angles-left text-xs" id="collapse-icon"></i></button>
+    </div>
+    <nav id="sidebar-nav" class="flex-1 py-4 px-3 space-y-1 overflow-y-auto"></nav>
+    <div class="p-4 border-t border-white/10">
+      <div class="flex items-center gap-3">
+        <div id="sidebar-avatar" class="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0"></div>
+        <div class="user-info-text transition-opacity min-w-0">
+          <p id="sidebar-name" class="text-white text-sm font-medium truncate"></p>
+          <p id="sidebar-role" class="text-slate-500 text-[11px] capitalize"></p>
+        </div>
+        <button onclick="doLogout()" class="ml-auto text-slate-500 hover:text-red-400 transition-colors flex-shrink-0" title="Logout"><i class="fas fa-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+  <!-- Main Area -->
+  <div id="main-area" class="transition-all duration-300" style="margin-left:260px">
+    <header id="topbar" class="sticky top-0 z-20 h-16 bg-white/80 backdrop-blur-lg border-b border-slate-200/80 flex items-center px-6 gap-4">
+      <button onclick="toggleMobileSidebar()" class="md:hidden text-slate-600 hover:text-slate-900"><i class="fas fa-bars text-lg"></i></button>
+      <h2 id="page-title" class="text-lg font-bold text-slate-800"></h2>
+      <div class="ml-auto flex items-center gap-3">
+        <span id="topbar-date" class="text-xs text-slate-400 hidden sm:block"></span>
+        <div id="topbar-avatar" class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center text-xs font-bold"></div>
+      </div>
+    </header>
+    <main id="main-content" class="p-6"></main>
+  </div>
+</div>
+
+<!-- ==================== MODAL ==================== -->
+<div id="modal-overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+  <div id="modal-box" class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"></div>
+</div>
+
+<!-- ==================== TOAST CONTAINER ==================== -->
+<div id="toast-container" class="fixed top-4 right-4 z-[60] space-y-2"></div>
+
+<script>
+// ==================== UTILITY FUNCTIONS ====================
+const $ = id => document.getElementById(id);
+const genId = () => '_' + Math.random().toString(36).substr(2, 9);
+const today = () => new Date().toISOString().split('T')[0];
+const formatDate = d => { const dt = new Date(d); return dt.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}; };
+const subjectColors = {MATH:'bg-teal-100 text-teal-800',SCI:'bg-blue-100 text-blue-800',ENG:'bg-indigo-100 text-indigo-800',HIN:'bg-amber-100 text-amber-800',SST:'bg-emerald-100 text-emerald-800'};
+const subjectHex = {MATH:'#0D9488',SCI:'#3B82F6',ENG:'#6366F1',HIN:'#F59E0B',SST:'#10B981'};
+function getGrade(marks,max){const p=((marks/max)*100);if(p>=90)return'A+';if(p>=80)return'A';if(p>=70)return'B+';if(p>=60)return'B';if(p>=50)return'C';if(p>=40)return'D';return'F'}
+function getInitials(name){return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+
+// ==================== DATA STORE ====================
+const Store = {
+  prefix: 'sps_',
+  get(key){ try{return JSON.parse(localStorage.getItem(this.prefix+key))||null}catch(e){return null} },
+  set(key,val){ localStorage.setItem(this.prefix+key,JSON.stringify(val)) },
+  init(){
+    if(this.get('initialized'))return;
+    // Subjects
+    const subjects=[
+      {id:'SUB001',name:'Mathematics',code:'MATH'},
+      {id:'SUB002',name:'Science',code:'SCI'},
+      {id:'SUB003',name:'English',code:'ENG'},
+      {id:'SUB004',name:'Hindi',code:'HIN'},
+      {id:'SUB005',name:'Social Studies',code:'SST'}
+    ];
+    // Classes
+    const classes=[
+      {id:'CLS001',name:'Class 8',section:'A',classTeacherId:'USR002'},
+      {id:'CLS002',name:'Class 9',section:'A',classTeacherId:'USR003'},
+      {id:'CLS003',name:'Class 10',section:'A',classTeacherId:'USR002'}
+    ];
+    // Users
+    const studentNames=[
+      ['Aarav Sharma','Diya Patel','Arjun Reddy','Ananya Gupta','Rohan Singh','Kavya Nair'],
+      ['Vihaan Mehta','Ishika Joshi','Aditya Kumar','Sneha Iyer','Karthik Rao','Meera Pillai'],
+      ['Arjun Malhotra','Tanya Agarwal','Rishi Verma','Pooja Desai','Nikhil Chauhan','Shruti Bhatt']
+    ];
+    const genders=['Male','Female','Male','Female','Male','Female'];
+    const users=[
+      {id:'USR001',username:'admin',password:'admin123',role:'admin',name:'Dr. Suresh Mishra',email:'admin@sps.edu.in',phone:'9876543210'},
+      {id:'USR002',username:'rajesh.kumar',password:'teacher123',role:'teacher',name:'Rajesh Kumar',email:'rajesh@sps.edu.in',phone:'9876543211',subjects:['SUB001','SUB002'],classIds:['CLS001','CLS003'],qualification:'M.Sc, B.Ed',joinDate:'2018-06-01'},
+      {id:'USR003',username:'priya.sharma',password:'teacher123',role:'teacher',name:'Priya Sharma',email:'priya@sps.edu.in',phone:'9876543212',subjects:['SUB003','SUB004'],classIds:['CLS001','CLS002'],qualification:'M.A, B.Ed',joinDate:'2020-06-01'}
+    ];
+    let uid=4;
+    classes.forEach((cls,ci)=>{
+      studentNames[ci].forEach((sname,si)=>{
+        const uname=sname.toLowerCase().replace(' ','.');
+        users.push({
+          id:'USR'+String(uid).padStart(3,'0'),username:uname,password:'student123',role:'student',name:sname,
+          classId:cls.id,rollNo:si+1,dob:`200${10-ci}-${String(3+si*2).padStart(2,'0')}`,
+          gender:genders[si],parentName:'Mr. '+sname.split(' ')[1],parentPhone:'9'+String(Math.floor(Math.random()*900000000+100000000)),
+          address:`${Math.floor(Math.random()*200+1)}, Sector ${Math.floor(Math.random()*50+1)}, New Delhi`
+        });
+        uid++;
+      });
+    });
+    this.set('users',users);
+    this.set('subjects',subjects);
+    this.set('classes',classes);
+    // Generate timetable
+    const tt=[];
+    const subIds=subjects.map(s=>s.id);
+    const days=['Mon','Tue','Wed','Thu','Fri'];
+    classes.forEach(cls=>{
+      days.forEach(day=>{
+        for(let p=1;p<=6;p++){
+          const si=(p+days.indexOf(day)*3+classes.indexOf(cls))%subIds.length;
+          tt.push({id:genId(),classId:cls.id,day,period:p,subjectId:subIds[si]});
+        }
+      });
+    });
+    this.set('timetable',tt);
+    // Generate attendance (past 25 working days)
+    const att=[];
+    const students=users.filter(u=>u.role==='student');
+    let d=new Date();d.setDate(d.getDate()-35);
+    for(let i=0;i<25;i++){
+      d.setDate(d.getDate()+1);
+      if(d.getDay()===0||d.getDay()===6)continue;
+      const dateStr=d.toISOString().split('T')[0];
+      students.forEach(st=>{
+        const r=Math.random();
+        att.push({id:genId(),date:dateStr,classId:st.classId,studentId:st.id,status:r<.82?'present':r<.94?'absent':'late'});
+      });
+    }
+    this.set('attendance',att);
+    // Generate grades (Mid-Term)
+    const grades=[];
+    const exams=['Mid-Term','Unit Test 1'];
+    exams.forEach(exam=>{
+      students.forEach(st=>{
+        subjects.forEach(sub=>{
+          const max=exam==='Mid-Term'?100:25;
+          const marks=Math.floor(Math.random()*(max*.55)+max*.4);
+          grades.push({id:genId(),studentId:st.id,classId:st.classId,subjectId:sub.id,examType:exam,marks,maxMarks:max});
+        });
+      });
+    });
+    this.set('grades',grades);
+    this.set('initialized',true);
+  }
+};
+
+// ==================== AUTH ====================
+const Auth = {
+  user: null,
+  login(u,p){
+    const users=Store.get('users')||[];
+    const found=users.find(x=>x.username===u&&x.password===p);
+    if(!found)return false;
+    this.user=found;
+    sessionStorage.setItem('sps_session',found.id);
+    return true;
+  },
+  logout(){this.user=null;sessionStorage.removeItem('sps_session')},
+  restore(){
+    const sid=sessionStorage.getItem('sps_session');
+    if(!sid)return false;
+    const users=Store.get('users')||[];
+    const found=users.find(x=>x.id===sid);
+    if(found){this.user=found;return true}
+    return false;
+  },
+  isAdmin(){return this.user?.role==='admin'},
+  isTeacher(){return this.user?.role==='teacher'},
+  isStudent(){return this.user?.role==='student'},
+  refreshUser(){
+    const users=Store.get('users')||[];
+    const found=users.find(x=>x.id===this.user.id);
+    if(found)this.user=found;
+  }
+};
+
+// ==================== TOAST & MODAL ====================
+function toast(msg,type='success'){
+  const colors={success:'bg-emerald-500',error:'bg-red-500',warning:'bg-amber-500',info:'bg-blue-500'};
+  const icons={success:'fa-check-circle',error:'fa-times-circle',warning:'fa-exclamation-triangle',info:'fa-info-circle'};
+  const el=document.createElement('div');
+  el.className=`toast flex items-center gap-3 px-5 py-3 rounded-xl ${colors[type]} text-white shadow-lg text-sm font-medium`;
+  el.innerHTML=`<i class="fas ${icons[type]}"></i><span>${msg}</span>`;
+  $('toast-container').appendChild(el);
+  setTimeout(()=>el.remove(),3100);
+}
+function showModal(html){$('modal-box').innerHTML=html;$('modal-overlay').classList.remove('hidden')}
+function hideModal(){$('modal-overlay').classList.add('hidden')}
+function confirmAction(msg,onConfirm){
+  showModal(`<div class="p-6 text-center">
+    <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4"><i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i></div>
+    <h3 class="text-lg font-bold text-slate-800 mb-2">Confirm Action</h3>
+    <p class="text-slate-500 text-sm mb-6">${msg}</p>
+    <div class="flex gap-3 justify-center">
+      <button onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-medium transition-colors">Cancel</button>
+      <button id="confirm-yes-btn" class="px-5 py-2.5 rounded-lg bg-red-500 text-white hover:bg-red-600 text-sm font-medium transition-colors">Confirm</button>
+    </div></div>`);
+  $('confirm-yes-btn').onclick=()=>{hideModal();onConfirm()};
+}
+
+// ==================== CHART MANAGEMENT ====================
+let charts=[];
+function destroyCharts(){charts.forEach(c=>c.destroy());charts=[]}
+
+// ==================== SIDEBAR ====================
+const menuConfig={
+  admin:[
+    {id:'admin-dashboard',icon:'fa-gauge-high',label:'Dashboard'},
+    {id:'admin-students',icon:'fa-user-graduate',label:'Students'},
+    {id:'admin-teachers',icon:'fa-chalkboard-teacher',label:'Teachers'},
+    {id:'admin-classes',icon:'fa-school',label:'Classes'},
+    {id:'admin-attendance',icon:'fa-clipboard-check',label:'Attendance'},
+    {id:'admin-grades',icon:'fa-chart-line',label:'Grades'},
+    {id:'admin-timetable',icon:'fa-calendar-days',label:'Timetable'}
+  ],
+  teacher:[
+    {id:'teacher-dashboard',icon:'fa-gauge-high',label:'Dashboard'},
+    {id:'teacher-schedule',icon:'fa-calendar-days',label:'My Schedule'},
+    {id:'teacher-attendance',icon:'fa-clipboard-check',label:'Mark Attendance'},
+    {id:'teacher-grades',icon:'fa-pen-to-square',label:'Enter Grades'},
+    {id:'teacher-students',icon:'fa-users',label:'My Students'}
+  ],
+  student:[
+    {id:'student-dashboard',icon:'fa-gauge-high',label:'Dashboard'},
+    {id:'student-profile',icon:'fa-user',label:'My Profile'},
+    {id:'student-attendance',icon:'fa-clipboard-check',label:'My Attendance'},
+    {id:'student-grades',icon:'fa-chart-line',label:'My Grades'},
+    {id:'student-schedule',icon:'fa-calendar-days',label:'My Schedule'}
+  ]
+};
+let currentView='';
+function buildSidebar(){
+  const role=Auth.user.role;
+  const items=menuConfig[role]||[];
+  $('sidebar-nav').innerHTML=items.map(it=>`
+    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium transition-all ${currentView===it.id?'active':''}" data-view="${it.id}">
+      <i class="fas ${it.icon} w-5 text-center flex-shrink-0"></i>
+      <span class="nav-text">${it.label}</span>
+    </button>`).join('');
+  $('sidebar-nav').querySelectorAll('.nav-item').forEach(btn=>{
+    btn.onclick=()=>navigate(btn.dataset.view);
+  });
+  $('sidebar-avatar').textContent=getInitials(Auth.user.name);
+  $('sidebar-name').textContent=Auth.user.name;
+  $('sidebar-role').textContent=Auth.user.role;
+  $('topbar-avatar').textContent=getInitials(Auth.user.name);
+  const d=new Date();$('topbar-date').textContent=d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+function toggleSidebar(){
+  const sb=$('sidebar');
+  sb.classList.toggle('collapsed');
+  $('collapse-icon').classList.toggle('fa-angles-left');$('collapse-icon').classList.toggle('fa-angles-right');
+  $('main-area').style.marginLeft=sb.classList.contains('collapsed')?'72px':'260px';
+}
+function toggleMobileSidebar(){
+  $('sidebar').classList.toggle('mobile-open');
+  $('sidebar-overlay').classList.toggle('show');
+}
+
+// ==================== NAVIGATION ====================
+function navigate(view){
+  currentView=view;
+  destroyCharts();
+  buildSidebar();
+  // Close mobile sidebar
+  $('sidebar').classList.remove('mobile-open');$('sidebar-overlay').classList.remove('show');
+  const titles={
+    'admin-dashboard':'Dashboard','admin-students':'Student Management','admin-teachers':'Teacher Management',
+    'admin-classes':'Class Management','admin-attendance':'Attendance Records','admin-grades':'Grade Records',
+    'admin-timetable':'Class Timetable','teacher-dashboard':'Dashboard','teacher-schedule':'My Schedule',
+    'teacher-attendance':'Mark Attendance','teacher-grades':'Enter Grades','teacher-students':'My Students',
+    'student-dashboard':'Dashboard','student-profile':'My Profile','student-attendance':'My Attendance',
+    'student-grades':'My Grades','student-schedule':'My Schedule'
+  };
+  $('page-title').textContent=titles[view]||'';
+  // Render view
+  const renderer=Views[view];
+  if(renderer)$('main-content').innerHTML=renderer();
+  // Post-render hooks
+  const hook=ViewHooks[view];
+  if(hook)setTimeout(hook,50);
+}
+
+// ==================== VIEW RENDERERS ====================
+const Views={};
+const ViewHooks={};
+
+// --- Helpers ---
+function statCard(icon,label,value,bgColor,sub=''){
+  return `<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+    <div class="flex items-center justify-between">
+      <div><p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${label}</p>
+      <p class="text-2xl font-extrabold text-slate-800 mt-1">${value}</p>
+      ${sub?`<p class="text-xs mt-1.5 text-slate-400">${sub}</p>`:''}</div>
+      <div class="w-12 h-12 rounded-xl ${bgColor} flex items-center justify-center"><i class="fas ${icon} text-white"></i></div>
+    </div></div>`;
+}
+function avatarCircle(name,size='w-9 h-9 text-sm'){
+  const colors=['bg-teal-100 text-teal-700','bg-blue-100 text-blue-700','bg-amber-100 text-amber-700','bg-indigo-100 text-indigo-700','bg-rose-100 text-rose-700','bg-emerald-100 text-emerald-700'];
+  const ci=name.charCodeAt(0)%colors.length;
+  return `<div class="${size} rounded-full ${colors[ci]} flex items-center justify-center font-bold flex-shrink-0">${getInitials(name)}</div>`;
+}
+function classBadge(classId){
+  const cls=(Store.get('classes')||[]).find(c=>c.id===classId);
+  return cls?`<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-50 text-primary-700">${cls.name} - ${cls.section}</span>`:'—';
+}
+function subjectBadge(subId){
+  const sub=(Store.get('subjects')||[]).find(s=>s.id===subId);
+  return sub?`<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${subjectColors[sub.code]||''}">${sub.code}</span>`:'—';
+}
+
+// ==================== ADMIN VIEWS ====================
+Views['admin-dashboard']=()=>{
+  const users=Store.get('users')||[];
+  const students=users.filter(u=>u.role==='student');
+  const teachers=users.filter(u=>u.role==='teacher');
+  const classes=Store.get('classes')||[];
+  const att=Store.get('attendance')||[];
+  const presentCount=att.filter(a=>a.status==='present').length;
+  const avgAtt=att.length?Math.round(presentCount/att.length*100):0;
+  return `<div class="space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      ${statCard('fa-user-graduate','Total Students',students.length,'bg-teal-500',`${classes.length} classes`)}
+      ${statCard('fa-chalkboard-teacher','Total Teachers',teachers.length,'bg-blue-500','Active staff')}
+      ${statCard('fa-school','Total Classes',classes.length,'bg-indigo-500','All sections')}
+      ${statCard('fa-clipboard-check','Avg Attendance',avgAtt+'%','bg-amber-500','This month')}
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <h3 class="text-sm font-bold text-slate-800 mb-4">Students per Class</h3>
+        <canvas id="chart-class-dist" height="220"></canvas>
+      </div>
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <h3 class="text-sm font-bold text-slate-800 mb-4">Recent Attendance Trend</h3>
+        <canvas id="chart-att-trend" height="220"></canvas>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+      <h3 class="text-sm font-bold text-slate-800 mb-4">Recently Enrolled Students</h3>
+      <div class="space-y-3">${students.slice(-5).reverse().map(s=>`
+        <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">
+          ${avatarCircle(s.name)}
+          <div class="flex-1 min-w-0"><p class="text-sm font-semibold text-slate-800 truncate">${s.name}</p>
+          <p class="text-xs text-slate-400">Roll No: ${s.rollNo}</p></div>
+          ${classBadge(s.classId)}
+        </div>`).join('')}</div>
+    </div></div>`;
+};
+ViewHooks['admin-dashboard']=()=>{
+  const users=Store.get('users')||[];const students=users.filter(u=>u.role==='student');const classes=Store.get('classes')||[];
+  const ctx1=$('chart-class-dist');
+  if(ctx1)charts.push(new Chart(ctx1,{type:'doughnut',data:{labels:classes.map(c=>c.name+' '+c.section),datasets:[{data:classes.map(c=>students.filter(s=>s.classId===c.id).length),backgroundColor:['#0D9488','#3B82F6','#6366F1'],borderWidth:0,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyle:'circle',font:{size:12,family:'Plus Jakarta Sans'}}}}}}));
+  const att=Store.get('attendance')||[];const dates=[...new Set(att.map(a=>a.date))].sort().slice(-10);
+  const ctx2=$('chart-att-trend');
+  if(ctx2){
+    const presRates=dates.map(d=>{const dayAtt=att.filter(a=>a.date===d);const p=dayAtt.filter(a=>a.status==='present').length;return dayAtt.length?Math.round(p/dayAtt.length*100):0});
+    charts.push(new Chart(ctx2,{type:'bar',data:{labels:dates.map(d=>{const dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}),datasets:[{label:'Attendance %',data:presRates,backgroundColor:'#0D9488',borderRadius:6,maxBarThickness:32}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%',font:{size:11}},grid:{color:'#F1F5F9'}},x:{grid:{display:false},ticks:{font:{size:10}}}},plugins:{legend:{display:false}}}}));
+  }
+};
+
+// Admin Students
+Views['admin-students']=()=>{
+  const users=Store.get('users')||[];const students=users.filter(u=>u.role==='student');const classes=Store.get('classes')||[];
+  return `<div class="space-y-4">
+    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+      <div class="relative w-full sm:w-72">
+        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input id="student-search" type="text" placeholder="Search students..." class="w-full pl-9 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm" oninput="filterStudents()">
+      </div>
+      <button onclick="showStudentForm()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm"><i class="fas fa-plus"></i>Add Student</button>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="overflow-x-auto"><table class="w-full" id="students-table">
+        <thead><tr class="border-b border-slate-100 bg-slate-50/50">
+          <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Student</th>
+          <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Roll No</th>
+          <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Class</th>
+          <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Parent</th>
+          <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Phone</th>
+          <th class="px-5 py-3.5 text-right text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
+        </tr></thead>
+        <tbody id="students-tbody" class="divide-y divide-slate-50">${renderStudentRows(students)}</tbody>
+      </table></div>
+    </div></div>`;
+};
+function renderStudentRows(students){
+  return students.map(s=>`<tr class="data-row transition-colors">
+    <td class="px-5 py-3.5"><div class="flex items-center gap-3">${avatarCircle(s.name)}<span class="text-sm font-medium text-slate-800">${s.name}</span></div></td>
+    <td class="px-5 py-3.5 text-sm text-slate-600">${s.rollNo}</td>
+    <td class="px-5 py-3.5">${classBadge(s.classId)}</td>
+    <td class="px-5 py-3.5 text-sm text-slate-600">${s.parentName||'—'}</td>
+    <td class="px-5 py-3.5 text-sm text-slate-600">${s.parentPhone||'—'}</td>
+    <td class="px-5 py-3.5 text-right"><div class="flex items-center justify-end gap-1">
+      <button onclick="showStudentForm('${s.id}')" class="w-8 h-8 rounded-lg hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors" title="Edit"><i class="fas fa-pen-to-square text-xs"></i></button>
+      <button onclick="deleteStudent('${s.id}')" class="w-8 h-8 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors" title="Delete"><i class="fas fa-trash text-xs"></i></button>
+    </div></td></tr>`).join('');
+}
+function filterStudents(){
+  const q=$('student-search').value.toLowerCase();
+  const users=Store.get('users')||[];const students=users.filter(u=>u.role==='student');
+  const filtered=students.filter(s=>s.name.toLowerCase().includes(q)||String(s.rollNo).includes(q));
+  $('students-tbody').innerHTML=renderStudentRows(filtered);
+}
+function showStudentForm(editId){
+  const classes=Store.get('classes')||[];let s=null;
+  if(editId){const users=Store.get('users')||[];s=users.find(u=>u.id===editId)}
+  const title=s?'Edit Student':'Add New Student';
+  showModal(`<div class="p-6">
+    <h3 class="text-lg font-bold text-slate-800 mb-5">${title}</h3>
+    <form id="student-form" class="space-y-4" onsubmit="saveStudent(event,'${editId||''}')">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label>
+          <input name="name" value="${s?.name||''}" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label>
+          <select name="classId" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm">
+            ${classes.map(c=>`<option value="${c.id}" ${s?.classId===c.id?'selected':''}>${c.name} - ${c.section}</option>`).join('')}</select></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Roll Number</label>
+          <input name="rollNo" type="number" value="${s?.rollNo||''}" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Date of Birth</label>
+          <input name="dob" type="date" value="${s?.dob||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Gender</label>
+          <select name="gender" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm">
+            <option value="Male" ${s?.gender==='Male'?'selected':''}>Male</option>
+            <option value="Female" ${s?.gender==='Female'?'selected':''}>Female</option></select></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Parent Name</label>
+          <input name="parentName" value="${s?.parentName||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Parent Phone</label>
+          <input name="parentPhone" value="${s?.parentPhone||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Address</label>
+          <textarea name="address" rows="2" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm">${s?.address||''}</textarea></div>
+        ${!s?`<div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Username</label>
+          <input name="username" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm" placeholder="e.g. john.doe"></div>`:''}
+      </div>
+      <div class="flex gap-3 justify-end pt-2">
+        <button type="button" onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">Cancel</button>
+        <button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors">${s?'Update':'Add'} Student</button>
+      </div>
+    </form></div>`);
+}
+function saveStudent(e,editId){
+  e.preventDefault();const fd=new FormData(e.target);const data=Object.fromEntries(fd);
+  const users=Store.get('users')||[];
+  if(editId){
+    const idx=users.findIndex(u=>u.id===editId);
+    if(idx>=0){Object.assign(users[idx],data);users[idx].rollNo=parseInt(data.rollNo)}
+    toast('Student updated successfully');
+  }else{
+    const newUser={id:genId(),username:data.username,password:'student123',role:'student',name:data.name,classId:data.classId,rollNo:parseInt(data.rollNo),dob:data.dob,gender:data.gender,parentName:data.parentName,parentPhone:data.parentPhone,address:data.address};
+    delete newUser.username;users.push(newUser);
+    toast('Student added successfully');
+  }
+  Store.set('users',users);hideModal();navigate('admin-students');
+}
+function deleteStudent(id){
+  confirmAction('Are you sure you want to delete this student? This action cannot be undone.',()=>{
+    let users=Store.get('users')||[];users=users.filter(u=>u.id!==id);Store.set('users',users);
+    let att=Store.get('attendance')||[];att=att.filter(a=>a.studentId!==id);Store.set('attendance',att);
+    let grades=Store.get('grades')||[];grades=grades.filter(g=>g.studentId!==id);Store.set('grades',grades);
+    toast('Student deleted','warning');navigate('admin-students');
+  });
+}
+
+// Admin Teachers
+Views['admin-teachers']=()=>{
+  const users=Store.get('users')||[];const teachers=users.filter(u=>u.role==='teacher');const subjects=Store.get('subjects')||[];const classes=Store.get('classes')||[];
+  return `<div class="space-y-4">
+    <div class="flex justify-end">
+      <button onclick="showTeacherForm()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm"><i class="fas fa-plus"></i>Add Teacher</button>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      ${teachers.map(t=>`<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+        <div class="flex items-start gap-4">
+          ${avatarCircle(t.name,'w-12 h-12 text-base')}
+          <div class="flex-1 min-w-0">
+            <h4 class="text-sm font-bold text-slate-800 truncate">${t.name}</h4>
+            <p class="text-xs text-slate-400 mt-0.5">${t.qualification||'—'}</p>
+            <div class="flex flex-wrap gap-1.5 mt-3">${(t.subjects||[]).map(sid=>subjectBadge(sid)).join('')}</div>
+            <div class="flex flex-wrap gap-1.5 mt-2">${(t.classIds||[]).map(cid=>classBadge(cid)).join('')}</div>
+            <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <p class="text-xs text-slate-400"><i class="fas fa-phone mr-1"></i>${t.phone||'—'}</p>
+              <div class="flex gap-1">
+                <button onclick="showTeacherForm('${t.id}')" class="w-7 h-7 rounded hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-pen text-[10px]"></i></button>
+                <button onclick="deleteTeacher('${t.id}')" class="w-7 h-7 rounded hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-trash text-[10px]"></i></button>
+              </div>
+            </div>
+          </div>
+        </div></div>`).join('')}
+    </div></div>`;
+};
+function showTeacherForm(editId){
+  const subjects=Store.get('subjects')||[];const classes=Store.get('classes')||[];let t=null;
+  if(editId){const users=Store.get('users')||[];t=users.find(u=>u.id===editId)}
+  showModal(`<div class="p-6">
+    <h3 class="text-lg font-bold text-slate-800 mb-5">${t?'Edit Teacher':'Add New Teacher'}</h3>
+    <form id="teacher-form" class="space-y-4" onsubmit="saveTeacher(event,'${editId||''}')">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label>
+          <input name="name" value="${t?.name||''}" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        ${!t?`<div><label class="block text-xs font-semibold text-slate-600 mb-1">Username</label>
+          <input name="username" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+          <div><label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
+          <input name="password" value="teacher123" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>`:''}
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Subjects</label>
+          <div class="flex flex-wrap gap-2">${subjects.map(s=>`<label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 text-sm ${(t?.subjects||[]).includes(s.id)?'bg-primary-50 border-primary-300':''}">
+            <input type="checkbox" name="subjects" value="${s.id}" ${(t?.subjects||[]).includes(s.id)?'checked':''} class="accent-primary-600"><span class="text-slate-700">${s.name}</span></label>`).join('')}</div></div>
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Assigned Classes</label>
+          <div class="flex flex-wrap gap-2">${classes.map(c=>`<label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 text-sm ${(t?.classIds||[]).includes(c.id)?'bg-primary-50 border-primary-300':''}">
+            <input type="checkbox" name="classIds" value="${c.id}" ${(t?.classIds||[]).includes(c.id)?'checked':''} class="accent-primary-600"><span class="text-slate-700">${c.name} - ${c.section}</span></label>`).join('')}</div></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Phone</label>
+          <input name="phone" value="${t?.phone||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Email</label>
+          <input name="email" value="${t?.email||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Qualification</label>
+          <input name="qualification" value="${t?.qualification||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+      </div>
+      <div class="flex gap-3 justify-end pt-2">
+        <button type="button" onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">Cancel</button>
+        <button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors">${t?'Update':'Add'} Teacher</button>
+      </div>
+    </form></div>`);
+}
+function saveTeacher(e,editId){
+  e.preventDefault();const fd=new FormData(e.target);
+  const data={name:fd.get('name'),phone:fd.get('phone'),email:fd.get('email'),qualification:fd.get('qualification'),
+    subjects:fd.getAll('subjects'),classIds:fd.getAll('classIds')};
+  const users=Store.get('users')||[];
+  if(editId){const idx=users.findIndex(u=>u.id===editId);if(idx>=0)Object.assign(users[idx],data);toast('Teacher updated successfully');}
+  else{users.push({id:genId(),username:fd.get('username'),password:fd.get('password'),role:'teacher',...data});toast('Teacher added successfully');}
+  Store.set('users',users);hideModal();navigate('admin-teachers');
+}
+function deleteTeacher(id){
+  confirmAction('Are you sure you want to delete this teacher?',()=>{
+    let users=Store.get('users')||[];users=users.filter(u=>u.id!==id);Store.set('users',users);
+    toast('Teacher deleted','warning');navigate('admin-teachers');
+  });
+}
+
+// Admin Classes
+Views['admin-classes']=()=>{
+  const classes=Store.get('classes')||[];const users=Store.get('users')||[];const students=users.filter(u=>u.role==='student');
+  return `<div class="space-y-4">
+    <div class="flex justify-end">
+      <button onclick="showClassForm()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm"><i class="fas fa-plus"></i>Add Class</button>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      ${classes.map(c=>{
+        const teacher=users.find(u=>u.id===c.classTeacherId);
+        const count=students.filter(s=>s.classId===c.id).length;
+        return `<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <div><h4 class="text-base font-bold text-slate-800">${c.name}</h4>
+            <p class="text-xs text-slate-400">Section: ${c.section}</p></div>
+            <div class="flex gap-1">
+              <button onclick="showClassForm('${c.id}')" class="w-7 h-7 rounded hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-pen text-[10px]"></i></button>
+              <button onclick="deleteClass('${c.id}')" class="w-7 h-7 rounded hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-trash text-[10px]"></i></button>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 text-sm text-slate-600">
+            <div class="flex-1"><p class="text-xs text-slate-400 mb-1">Class Teacher</p>
+            <p class="font-medium">${teacher?teacher.name:'Not Assigned'}</p></div>
+            <div class="text-right"><p class="text-xs text-slate-400 mb-1">Students</p>
+            <p class="text-2xl font-extrabold text-primary-600">${count}</p></div>
+          </div></div>`;
+      }).join('')}
+    </div></div>`;
+};
+function showClassForm(editId){
+  const classes=Store.get('classes')||[];const users=Store.get('users')||[];const teachers=users.filter(u=>u.role==='teacher');
+  let c=editId?classes.find(cl=>cl.id===editId):null;
+  showModal(`<div class="p-6">
+    <h3 class="text-lg font-bold text-slate-800 mb-5">${c?'Edit Class':'Add New Class'}</h3>
+    <form onsubmit="saveClass(event,'${editId||''}')" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class Name</label>
+          <input name="name" value="${c?.name||''}" required placeholder="e.g. Class 8" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Section</label>
+          <input name="section" value="${c?.section||''}" required placeholder="e.g. A" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Class Teacher</label>
+          <select name="classTeacherId" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm">
+            <option value="">-- Not Assigned --</option>
+            ${teachers.map(t=>`<option value="${t.id}" ${c?.classTeacherId===t.id?'selected':''}>${t.name}</option>`).join('')}</select></div>
+      </div>
+      <div class="flex gap-3 justify-end pt-2">
+        <button type="button" onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">Cancel</button>
+        <button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors">${c?'Update':'Add'} Class</button>
+      </div>
+    </form></div>`);
+}
+function saveClass(e,editId){
+  e.preventDefault();const fd=new FormData(e.target);const data=Object.fromEntries(fd);
+  const classes=Store.get('classes')||[];
+  if(editId){const idx=classes.findIndex(c=>c.id===editId);if(idx>=0)Object.assign(classes[idx],data);toast('Class updated successfully');}
+  else{classes.push({id:genId(),...data});toast('Class added successfully');}
+  Store.set('classes',classes);hideModal();navigate('admin-classes');
+}
+function deleteClass(id){
+  confirmAction('Deleting this class will affect all associated students. Continue?',()=>{
+    let classes=Store.get('classes')||[];classes=classes.filter(c=>c.id!==id);Store.set('classes',classes);
+    toast('Class deleted','warning');navigate('admin-classes');
+  });
+}
+
+// Admin Attendance
+Views['admin-attendance']=()=>{
+  const classes=Store.get('classes')||[];const att=Store.get('attendance')||[];const users=Store.get('users')||[];
+  const dates=[...new Set(att.map(a=>a.date))].sort().reverse().slice(0,10);
+  const selClass=classes[0]?.id||'';
+  const selDate=dates[0]||today();
+  return `<div class="space-y-4">
+    <div class="flex flex-wrap gap-3 items-end">
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label>
+        <select id="att-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminAtt()">
+          ${classes.map(c=>`<option value="${c.id}">${c.name} - ${c.section}</option>`).join('')}</select></div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Date</label>
+        <input id="att-date" type="date" value="${selDate}" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminAtt()"></div>
+    </div>
+    <div id="att-admin-table" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['admin-attendance']=()=>loadAdminAtt();
+function loadAdminAtt(){
+  const clsId=$('att-cls')?.value;const date=$('att-date')?.value;
+  if(!clsId)return;
+  const att=Store.get('attendance')||[];const users=Store.get('users')||[];
+  const students=users.filter(u=>u.role==='student'&&u.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
+  const dayAtt=att.filter(a=>a.classId===clsId&&a.date===date);
+  const statusBadge=s=>{const c={present:'bg-emerald-100 text-emerald-700',absent:'bg-red-100 text-red-700',late:'bg-amber-100 text-amber-700'};return `<span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${c[s]||'bg-slate-100 text-slate-600'} capitalize">${s||'Not Marked'}</span>`};
+  $('att-admin-table').innerHTML=`<div class="overflow-x-auto"><table class="w-full">
+    <thead><tr class="border-b border-slate-100 bg-slate-50/50">
+      <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th>
+      <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>
+      <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Status</th>
+    </tr></thead><tbody class="divide-y divide-slate-50">
+    ${students.map(s=>{const rec=dayAtt.find(a=>a.studentId===s.id);return `<tr class="data-row transition-colors">
+      <td class="px-5 py-3 text-sm text-slate-500">${s.rollNo}</td>
+      <td class="px-5 py-3"><div class="flex items-center gap-3">${avatarCircle(s.name)}<span class="text-sm font-medium text-slate-800">${s.name}</span></div></td>
+      <td class="px-5 py-3">${statusBadge(rec?.status)}</td></tr>`}).join('')}
+    ${students.length===0?'<tr><td colspan="3" class="px-5 py-8 text-center text-slate-400 text-sm">No students found</td></tr>':''}
+  </tbody></table></div>`;
+}
+
+// Admin Grades
+Views['admin-grades']=()=>{
+  const classes=Store.get('classes')||[];const subjects=Store.get('subjects')||[];
+  return `<div class="space-y-4">
+    <div class="flex flex-wrap gap-3 items-end">
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label>
+        <select id="grade-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminGrades()">
+          ${classes.map(c=>`<option value="${c.id}">${c.name} - ${c.section}</option>`).join('')}</select></div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Exam</label>
+        <select id="grade-exam" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminGrades()">
+          <option>Mid-Term</option><option>Unit Test 1</option></select></div>
+    </div>
+    <div id="grade-admin-table" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['admin-grades']=()=>loadAdminGrades();
+function loadAdminGrades(){
+  const clsId=$('grade-cls')?.value;const exam=$('grade-exam')?.value;if(!clsId)return;
+  const grades=Store.get('grades')||[];const users=Store.get('users')||[];const subjects=Store.get('subjects')||[];
+  const students=users.filter(u=>u.role==='student'&&u.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
+  const subGrades=subjects.map(sub=>{
+    const sg=grades.filter(g=>g.studentId===students[0]?.id&&g.subjectId===sub.id&&g.examType===exam);
+    return sg[0];
+  });
+  $('grade-admin-table').innerHTML=`<div class="overflow-x-auto"><table class="w-full">
+    <thead><tr class="border-b border-slate-100 bg-slate-50/50">
+      <th class="px-4 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>
+      ${subjects.map(s=>`<th class="px-4 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">${s.code}</th>`).join('')}
+      <th class="px-4 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Total</th>
+      <th class="px-4 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">%</th>
+    </tr></thead><tbody class="divide-y divide-slate-50">
+    ${students.map(st=>{
+      let total=0,maxT=0;
+      const cells=subjects.map(sub=>{
+        const g=grades.find(x=>x.studentId===st.id&&x.subjectId===sub.id&&x.examType===exam);
+        const m=g?.marks||0;const mx=g?.maxMarks||100;total+=m;maxT+=mx;
+        const pct=mx?Math.round(m/mx*100):0;
+        const clr=pct>=80?'text-emerald-600':pct>=60?'text-amber-600':'text-red-500';
+        return `<td class="px-4 py-3 text-center text-sm font-medium ${clr}">${g?m:'—'}</td>`;
+      }).join('');
+      const pct=maxT?Math.round(total/maxT*100):0;
+      return `<tr class="data-row transition-colors">
+        <td class="px-4 py-3"><div class="flex items-center gap-2">${avatarCircle(st.name,'w-7 h-7 text-[10px]')}<span class="text-sm font-medium text-slate-800">${st.name}</span></div></td>
+        ${cells}
+        <td class="px-4 py-3 text-center text-sm font-bold text-slate-800">${total}</td>
+        <td class="px-4 py-3 text-center text-sm font-bold ${pct>=60?'text-primary-600':'text-red-500'}">${pct}%</td></tr>`;
+    }).join('')}
+  </tbody></table></div>`;
+}
+
+// Admin Timetable
+Views['admin-timetable']=()=>{
+  const classes=Store.get('classes')||[];
+  return `<div class="space-y-4">
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Select Class</label>
+      <select id="tt-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTimetable()">
+        ${classes.map(c=>`<option value="${c.id}">${c.name} - ${c.section}</option>`).join('')}</select></div>
+    <div id="tt-grid" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['admin-timetable']=()=>loadTimetable();
+function loadTimetable(){
+  const clsId=$('tt-cls')?.value||($('tt-cls')?.options[0]?.value);if(!clsId)return;
+  const tt=Store.get('timetable')||[];const subjects=Store.get('subjects')||[];
+  const days=['Mon','Tue','Wed','Thu','Fri'];const periods=6;
+  const clsTT=tt.filter(t=>t.classId===clsId);
+  let html='<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase w-20">Day</th>';
+  for(let p=1;p<=periods;p++)html+=`<th class="px-3 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">P${p}</th>`;
+  html+='</tr></thead><tbody class="divide-y divide-slate-50">';
+  days.forEach(day=>{
+    html+=`<tr class="data-row"><td class="px-4 py-3 text-sm font-semibold text-slate-700">${day}</td>`;
+    for(let p=1;p<=periods;p++){
+      const entry=clsTT.find(t=>t.day===day&&t.period===p);
+      const sub=entry?subjects.find(s=>s.id===entry.subjectId):null;
+      html+=`<td class="px-2 py-2 text-center">${sub?`<div class="tt-cell ${subjectColors[sub.code]||'bg-slate-100 text-slate-600'}">${sub.code}</div>`:'<span class="text-slate-300">—</span>'}</td>`;
+    }
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
+  $('tt-grid').innerHTML=html;
+}
+
+// ==================== TEACHER VIEWS ====================
+Views['teacher-dashboard']=()=>{
+  const u=Auth.user;const users=Store.get('users')||[];const classes=Store.get('classes')||[];const subjects=Store.get('subjects')||[];
+  const myClasses=(u.classIds||[]).map(id=>classes.find(c=>c.id===id)).filter(Boolean);
+  const myStudents=users.filter(s=>s.role==='student'&&(u.classIds||[]).includes(s.classId));
+  const tt=Store.get('timetable')||[];const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const todayName=dayNames[new Date().getDay()];
+  const todayPeriods=tt.filter(t=>(u.classIds||[]).includes(t.classId)&&t.day===todayName).sort((a,b)=>a.period-b.period);
+  const grades=Store.get('grades')||[];const myGrades=grades.filter(g=>(u.subjects||[]).includes(g.subjectId)&&(u.classIds||[]).includes(g.classId)&&g.examType==='Mid-Term');
+  const avgPerf=myGrades.length?Math.round(myGrades.reduce((s,g)=>s+(g.marks/g.maxMarks*100),0)/myGrades.length):0;
+  return `<div class="space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      ${statCard('fa-school','My Classes',myClasses.length,'bg-teal-500')}
+      ${statCard('fa-users','Total Students',myStudents.length,'bg-blue-500')}
+      ${statCard('fa-clock','Today\'s Periods',todayPeriods.length,'bg-indigo-500')}
+      ${statCard('fa-chart-simple','Avg Performance',avgPerf+'%','bg-amber-500','Mid-Term')}
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <h3 class="text-sm font-bold text-slate-800 mb-4">Class-wise Avg Performance</h3>
+        <canvas id="chart-tchr-perf" height="220"></canvas>
+      </div>
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <h3 class="text-sm font-bold text-slate-800 mb-4">Today's Schedule</h3>
+        <div class="space-y-3">${todayPeriods.length===0?'<p class="text-slate-400 text-sm text-center py-8">No classes today</p>':''}
+          ${todayPeriods.map(tp=>{
+            const sub=subjects.find(s=>s.id===tp.subjectId);const cls=classes.find(c=>c.id===tp.classId);
+            return `<div class="flex items-center gap-4 p-3 rounded-lg bg-slate-50">
+              <div class="text-center w-12"><p class="text-lg font-extrabold text-primary-600">P${tp.period}</p></div>
+              <div class="flex-1"><p class="text-sm font-semibold text-slate-800">${sub?.name||'—'}</p>
+              <p class="text-xs text-slate-400">${cls?.name||''} - ${cls?.section||''}</p></div>
+              ${sub?`<span class="tt-cell ${subjectColors[sub.code]||''}">${sub.code}</span>`:''}
+            </div>`;
+          }).join('')}</div>
+      </div>
+    </div></div>`;
+};
+ViewHooks['teacher-dashboard']=()=>{
+  const u=Auth.user;const classes=Store.get('classes')||[];const grades=Store.get('grades')||[];
+  const ctx=$('chart-tchr-perf');if(!ctx)return;
+  const data=(u.classIds||[]).map(cid=>{
+    const cls=classes.find(c=>c.id===cid);
+    const cg=grades.filter(g=>g.classId===cid&&(u.subjects||[]).includes(g.subjectId)&&g.examType==='Mid-Term');
+    const avg=cg.length?Math.round(cg.reduce((s,g)=>s+(g.marks/g.maxMarks*100),0)/cg.length):0;
+    return {label:cls?cls.name+' '+cls.section:cid,value:avg};
+  });
+  charts.push(new Chart(ctx,{type:'bar',data:{labels:data.map(d=>d.label),datasets:[{label:'Average %',data:data.map(d=>d.value),backgroundColor:'#0D9488',borderRadius:6,maxBarThickness:48}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#F1F5F9'}},x:{grid:{display:false}}},plugins:{legend:{display:false}}}}));
+};
+
+// Teacher Schedule
+Views['teacher-schedule']=()=>{
+  const u=Auth.user;const tt=Store.get('timetable')||[];const subjects=Store.get('subjects')||[];const classes=Store.get('classes')||[];
+  const days=['Mon','Tue','Wed','Thu','Fri'];const periods=6;
+  const myTT=tt.filter(t=>(u.classIds||[]).includes(t.classId));
+  let html='<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase w-20">Day</th>';
+  for(let p=1;p<=periods;p++)html+=`<th class="px-3 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">P${p}</th>`;
+  html+='</tr></thead><tbody class="divide-y divide-slate-50">';
+  days.forEach(day=>{
+    html+=`<tr class="data-row"><td class="px-4 py-3 text-sm font-semibold text-slate-700">${day}</td>`;
+    for(let p=1;p<=periods;p++){
+      const entry=myTT.find(t=>t.day===day&&t.period===p);
+      const sub=entry?subjects.find(s=>s.id===entry.subjectId):null;
+      const cls=entry?classes.find(c=>c.id===entry.classId):null;
+      html+=`<td class="px-2 py-2 text-center">${sub?`<div class="tt-cell ${subjectColors[sub.code]||''}">${sub.code}<br><span class="font-normal opacity-75">${cls?.name?.replace('Class ','')||''}</span></div>`:'<span class="text-slate-300">—</span>'}</td>`;
+    }
+    html+='</tr>';
+  });
+  html+='</tbody></table></div></div>';return html;
+};
+
+// Teacher Mark Attendance
+Views['teacher-attendance']=()=>{
+  const u=Auth.user;const classes=Store.get('classes')||[];
+  return `<div class="space-y-4">
+    <div class="flex flex-wrap gap-3 items-end">
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label>
+        <select id="t-att-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherAtt()">
+          ${(u.classIds||[]).map(cid=>{const c=classes.find(x=>x.id===cid);return c?`<option value="${c.id}">${c.name} - ${c.section}</option>`:''}).join('')}</select></div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Date</label>
+        <input id="t-att-date" type="date" value="${today()}" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherAtt()"></div>
+    </div>
+    <div id="t-att-form" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['teacher-attendance']=()=>loadTeacherAtt();
+function loadTeacherAtt(){
+  const clsId=$('t-att-cls')?.value;const date=$('t-att-date')?.value;if(!clsId)return;
+  const users=Store.get('users')||[];const att=Store.get('attendance')||[];
+  const students=users.filter(u=>u.role==='student'&&u.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
+  const existing=att.filter(a=>a.classId===clsId&&a.date===date);
+  const alreadyMarked=existing.length>0;
+  let html=`<div class="p-4 border-b border-slate-100 flex items-center justify-between">
+    <p class="text-sm text-slate-500">${alreadyMarked?'Attendance already marked. You can update it.':'Mark attendance for each student'}</p>
+    ${!alreadyMarked?'':`<span class="text-xs font-semibold text-amber-600 bg-amber-50 px-3 py-1 rounded-full"><i class="fas fa-pen mr-1"></i>Editing</span>`}
+  </div><div class="overflow-x-auto"><table class="w-full">
+    <thead><tr class="border-b border-slate-100 bg-slate-50/50">
+      <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th>
+      <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>
+      <th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Present</th>
+      <th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Absent</th>
+      <th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Late</th>
+    </tr></thead><tbody class="divide-y divide-slate-50">`;
+  students.forEach(s=>{
+    const rec=existing.find(a=>a.studentId===s.id);
+    const st=rec?.status||'present';
+    html+=`<tr class="data-row"><td class="px-5 py-3 text-sm text-slate-500">${s.rollNo}</td>
+      <td class="px-5 py-3"><div class="flex items-center gap-3">${avatarCircle(s.name)}<span class="text-sm font-medium text-slate-800">${s.name}</span></div></td>
+      <td class="px-5 py-3 text-center"><input type="radio" name="att-${s.id}" value="present" ${st==='present'?'checked':''} class="att-radio"></td>
+      <td class="px-5 py-3 text-center"><input type="radio" name="att-${s.id}" value="absent" ${st==='absent'?'checked':''} class="att-radio absent"></td>
+      <td class="px-5 py-3 text-center"><input type="radio" name="att-${s.id}" value="late" ${st==='late'?'checked':''} class="att-radio late"></td></tr>`;
+  });
+  html+=`</tbody></table></div><div class="p-4 border-t border-slate-100 flex justify-end">
+    <button onclick="saveTeacherAtt()" class="px-6 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors"><i class="fas fa-save mr-2"></i>Save Attendance</button></div>`;
+  $('t-att-form').innerHTML=html;
+}
+function saveTeacherAtt(){
+  const clsId=$('t-att-cls')?.value;const date=$('t-att-date')?.value;if(!clsId||!date)return;
+  const users=Store.get('users')||[];const students=users.filter(u=>u.role==='student'&&u.classId===clsId);
+  let att=Store.get('attendance')||[];
+  att=att.filter(a=>!(a.classId===clsId&&a.date===date));
+  students.forEach(s=>{
+    const val=document.querySelector(`input[name="att-${s.id}"]:checked`)?.value||'present';
+    att.push({id:genId(),date,classId:clsId,studentId:s.id,status:val});
+  });
+  Store.set('attendance',att);toast('Attendance saved successfully');loadTeacherAtt();
+}
+
+// Teacher Enter Grades
+Views['teacher-grades']=()=>{
+  const u=Auth.user;const classes=Store.get('classes')||[];
+  return `<div class="space-y-4">
+    <div class="flex flex-wrap gap-3 items-end">
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label>
+        <select id="t-gr-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherGrades()">
+          ${(u.classIds||[]).map(cid=>{const c=classes.find(x=>x.id===cid);return c?`<option value="${c.id}">${c.name} - ${c.section}</option>`:''}).join('')}</select></div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Exam</label>
+        <select id="t-gr-exam" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherGrades()">
+          <option>Mid-Term</option><option>Unit Test 1</option></select></div>
+    </div>
+    <div id="t-gr-form" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['teacher-grades']=()=>loadTeacherGrades();
+function loadTeacherGrades(){
+  const clsId=$('t-gr-cls')?.value;const exam=$('t-gr-exam')?.value;if(!clsId)return;
+  const u=Auth.user;const users=Store.get('users')||[];const grades=Store.get('grades')||[];const subjects=Store.get('subjects')||[];
+  const mySubs=subjects.filter(s=>(u.subjects||[]).includes(s.id));
+  const students=users.filter(s=>s.role==='student'&&s.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
+  const isUnitTest=exam?.includes('Unit');
+  const maxM=isUnitTest?25:100;
+  let html=`<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50">
+    <th class="px-4 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>
+    ${mySubs.map(s=>`<th class="px-4 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">${s.code}<br><span class="font-normal text-slate-400">(Max: ${maxM})</span></th>`).join('')}
+  </tr></thead><tbody class="divide-y divide-slate-50">`;
+  students.forEach(st=>{
+    html+=`<tr class="data-row"><td class="px-4 py-3"><div class="flex items-center gap-2">${avatarCircle(st.name,'w-7 h-7 text-[10px]')}<span class="text-sm font-medium text-slate-800">${st.name}</span></div></td>`;
+    mySubs.forEach(sub=>{
+      const g=grades.find(x=>x.studentId===st.id&&x.subjectId===sub.id&&x.examType===exam);
+      html+=`<td class="px-4 py-2 text-center"><input type="number" min="0" max="${maxM}" value="${g?.marks||''}" data-student="${st.id}" data-subject="${sub.id}" class="w-16 px-2 py-1.5 rounded border border-slate-200 text-sm text-center font-medium"></td>`;
+    });
+    html+='</tr>';
+  });
+  html+=`</tbody></table></div><div class="p-4 border-t border-slate-100 flex justify-end">
+    <button onclick="saveTeacherGrades('${exam}',${maxM})" class="px-6 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors"><i class="fas fa-save mr-2"></i>Save Grades</button></div>`;
+  $('t-gr-form').innerHTML=html;
+}
+function saveTeacherGrades(exam,maxM){
+  const clsId=$('t-gr-cls')?.value;if(!clsId)return;
+  const inputs=$('t-gr-form').querySelectorAll('input[type="number"]');
+  let grades=Store.get('grades')||[];
+  inputs.forEach(inp=>{
+    const sid=inp.dataset.student;const subId=inp.dataset.subject;const marks=parseInt(inp.value);
+    if(isNaN(marks))return;
+    const idx=grades.findIndex(g=>g.studentId===sid&&g.subjectId===subId&&g.examType===exam&&g.classId===clsId);
+    if(idx>=0)grades[idx].marks=marks;
+    else grades.push({id:genId(),studentId:sid,classId:clsId,subjectId:subId,examType:exam,marks,maxMarks:maxM});
+  });
+  Store.set('grades',grades);toast('Grades saved successfully');
+}
+
+// Teacher My Students
+Views['teacher-students']=()=>{
+  const u=Auth.user;const users=Store.get('users')||[];const classes=Store.get('classes')||[];
+  const myClassIds=u.classIds||[];
+  return `<div class="space-y-4">
+    <div class="flex gap-2 flex-wrap">${myClassIds.map((cid,i)=>{const c=classes.find(x=>x.id===cid);return c?`<button onclick="showTeacherStudents('${cid}')" class="tch-cls-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${i===0?'bg-primary-600 text-white':'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}" data-cid="${cid}">${c.name} - ${c.section}</button>`:''}).join('')}</div>
+    <div id="tch-students-list" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['teacher-students']=()=>{
+  const u=Auth.user;const cid=(u.classIds||[])[0];
+  if(cid)showTeacherStudents(cid);
+};
+function showTeacherStudents(cid){
+  document.querySelectorAll('.tch-cls-tab').forEach(b=>{b.className=b.dataset.cid===cid?'tch-cls-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-primary-600 text-white':'tch-cls-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'});
+  const users=Store.get('users')||[];const students=users.filter(u=>u.role==='student'&&u.classId===cid).sort((a,b)=>a.rollNo-b.rollNo);
+  $('tch-students-list').innerHTML=`<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50">
+    <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th>
+    <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>
+    <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Gender</th>
+    <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Parent</th>
+    <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Phone</th>
+  </tr></thead><tbody class="divide-y divide-slate-50">
+  ${students.map(s=>`<tr class="data-row"><td class="px-5 py-3 text-sm text-slate-500">${s.rollNo}</td>
+    <td class="px-5 py-3"><div class="flex items-center gap-3">${avatarCircle(s.name)}<span class="text-sm font-medium text-slate-800">${s.name}</span></div></td>
+    <td class="px-5 py-3 text-sm text-slate-600">${s.gender||'—'}</td>
+    <td class="px-5 py-3 text-sm text-slate-600">${s.parentName||'—'}</td>
+    <td class="px-5 py-3 text-sm text-slate-600">${s.parentPhone||'—'}</td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+
+// ==================== STUDENT VIEWS ====================
+Views['student-dashboard']=()=>{
+  const u=Auth.user;const classes=Store.get('classes')||[];const subjects=Store.get('subjects')||[];
+  const cls=classes.find(c=>c.id===u.classId);
+  const att=Store.get('attendance')||[];const myAtt=att.filter(a=>a.studentId===u.id);
+  const present=myAtt.filter(a=>a.status==='present').length;
+  const attPct=myAtt.length?Math.round(present/myAtt.length*100):0;
+  const grades=Store.get('grades')||[];const myGrades=grades.filter(g=>g.studentId===u.id&&g.examType==='Mid-Term');
+  const totalM=myGrades.reduce((s,g)=>s+g.marks,0);const totalMax=myGrades.reduce((s,g)=>s+g.maxMarks,0);
+  const overallPct=totalMax?Math.round(totalM/totalMax*100):0;
+  const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const todayName=dayNames[new Date().getDay()];
+  const tt=Store.get('timetable')||[];const todayTT=tt.filter(t=>t.classId===u.classId&&t.day===todayName).sort((a,b)=>a.period-b.period);
+  return `<div class="space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      ${statCard('fa-school','My Class',cls?cls.name+' '+cls.section:'—','bg-teal-500','Roll No: '+u.rollNo)}
+      ${statCard('fa-clipboard-check','Attendance',attPct+'%','bg-blue-500',`${present}/${myAtt.length} days`)}
+      ${statCard('fa-chart-line','Overall Score',overallPct+'%','bg-indigo-500','Mid-Term')}
+      ${statCard('fa-star','Grade',getGrade(totalM,totalMax),'bg-amber-500','Mid-Term')}
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <h3 class="text-sm font-bold text-slate-800 mb-4">Subject-wise Performance</h3>
+        <canvas id="chart-stu-perf" height="220"></canvas>
+      </div>
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+        <h3 class="text-sm font-bold text-slate-800 mb-4">Today's Schedule — ${todayName}</h3>
+        <div class="space-y-3">${todayTT.length===0?'<p class="text-slate-400 text-sm text-center py-8">No classes today</p>':''}
+          ${todayTT.map(tp=>{
+            const sub=subjects.find(s=>s.id===tp.subjectId);
+            return `<div class="flex items-center gap-4 p-3 rounded-lg bg-slate-50">
+              <div class="text-center w-12"><p class="text-lg font-extrabold text-primary-600">P${tp.period}</p></div>
+              <div class="flex-1"><p class="text-sm font-semibold text-slate-800">${sub?.name||'—'}</p></div>
+              ${sub?`<span class="tt-cell ${subjectColors[sub.code]||''}">${sub.code}</span>`:''}
+            </div>`;
+          }).join('')}</div>
+      </div>
+    </div></div>`;
+};
+ViewHooks['student-dashboard']=()=>{
+  const u=Auth.user;const subjects=Store.get('subjects')||[];const grades=Store.get('grades')||[];
+  const ctx=$('chart-stu-perf');if(!ctx)return;
+  const myGrades=grades.filter(g=>g.studentId===u.id&&g.examType==='Mid-Term');
+  const data=subjects.map(sub=>{const g=myGrades.find(x=>x.subjectId===sub.id);return g?Math.round(g.marks/g.maxMarks*100):0});
+  charts.push(new Chart(ctx,{type:'radar',data:{labels:subjects.map(s=>s.code),datasets:[{label:'Mid-Term %',data,backgroundColor:'rgba(13,148,136,0.15)',borderColor:'#0D9488',borderWidth:2,pointBackgroundColor:'#0D9488',pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:5}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{beginAtZero:true,max:100,ticks:{stepSize:20,font:{size:10}},grid:{color:'#E2E8F0'},pointLabels:{font:{size:12,family:'Plus Jakarta Sans',weight:'600'}}}},plugins:{legend:{display:false}}}}));
+};
+
+// Student Profile
+Views['student-profile']=()=>{
+  const u=Auth.user;const classes=Store.get('classes')||[];
+  const cls=classes.find(c=>c.id===u.classId);
+  const fields=[
+    ['Full Name',u.name],['Username',u.username],['Roll Number',u.rollNo],
+    ['Class',cls?cls.name+' '+cls.section:'—'],['Section',cls?.section||'—'],
+    ['Date of Birth',u.dob?formatDate(u.dob):'—'],['Gender',u.gender||'—'],
+    ['Parent Name',u.parentName||'—'],['Parent Phone',u.parentPhone||'—'],['Address',u.address||'—']
+  ];
+  return `<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-8 py-10 text-center">
+        <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold backdrop-blur-sm">${getInitials(u.name)}</div>
+        <h3 class="text-xl font-bold text-white">${u.name}</h3>
+        <p class="text-primary-100 text-sm mt-1">${cls?cls.name+' - '+cls.section:''} | Roll No: ${u.rollNo}</p>
+      </div>
+      <div class="p-6 space-y-4">${fields.map(([label,val])=>`
+        <div class="flex items-center justify-between py-3 border-b border-slate-100 last:border-0">
+          <span class="text-sm text-slate-500">${label}</span>
+          <span class="text-sm font-semibold text-slate-800 text-right max-w-[60%]">${val}</span>
+        </div>`).join('')}
+      </div>
+    </div></div>`;
+};
+
+// Student Attendance
+Views['student-attendance']=()=>{
+  const u=Auth.user;const att=Store.get('attendance')||[];const myAtt=att.filter(a=>a.studentId===u.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const present=myAtt.filter(a=>a.status==='present').length;
+  const absent=myAtt.filter(a=>a.status==='absent').length;
+  const late=myAtt.filter(a=>a.status==='late').length;
+  const pct=myAtt.length?Math.round(present/myAtt.length*100):0;
+  const barColor=pct>=80?'bg-emerald-500':pct>=60?'bg-amber-500':'bg-red-500';
+  return `<div class="space-y-6">
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-sm font-bold text-slate-800">Overall Attendance</h3>
+        <span class="text-2xl font-extrabold ${pct>=80?'text-emerald-600':pct>=60?'text-amber-600':'text-red-500'}">${pct}%</span>
+      </div>
+      <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden mb-4"><div class="${barColor} h-full rounded-full transition-all" style="width:${pct}%"></div></div>
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div class="p-3 rounded-lg bg-emerald-50"><p class="text-lg font-bold text-emerald-600">${present}</p><p class="text-xs text-emerald-600">Present</p></div>
+        <div class="p-3 rounded-lg bg-red-50"><p class="text-lg font-bold text-red-500">${absent}</p><p class="text-xs text-red-500">Absent</p></div>
+        <div class="p-3 rounded-lg bg-amber-50"><p class="text-lg font-bold text-amber-600">${late}</p><p class="text-xs text-amber-600">Late</p></div>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100"><h3 class="text-sm font-bold text-slate-800">Daily Records</h3></div>
+      <div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50">
+        <th class="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Date</th>
+        <th class="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Day</th>
+        <th class="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Status</th>
+      </tr></thead><tbody class="divide-y divide-slate-50">
+      ${myAtt.slice(0,30).map(a=>{
+        const dt=new Date(a.date);const day=dt.toLocaleDateString('en-IN',{weekday:'short'});
+        const stClr={present:'bg-emerald-100 text-emerald-700',absent:'bg-red-100 text-red-700',late:'bg-amber-100 text-amber-700'};
+        return `<tr class="data-row"><td class="px-6 py-3 text-sm text-slate-700">${formatDate(a.date)}</td>
+          <td class="px-6 py-3 text-sm text-slate-500">${day}</td>
+          <td class="px-6 py-3"><span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${stClr[a.status]||''} capitalize">${a.status}</span></td></tr>`;
+      }).join('')}
+      </tbody></table></div>
+    </div></div>`;
+};
+
+// Student Grades
+Views['student-grades']=()=>{
+  const u=Auth.user;const subjects=Store.get('subjects')||[];const grades=Store.get('grades')||[];
+  return `<div class="space-y-4">
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Select Exam</label>
+      <select id="s-gr-exam" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadStudentGrades()">
+        <option>Mid-Term</option><option>Unit Test 1</option></select></div>
+    <div id="s-gr-report" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['student-grades']=()=>loadStudentGrades();
+function loadStudentGrades(){
+  const exam=$('s-gr-exam')?.value;const u=Auth.user;
+  const subjects=Store.get('subjects')||[];const grades=Store.get('grades')||[];
+  const myGrades=grades.filter(g=>g.studentId===u.id&&g.examType===exam);
+  let totalM=0,totalMax=0;
+  let rows=subjects.map(sub=>{
+    const g=myGrades.find(x=>x.subjectId===sub.id);
+    const m=g?.marks||0;const mx=g?.maxMarks||100;totalM+=m;totalMax+=mx;
+    const pct=mx?Math.round(m/mx*100):0;const grade=getGrade(m,mx);
+    const remark=pct>=80?'Excellent':pct>=60?'Good':pct>=50?'Average':'Needs Improvement';
+    const clr=pct>=80?'text-emerald-600':pct>=60?'text-amber-600':'text-red-500';
+    return `<tr class="data-row"><td class="px-5 py-3"><div class="flex items-center gap-3">${sub?`<span class="tt-cell ${subjectColors[sub.code]||''}">${sub.code}</span>`:''}
+      <span class="text-sm font-medium text-slate-800">${sub?.name||''}</span></div></td>
+      <td class="px-5 py-3 text-center text-sm font-bold text-slate-800">${g?m:'—'}</td>
+      <td class="px-5 py-3 text-center text-sm text-slate-500">${g?mx:'—'}</td>
+      <td class="px-5 py-3 text-center"><span class="text-sm font-bold ${clr}">${g?grade:'—'}</span></td>
+      <td class="px-5 py-3 text-center text-sm text-slate-500">${g?remark:'—'}</td></tr>`;
+  }).join('');
+  const pct=totalMax?Math.round(totalM/totalMax*100):0;
+  $('s-gr-report').innerHTML=`<div class="p-6 border-b border-slate-100 text-center">
+    <h3 class="text-lg font-bold text-slate-800">${exam} Report Card</h3>
+    <p class="text-sm text-slate-400 mt-1">${u.name} | Roll No: ${u.rollNo}</p></div>
+    <div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50">
+      <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Subject</th>
+      <th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Marks</th>
+      <th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Max Marks</th>
+      <th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Grade</th>
+      <th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Remarks</th>
+    </tr></thead><tbody class="divide-y divide-slate-50">${rows}</tbody>
+    <tfoot><tr class="bg-slate-50 border-t-2 border-slate-200">
+      <td class="px-5 py-4 text-sm font-bold text-slate-800">Total</td>
+      <td class="px-5 py-4 text-center text-sm font-bold text-slate-800">${totalM}</td>
+      <td class="px-5 py-4 text-center text-sm font-bold text-slate-800">${totalMax}</td>
+      <td class="px-5 py-4 text-center text-sm font-bold ${pct>=60?'text-primary-600':'text-red-500'}">${pct}%</td>
+      <td class="px-5 py-4 text-center"><span class="text-xs font-semibold px-3 py-1 rounded-full ${pct>=80?'bg-emerald-100 text-emerald-700':pct>=60?'bg-amber-100 text-amber-700':'bg-red-100 text-red-700'}">${getGrade(totalM,totalMax)}</span></td>
+    </tr></tfoot></table></div>`;
+}
+
+// Student Schedule
+Views['student-schedule']=()=>{
+  const u=Auth.user;const tt=Store.get('timetable')||[];const subjects=Store.get('subjects')||[];
+  const days=['Mon','Tue','Wed','Thu','Fri'];const periods=6;
+  const myTT=tt.filter(t=>t.classId===u.classId);
+  let html='<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase w-20">Day</th>';
+  for(let p=1;p<=periods;p++)html+=`<th class="px-3 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">P${p}</th>`;
+  html+='</tr></thead><tbody class="divide-y divide-slate-50">';
+  days.forEach(day=>{
+    html+=`<tr class="data-row"><td class="px-4 py-3 text-sm font-semibold text-slate-700">${day}</td>`;
+    for(let p=1;p<=periods;p++){
+      const entry=myTT.find(t=>t.day===day&&t.period===p);
+      const sub=entry?subjects.find(s=>s.id===entry.subjectId):null;
+      html+=`<td class="px-2 py-2 text-center">${sub?`<div class="tt-cell ${subjectColors[sub.code]||''}">${sub.code}<br><span class="font-normal opacity-75 text-[10px]">${sub.name}</span></div>`:'<span class="text-slate-300">—</span>'}</td>`;
+    }
+    html+='</tr>';
+  });
+  html+='</tbody></table></div></div>';return html;
+};
+
+// ==================== LOGIN / LOGOUT ====================
+function fillLogin(u,p){$('login-user').value=u;$('login-pass').value=p;$('login-error').classList.add('hidden')}
+function doLogin(){
+  const u=$('login-user').value.trim();const p=$('login-pass').value;
+  if(!u||!p){showLoginError('Please enter both username and password');return}
+  if(Auth.login(u,p)){enterApp()}
+  else{showLoginError('Invalid username or password')}
+}
+function showLoginError(msg){const el=$('login-error');el.classList.remove('hidden');el.querySelector('span').textContent=msg}
+function doLogout(){Auth.logout();$('app-shell').classList.add('hidden');$('login-screen').classList.remove('hidden');$('login-user').value='';$('login-pass').value='';$('login-error').classList.add('hidden')}
+function enterApp(){
+  $('login-screen').classList.add('hidden');$('app-shell').classList.remove('hidden');
+  // Set default view
+  const role=Auth.user.role;
+  const defaultView=role==='admin'?'admin-dashboard':role==='teacher'?'teacher-dashboard':'student-dashboard';
+  // Reset sidebar state for mobile
+  $('sidebar').classList.remove('collapsed');$('main-area').style.marginLeft='260px';
+  navigate(defaultView);
+}
+
+// ==================== INITIALIZATION ====================
+Store.init();
+// Check for existing session
+if(Auth.restore()){enterApp()}
+
+// Close modal on overlay click
+ $('modal-overlay').addEventListener('click',e=>{if(e.target===$('modal-overlay'))hideModal()});
+// ESC to close modal
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideModal()});
+// Responsive sidebar on resize
+window.addEventListener('resize',()=>{
+  if(window.innerWidth>768){$('sidebar').classList.remove('mobile-open');$('sidebar-overlay').classList.remove('show')}
+});
+</script>
+</body>
+</html>
