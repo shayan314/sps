@@ -3,24 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPS — School Management System</title>
+<title>SPS School Management</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{primary:{50:'#F0FDFA',100:'#CCFBF1',200:'#99F6E4',300:'#5EEAD4',400:'#2DD4BF',500:'#14B8A6',600:'#0D9488',700:'#0F766E',800:'#115E59',900:'#134E4A'},accent:{400:'#FBBF24',500:'#F59E0B',600:'#D97706'},dark:{800:'#1E293B',900:'#0F172A'}}}}}
-</script>
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{primary:{50:'#F0FDFA',100:'#CCFBF1',200:'#99F6E4',300:'#5EEAD4',400:'#2DD4BF',500:'#14B8A6',600:'#0D9488',700:'#0F766E',800:'#115E59',900:'#134E4A'},accent:{400:'#FBBF24',500:'#F59E0B'},dark:{800:'#1E293B',900:'#0F172A'}}}}}</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-<!-- ============ FIREBASE SDK ============ -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
 <script>
-// =============================================
-// YE LINE KO APNI CONFIG SE REPLACE KARO
-// Step 3 mein jo mila tha wahi daalo yahan
-// =============================================
+// ★★★ LINES 21-26 MEIN APNI REAL FIREBASE CONFIG DAALO ★★★
 const firebaseConfig = {
   apiKey: "AIzaSyAP5AkY5YMzMPuqf21-NmL6IIZZkzcE1CA",
   authDomain: "sps-school-management-96f68.firebaseapp.com",
@@ -29,1001 +21,245 @@ const firebaseConfig = {
   messagingSenderId: "57272480045",
   appId: "1:57272480045:web:403763647ee171f2f263a4"
 };
-// =============================================
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
 </script>
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:#F1F5F9;overflow-x:hidden}
-::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
-.login-bg{position:fixed;inset:0;background:linear-gradient(135deg,#0F172A 0%,#1E293B 50%,#0F172A 100%);overflow:hidden;z-index:0}
-.shape{position:absolute;border-radius:50%;opacity:.07;animation:shapeFloat 25s infinite ease-in-out}
-.shape:nth-child(1){width:400px;height:400px;background:#0D9488;top:-100px;left:-100px;animation-duration:22s}
-.shape:nth-child(2){width:300px;height:300px;background:#F59E0B;bottom:-80px;right:-80px;animation-duration:28s;animation-delay:-5s}
-.shape:nth-child(3){width:200px;height:200px;background:#0D9488;top:50%;right:20%;animation-duration:18s;animation-delay:-10s;border-radius:30%}
-.shape:nth-child(4){width:250px;height:250px;background:#F59E0B;top:20%;left:10%;animation-duration:30s;animation-delay:-3s}
-.shape:nth-child(5){width:150px;height:150px;background:#14B8A6;bottom:30%;left:40%;animation-duration:20s;animation-delay:-8s;border-radius:20%}
-@keyframes shapeFloat{0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}25%{transform:translate(30px,-40px) rotate(90deg) scale(1.1)}50%{transform:translate(-20px,30px) rotate(180deg) scale(.95)}75%{transform:translate(40px,20px) rotate(270deg) scale(1.05)}}
-#sidebar{transition:width .3s cubic-bezier(.4,0,.2,1),transform .3s cubic-bezier(.4,0,.2,1)}
-#sidebar .nav-text{transition:opacity .2s,transform .2s}
-#sidebar.collapsed .nav-text{opacity:0;transform:translateX(-10px);pointer-events:none;width:0;overflow:hidden}
-#sidebar.collapsed{width:72px!important}
-#sidebar.collapsed .sidebar-header-text,#sidebar.collapsed .user-info-text{opacity:0;width:0;overflow:hidden}
-.nav-item{position:relative;transition:all .2s}
-.nav-item::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:0;background:#0D9488;border-radius:0 3px 3px 0;transition:height .2s}
-.nav-item.active::before{height:60%}
-.nav-item.active{background:rgba(13,148,136,.15);color:#2DD4BF}
-.nav-item:hover:not(.active){background:rgba(255,255,255,.05)}
-#main-content{animation:fadeUp .35s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-#modal-overlay{transition:opacity .25s}#modal-overlay.hidden{opacity:0;pointer-events:none}
-#modal-box{transition:transform .25s,opacity .25s}#modal-overlay.hidden #modal-box{transform:scale(.95) translateY(10px);opacity:0}
-.toast{animation:toastIn .3s ease,toastOut .3s ease 2.7s forwards}
-@keyframes toastIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-@keyframes toastOut{to{transform:translateX(100%);opacity:0}}
-.tt-cell{font-size:.75rem;padding:6px 4px;border-radius:6px;text-align:center;font-weight:600;line-height:1.2}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#0D9488;box-shadow:0 0 0 3px rgba(13,148,136,.15)}
-.data-row:hover{background:#F8FAFC}
-.att-radio{appearance:none;width:20px;height:20px;border:2px solid #CBD5E1;border-radius:50%;cursor:pointer;transition:all .15s;position:relative}
-.att-radio:checked{border-color:#0D9488;background:#0D9488}
-.att-radio:checked::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:white;border-radius:50%}
-.att-radio.late:checked{border-color:#F59E0B;background:#F59E0B}
-.att-radio.absent:checked{border-color:#EF4444;background:#EF4444}
-#sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:30}
-@media(max-width:768px){
-  #sidebar{transform:translateX(-100%);z-index:40;position:fixed!important}
-  #sidebar.mobile-open{transform:translateX(0)}
-  #sidebar-overlay.show{display:block}
-  #sidebar.collapsed{width:260px!important}
-  #sidebar.collapsed .nav-text,#sidebar.collapsed .sidebar-header-text,#sidebar.collapsed .user-info-text{opacity:1;width:auto}
-}
-/* Loading overlay */
-#loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.95);z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .3s}
-#loading-overlay.hide{opacity:0;pointer-events:none}
-.loader{width:40px;height:40px;border:3px solid #E2E8F0;border-top-color:#0D9488;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media print{#sidebar,#topbar,#sidebar-overlay{display:none!important}#main-area{margin-left:0!important}#main-content{padding:0!important}}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',sans-serif;background:#F1F5F9;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+.lbg{position:fixed;inset:0;background:linear-gradient(135deg,#0F172A,#1E293B 50%,#0F172A);overflow:hidden;z-index:0}
+.sh{position:absolute;border-radius:50%;opacity:.07;animation:fl 25s infinite ease-in-out}
+.sh:nth-child(1){width:400px;height:400px;background:#0D9488;top:-100px;left:-100px}.sh:nth-child(2){width:300px;height:300px;background:#F59E0B;bottom:-80px;right:-80px;animation-delay:-5s}.sh:nth-child(3){width:200px;height:200px;background:#0D9488;top:50%;right:20%;animation-delay:-10s}
+@keyframes fl{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(1.1)}}
+#sidebar{transition:width .3s}#sidebar .nt{transition:opacity .2s}#sidebar.cl .nt{opacity:0;width:0;overflow:hidden}#sidebar.cl{width:72px!important}#sidebar.cl .sht,#sidebar.cl .uit{opacity:0;width:0;overflow:hidden}
+.ni{position:relative;transition:all .2s}.ni::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:0;background:#0D9488;border-radius:0 3px 3px 0;transition:height .2s}.ni.ac::before{height:60%}.ni.ac{background:rgba(13,148,136,.15);color:#2DD4BF}.ni:hover:not(.ac){background:rgba(255,255,255,.05)}
+#mc{animation:fu .3s ease}@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+#mo{transition:opacity .2s}#mo.hd{opacity:0;pointer-events:none}
+.tst{animation:ti .3s ease,to .3s ease 2.7s forwards}@keyframes ti{from{transform:translateX(100%)}to{transform:translateX(0)}}@keyframes to{to{transform:translateX(100%);opacity:0}}
+.tc{font-size:.7rem;padding:5px;border-radius:5px;text-align:center;font-weight:700;line-height:1.2}
+input:focus,select:focus{outline:none;border-color:#0D9488;box-shadow:0 0 0 3px rgba(13,148,136,.15)}
+.dr:hover{background:#F8FAFC}
+.ar{appearance:none;width:18px;height:18px;border:2px solid #CBD5E1;border-radius:50%;cursor:pointer;position:relative}.ar:checked{border-color:#0D9488;background:#0D9488}.ar:checked::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;background:#fff;border-radius:50%}.ar.la:checked{border-color:#F59E0B;background:#F59E0B}.ar.ab:checked{border-color:#EF4444;background:#EF4444}
+#so{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:30}
+@media(max-width:768px){#sidebar{transform:translateX(-100%);z-index:40;position:fixed!important}#sidebar.mo{transform:translateX(0)}#so.sh{display:block}#sidebar.cl{width:260px!important}#sidebar.cl .nt,#sidebar.cl .sht,#sidebar.cl .uit{opacity:1;width:auto}}
+#lo{position:fixed;inset:0;background:rgba(255,255,255,.97);z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .3s}#lo.hd{opacity:0;pointer-events:none}
+.ld{width:36px;height:36px;border:3px solid #E2E8F0;border-top-color:#0D9488;border-radius:50%;animation:sp .7s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
+<div id="lo"><div class="ld"></div><p class="text-sm text-slate-500 font-medium" id="lt">Starting...</p></div>
 
-<!-- Loading Overlay -->
-<div id="loading-overlay"><div class="loader"></div><p class="text-sm text-slate-500 font-medium" id="loading-text">Connecting to Firebase...</p></div>
-
-<!-- ==================== LOGIN SCREEN ==================== -->
-<div id="login-screen" class="min-h-screen flex items-center justify-center p-4" style="display:none">
-  <div class="login-bg">
-    <div class="shape"></div><div class="shape"></div><div class="shape"></div><div class="shape"></div><div class="shape"></div>
-  </div>
-  <div class="relative z-10 w-full max-w-md">
-    <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl">
-      <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-600 mb-4 shadow-lg shadow-primary-600/30">
-          <span class="text-2xl font-extrabold text-white">S</span>
-        </div>
-        <h1 class="text-3xl font-extrabold text-white tracking-tight">SPS</h1>
-        <p class="text-slate-400 text-sm mt-1">School Management System</p>
-        <p class="text-primary-400 text-[10px] mt-1 font-semibold tracking-wider uppercase"><i class="fas fa-database mr-1"></i>Firebase Connected</p>
-      </div>
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-slate-300 mb-1.5">Username</label>
-          <div class="relative">
-            <i class="fas fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
-            <input id="login-user" type="text" placeholder="Enter username" class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder-slate-500 text-sm focus:border-primary-400">
-          </div>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
-          <div class="relative">
-            <i class="fas fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
-            <input id="login-pass" type="password" placeholder="Enter password" class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder-slate-500 text-sm focus:border-primary-400" onkeydown="if(event.key==='Enter')doLogin()">
-          </div>
-        </div>
-        <div id="login-error" class="text-red-400 text-sm hidden"><i class="fas fa-exclamation-circle mr-1"></i><span></span></div>
-        <button onclick="doLogin()" class="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm transition-all hover:shadow-lg hover:shadow-primary-600/25 active:scale-[.98]">Sign In</button>
-      </div>
-      <div class="mt-6 pt-5 border-t border-white/10">
-        <p class="text-slate-500 text-xs text-center mb-3">Demo Credentials</p>
-        <div class="grid grid-cols-3 gap-2 text-xs">
-          <button onclick="fillLogin('admin','admin123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors text-center">
-            <i class="fas fa-user-shield block text-base mb-1 text-primary-400"></i>Admin
-          </button>
-          <button onclick="fillLogin('rajesh.kumar','teacher123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors text-center">
-            <i class="fas fa-chalkboard-teacher block text-base mb-1 text-accent-400"></i>Teacher
-          </button>
-          <button onclick="fillLogin('aarav.sharma','student123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors text-center">
-            <i class="fas fa-user-graduate block text-base mb-1 text-emerald-400"></i>Student
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+<div id="ls" class="min-h-screen flex items-center justify-center p-4" style="display:none">
+<div class="lbg"><div class="sh"></div><div class="sh"></div><div class="sh"></div></div>
+<div class="relative z-10 w-full max-w-md">
+<div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl">
+<div class="text-center mb-8">
+<div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-600 mb-4 shadow-lg shadow-primary-600/30"><span class="text-2xl font-extrabold text-white">S</span></div>
+<h1 class="text-3xl font-extrabold text-white">SPS</h1>
+<p class="text-slate-400 text-sm mt-1">School Management System</p>
 </div>
-
-<!-- ==================== APP SHELL ==================== -->
-<div id="app-shell" class="hidden min-h-screen">
-  <div id="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
-  <aside id="sidebar" class="fixed top-0 left-0 h-full w-[260px] bg-dark-900 flex flex-col z-40">
-    <div class="p-5 flex items-center gap-3 border-b border-white/10">
-      <div class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary-600/20">
-        <span class="text-lg font-extrabold text-white">S</span>
-      </div>
-      <div class="sidebar-header-text transition-opacity">
-        <h2 class="text-white font-bold text-lg leading-tight">SPS</h2>
-        <p class="text-slate-500 text-[10px] uppercase tracking-widest">Management</p>
-      </div>
-      <button onclick="toggleSidebar()" class="ml-auto text-slate-500 hover:text-white transition-colors hidden md:block"><i class="fas fa-angles-left text-xs" id="collapse-icon"></i></button>
-    </div>
-    <nav id="sidebar-nav" class="flex-1 py-4 px-3 space-y-1 overflow-y-auto"></nav>
-    <div class="p-4 border-t border-white/10">
-      <div class="flex items-center gap-3">
-        <div id="sidebar-avatar" class="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0"></div>
-        <div class="user-info-text transition-opacity min-w-0">
-          <p id="sidebar-name" class="text-white text-sm font-medium truncate"></p>
-          <p id="sidebar-role" class="text-slate-500 text-[11px] capitalize"></p>
-        </div>
-        <button onclick="doLogout()" class="ml-auto text-slate-500 hover:text-red-400 transition-colors flex-shrink-0" title="Logout"><i class="fas fa-right-from-bracket"></i></button>
-      </div>
-    </div>
-  </aside>
-  <div id="main-area" class="transition-all duration-300" style="margin-left:260px">
-    <header id="topbar" class="sticky top-0 z-20 h-16 bg-white/80 backdrop-blur-lg border-b border-slate-200/80 flex items-center px-6 gap-4">
-      <button onclick="toggleMobileSidebar()" class="md:hidden text-slate-600 hover:text-slate-900"><i class="fas fa-bars text-lg"></i></button>
-      <h2 id="page-title" class="text-lg font-bold text-slate-800"></h2>
-      <div class="ml-auto flex items-center gap-3">
-        <span id="topbar-date" class="text-xs text-slate-400 hidden sm:block"></span>
-        <div id="topbar-avatar" class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center text-xs font-bold"></div>
-      </div>
-    </header>
-    <main id="main-content" class="p-6"></main>
-  </div>
+<div class="space-y-4">
+<div><label class="block text-sm font-medium text-slate-300 mb-1">Username</label><div class="relative"><i class="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i><input id="lu" type="text" placeholder="Enter username" class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder-slate-500 text-sm"></div></div>
+<div><label class="block text-sm font-medium text-slate-300 mb-1">Password</label><div class="relative"><i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i><input id="lp" type="password" placeholder="Enter password" class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder-slate-500 text-sm" onkeydown="if(event.key==='Enter')dL()"></div></div>
+<div id="le" class="text-red-400 text-sm hidden"><i class="fas fa-exclamation-circle mr-1"></i><span></span></div>
+<button onclick="dL()" class="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm">Sign In</button>
 </div>
+<div class="mt-6 pt-5 border-t border-white/10 text-center">
+<p class="text-slate-500 text-xs mb-3">Demo Credentials</p>
+<div class="grid grid-cols-3 gap-2 text-xs">
+<button onclick="fL('admin','admin123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white"><i class="fas fa-user-shield block text-base mb-1 text-primary-400"></i>Admin</button>
+<button onclick="fL('rajesh.kumar','teacher123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white"><i class="fas fa-chalkboard-teacher block text-base mb-1 text-accent-400"></i>Teacher</button>
+<button onclick="fL('aarav.sharma','student123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white"><i class="fas fa-user-graduate block text-base mb-1 text-emerald-400"></i>Student</button>
+</div></div></div></div></div>
 
-<!-- ==================== MODAL ==================== -->
-<div id="modal-overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-  <div id="modal-box" class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"></div>
+<div id="as" class="hidden min-h-screen">
+<div id="so" onclick="tMS()"></div>
+<aside id="sidebar" class="fixed top-0 left-0 h-full w-[260px] bg-dark-900 flex flex-col z-40">
+<div class="p-5 flex items-center gap-3 border-b border-white/10">
+<div class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center flex-shrink-0"><span class="text-lg font-extrabold text-white">S</span></div>
+<div class="sht"><h2 class="text-white font-bold text-lg leading-tight">SPS</h2><p class="text-slate-500 text-[10px] uppercase tracking-widest">Management</p></div>
+<button onclick="tSB()" class="ml-auto text-slate-500 hover:text-white hidden md:block"><i class="fas fa-angles-left text-xs" id="ci"></i></button>
 </div>
-
-<!-- ==================== TOAST CONTAINER ==================== -->
-<div id="toast-container" class="fixed top-4 right-4 z-[60] space-y-2"></div>
+<nav id="sn" class="flex-1 py-4 px-3 space-y-1 overflow-y-auto"></nav>
+<div class="p-4 border-t border-white/10 flex items-center gap-3">
+<div id="sa" class="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0"></div>
+<div class="uit min-w-0"><p id="snm" class="text-white text-sm font-medium truncate"></p><p id="srl" class="text-slate-500 text-[11px] capitalize"></p></div>
+<button onclick="dO()" class="ml-auto text-slate-500 hover:text-red-400 flex-shrink-0"><i class="fas fa-right-from-bracket"></i></button>
+</div></aside>
+<div id="ma" class="transition-all duration-300" style="margin-left:260px">
+<header class="sticky top-0 z-20 h-16 bg-white/80 backdrop-blur-lg border-b border-slate-200/80 flex items-center px-6 gap-4">
+<button onclick="tMS()" class="md:hidden text-slate-600"><i class="fas fa-bars text-lg"></i></button>
+<h2 id="pt" class="text-lg font-bold text-slate-800"></h2>
+<div class="ml-auto flex items-center gap-3"><span id="td2" class="text-xs text-slate-400 hidden sm:block"></span><div id="ta" class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center text-xs font-bold"></div></div></header>
+<main id="mc" class="p-6"></main></div></div>
+<div id="mo" class="hd fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"><div id="mb" class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"></div></div>
+<div id="tct" class="fixed top-4 right-4 z-[60] space-y-2"></div>
 
 <script>
-// ==================== UTILITIES ====================
-const $ = id => document.getElementById(id);
-const genId = () => '_' + Math.random().toString(36).substr(2, 9);
-const today = () => new Date().toISOString().split('T')[0];
-const formatDate = d => { try{return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}catch(e){return d} };
-const subjectColors = {MATH:'bg-teal-100 text-teal-800',SCI:'bg-blue-100 text-blue-800',ENG:'bg-indigo-100 text-indigo-800',HIN:'bg-amber-100 text-amber-800',SST:'bg-emerald-100 text-emerald-800'};
-function getGrade(marks,max){const p=((marks/max)*100);if(p>=90)return'A+';if(p>=80)return'A';if(p>=70)return'B+';if(p>=60)return'B';if(p>=50)return'C';if(p>=40)return'D';return'F'}
-function getInitials(name){return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+const $=id=>document.getElementById(id),gI=()=>'_'+Math.random().toString(36).substr(2,9),tdy=()=>new Date().toISOString().split('T')[0],fD=d=>{try{return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}catch(e){return d}};
+const SC={MATH:'bg-teal-100 text-teal-800',SCI:'bg-blue-100 text-blue-800',ENG:'bg-indigo-100 text-indigo-800',HIN:'bg-amber-100 text-amber-800',SST:'bg-emerald-100 text-emerald-800'};
+function gG(m,x){const p=m/x*100;return p>=90?'A+':p>=80?'A':p>=70?'B+':p>=60?'B':p>=50?'C':p>=40?'D':'F'}
+function gN(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
 
-// ==================== FIREBASE STORE ====================
-// Ye poora localStorage ko replace karta hai
-// Har function async hai kyunki Firestore network call karta hai
+const FS={async co(n){try{const s=await db.collection(n).get();return s.docs.map(d=>({id:d.id,...d.data()}))}catch(e){return[]}},async se(n,id,d){try{await db.collection(n).doc(id).set(d,{merge:true});return true}catch(e){return false}},async de(n,id){try{await db.collection(n).doc(id).delete();return true}catch(e){return false}},async dw(n,f,o,v){try{const s=await db.collection(n).where(f,o,v).get();const b=db.batch();s.docs.forEach(d=>b.delete(d.ref));await b.commit();return s.size}catch(e){return 0}},async ini(){try{const d=await db.collection('_meta').doc('init').get();return d.exists&&d.data().done===true}catch(e){return false}},async mi(){await db.collection('_meta').doc('init').set({done:true})}};
 
-const FStore = {
-  // ---- READ ----
-  async getCollection(colName) {
-    try {
-      const snap = await db.collection(colName).get();
-      return snap.docs.map(d => ({id: d.id, ...d.data()}));
-    } catch(e) {
-      console.error(`Error reading ${colName}:`, e);
-      toast(`Failed to load ${colName}`, 'error');
-      return [];
-    }
-  },
+const CA={_d:{},s(k,v){this._d[k]=v},g(k){return this._d[k]||null}};
+async function lC(){const r=await Promise.all([FS.co('users'),FS.co('subjects'),FS.co('classes'),FS.co('timetable'),FS.co('attendance'),FS.co('grades')]);CA.s('users',r[0]);CA.s('subjects',r[1]);CA.s('classes',r[2]);CA.s('timetable',r[3]);CA.s('attendance',r[4]);CA.s('grades',r[5])}
+function U(){return CA.g('users')||[]}function SU(){return CA.g('subjects')||[]}function CL(){return CA.g('classes')||[]}function TT(){return CA.g('timetable')||[]}function AT(){return CA.g('attendance')||[]}function GR(){return CA.g('grades')||[]}
 
-  async getDoc(colName, docId) {
-    try {
-      const doc = await db.collection(colName).doc(docId).get();
-      return doc.exists ? {id: doc.id, ...doc.data()} : null;
-    } catch(e) { return null; }
-  },
+async function wU(u){const{id,...d}=u;Object.keys(d).forEach(k=>d[k]===undefined&&delete d[k]);await FS.se('users',id,d);const a=U(),i=a.findIndex(x=>x.id===id);if(i>=0)a[i]=u;else a.push(u);CA.s('users',a)}
+async function rU(id){await FS.de('users',id);CA.s('users',U().filter(u=>u.id!==id))}
+async function wC(c){const{id,...d}=c;Object.keys(d).forEach(k=>d[k]===undefined&&delete d[k]);await FS.se('classes',id,d);const a=CL(),i=a.findIndex(x=>x.id===id);if(i>=0)a[i]=c;else a.push(c);CA.s('classes',a)}
+async function rC(id){await FS.de('classes',id);CA.s('classes',CL().filter(c=>c.id!==id))}
+async function wA(rs){const b=db.batch();rs.forEach(r=>{const{id,...d}=r;Object.keys(d).forEach(k=>d[k]===undefined&&delete d[k]);b.set(db.collection('attendance').doc(id),d,{merge:true})});await b.commit();const ex=AT();rs.forEach(r=>{const i=ex.findIndex(e=>e.id===r.id);if(i>=0)ex[i]=r;else ex.push(r)});CA.s('attendance',ex)}
+async function wG(rs){const b=db.batch();rs.forEach(r=>{const{id,...d}=r;Object.keys(d).forEach(k=>d[k]===undefined&&delete d[k]);b.set(db.collection('grades').doc(id),d,{merge:true})});await b.commit();const ex=GR();rs.forEach(r=>{const i=ex.findIndex(e=>e.id===r.id);if(i>=0)ex[i]=r;else ex.push(r)});CA.s('grades',ex)}
+async function rSD(sid){await FS.dw('attendance','studentId','==',sid);await FS.dw('grades','studentId','==',sid);CA.s('attendance',AT().filter(a=>a.studentId!==sid));CA.s('grades',GR().filter(g=>g.studentId!==sid))}
 
-  async queryWhere(colName, field, op, value) {
-    try {
-      const snap = await db.collection(colName).where(field, op, value).get();
-      return snap.docs.map(d => ({id: d.id, ...d.data()}));
-    } catch(e) { return []; }
-  },
+const Au={user:null,login(u,p){const f=U().find(x=>x.username===u&&x.password===p);if(!f)return false;this.user=f;sessionStorage.setItem('sps_s',f.id);return true},logout(){this.user=null;sessionStorage.removeItem('sps_s')},restore(){const s=sessionStorage.getItem('sps_s');if(!s)return false;const f=U().find(x=>x.id===s);if(f){this.user=f;return true}return false}};
 
-  // ---- WRITE ----
-  async addDoc(colName, data) {
-    try {
-      const ref = await db.collection(colName).add(data);
-      return ref.id;
-    } catch(e) {
-      console.error(`Error adding to ${colName}:`, e);
-      toast('Failed to save data', 'error');
-      return null;
-    }
-  },
+function toa(m,t){const c={success:'bg-emerald-500',error:'bg-red-500',warning:'bg-amber-500'},ic={success:'fa-check-circle',error:'fa-times-circle',warning:'fa-exclamation-triangle'},el=document.createElement('div');el.className='tst flex items-center gap-3 px-5 py-3 rounded-xl '+(c[t||'success'])+' text-white shadow-lg text-sm font-medium';el.innerHTML='<i class="fas '+(ic[t||'success'])+'"></i><span>'+m+'</span>';$('tct').appendChild(el);setTimeout(()=>el.remove(),3100)}
+function sM(h){$('mb').innerHTML=h;$('mo').classList.remove('hd')}function hM(){$('mo').classList.add('hd')}
+function cA(m,cb){sM('<div class="p-6 text-center"><div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4"><i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i></div><h3 class="text-lg font-bold text-slate-800 mb-2">Confirm</h3><p class="text-slate-500 text-sm mb-6">'+m+'</p><div class="flex gap-3 justify-center"><button onclick="hM()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium">Cancel</button><button id="cb" class="px-5 py-2.5 rounded-lg bg-red-500 text-white text-sm font-medium">Confirm</button></div></div>');$('cb').onclick=()=>{hM();cb()}}
 
-  async setDoc(colName, docId, data) {
-    try {
-      await db.collection(colName).doc(docId).set(data, {merge: true});
-      return true;
-    } catch(e) {
-      console.error(`Error updating ${colName}:`, e);
-      toast('Failed to update data', 'error');
-      return false;
-    }
-  },
+let ch=[];function dc(){ch.forEach(c=>c.destroy());ch=[]}
 
-  async deleteDoc(colName, docId) {
-    try {
-      await db.collection(colName).doc(docId).delete();
-      return true;
-    } catch(e) {
-      toast('Failed to delete', 'error');
-      return false;
-    }
-  },
+const MN={admin:[{id:'ad',i:'fa-gauge-high',l:'Dashboard'},{id:'aS',i:'fa-user-graduate',l:'Students'},{id:'aT',i:'fa-chalkboard-teacher',l:'Teachers'},{id:'aC',i:'fa-school',l:'Classes'},{id:'aA',i:'fa-clipboard-check',l:'Attendance'},{id:'aG',i:'fa-chart-line',l:'Grades'},{id:'aTt',i:'fa-calendar-days',l:'Timetable'}],teacher:[{id:'tD',i:'fa-gauge-high',l:'Dashboard'},{id:'tSc',i:'fa-calendar-days',l:'My Schedule'},{id:'tAt',i:'fa-clipboard-check',l:'Mark Attendance'},{id:'tGr',i:'fa-pen-to-square',l:'Enter Grades'},{id:'tSt',i:'fa-users',l:'My Students'}],student:[{id:'sD',i:'fa-gauge-high',l:'Dashboard'},{id:'sP',i:'fa-user',l:'My Profile'},{id:'sAt',i:'fa-clipboard-check',l:'My Attendance'},{id:'sGr',i:'fa-chart-line',l:'My Grades'},{id:'sSc',i:'fa-calendar-days',l:'My Schedule'}]};
+let CV='';
+function bSB(){const items=MN[Au.user.role]||[];$('sn').innerHTML=items.map(i=>'<button class="ni w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium '+(CV===i.id?'ac':'')+'" data-v="'+i.id+'"><i class="fas '+i.i+' w-5 text-center flex-shrink-0"></i><span class="nt">'+i.l+'</span></button>').join('');$('sn').querySelectorAll('.ni').forEach(b=>{b.onclick=()=>nav(b.dataset.v)});$('sa').textContent=gN(Au.user.name);$('snm').textContent=Au.user.name;$('srl').textContent=Au.user.role;$('ta').textContent=gN(Au.user.name);$('td2').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+function tSB(){const sb=$('sidebar');sb.classList.toggle('cl');$('ci').classList.toggle('fa-angles-left');$('ci').classList.toggle('fa-angles-right');$('ma').style.marginLeft=sb.classList.contains('cl')?'72px':'260px'}
+function tMS(){$('sidebar').classList.toggle('mo');$('so').classList.toggle('sh')}
+function nav(v){CV=v;dc();bSB();$('sidebar').classList.remove('mo');$('so').classList.remove('sh');const t={ad:'Dashboard',aS:'Students',aT:'Teachers',aC:'Classes',aA:'Attendance',aG:'Grades',aTt:'Timetable',tD:'Dashboard',tSc:'My Schedule',tAt:'Mark Attendance',tGr:'Enter Grades',tSt:'My Students',sD:'Dashboard',sP:'My Profile',sAt:'My Attendance',sGr:'My Grades',sSc:'My Schedule'};$('pt').textContent=t[v]||'';if(VW[v])$('mc').innerHTML=VW[v]();if(HK[v])setTimeout(HK[v],50)}
+function sC(i,l,v,b,s){return '<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100"><div class="flex items-center justify-between"><div><p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">'+l+'</p><p class="text-2xl font-extrabold text-slate-800 mt-1">'+v+'</p>'+(s?'<p class="text-xs mt-1.5 text-slate-400">'+s+'</p>':'')+'</div><div class="w-12 h-12 rounded-xl '+b+' flex items-center justify-center"><i class="fas '+i+' text-white"></i></div></div></div>'}
+function av(n,sz){sz=sz||'w-9 h-9 text-sm';var c=['bg-teal-100 text-teal-700','bg-blue-100 text-blue-700','bg-amber-100 text-amber-700','bg-indigo-100 text-indigo-700','bg-rose-100 text-rose-700','bg-emerald-100 text-emerald-700'];return '<div class="'+sz+' rounded-full '+c[n.charCodeAt(0)%c.length]+' flex items-center justify-center font-bold flex-shrink-0">'+gN(n)+'</div>'}
+function cB(cid){var c=CL().find(x=>x.id===cid);return c?'<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-primary-50 text-primary-700">'+c.name+' - '+c.section+'</span>':'--'}
+function sB(sid){var s=SU().find(x=>x.id===sid);return s?'<span class="tc '+(SC[s.code]||'')+'">'+s.code+'</span>':'--'}
 
-  async deleteWhere(colName, field, op, value) {
-    try {
-      const snap = await db.collection(colName).where(field, op, value).get();
-      const batch = db.batch();
-      snap.docs.forEach(d => batch.delete(d.ref));
-      await batch.commit();
-      return snap.size;
-    } catch(e) { return 0; }
-  },
+const VW={},HK={};
 
-  // ---- CHECK INIT ----
-  async isInitialized() {
-    const meta = await this.getDoc('_meta', 'init');
-    return meta && meta.done === true;
-  },
+// ADMIN VIEWS
+VW['ad']=()=>{const s=U().filter(u=>u.role==='student'),t=U().filter(u=>u.role==='teacher'),c=CL(),a=AT(),avg=a.length?Math.round(a.filter(x=>x.status==='present').length/a.length*100):0;return '<div class="space-y-6"><div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">'+sC('fa-user-graduate','Students',s.length,'bg-teal-500',c.length+' classes')+sC('fa-chalkboard-teacher','Teachers',t.length,'bg-blue-500')+sC('fa-school','Classes',c.length,'bg-indigo-500')+sC('fa-clipboard-check','Attendance',avg+'%','bg-amber-500')+'</div><div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Students per Class</h3><canvas id="c1" height="220"></canvas></div><div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Attendance Trend</h3><canvas id="c2" height="220"></canvas></div></div><div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Recent</h3><div class="space-y-3">'+s.slice(-5).reverse().map(x=>'<div class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50">'+av(x.name)+'<div class="flex-1 min-w-0"><p class="text-sm font-semibold text-slate-800 truncate">'+x.name+'</p><p class="text-xs text-slate-400">Roll: '+x.rollNo+'</p></div>'+cB(x.classId)+'</div>').join('')+'</div></div></div>'};
+HK['ad']=()=>{const s=U().filter(u=>u.role==='student'),c=CL(),x=$('c1');if(x)ch.push(new Chart(x,{type:'doughnut',data:{labels:c.map(c=>c.name+' '+c.section),datasets:[{data:c.map(c=>s.filter(s=>s.classId===c.id).length),backgroundColor:['#0D9488','#3B82F6','#6366F1'],borderWidth:0,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true}}}}}));const a=AT(),d=[...new Set(a.map(x=>x.date))].sort().slice(-10),y=$('c2');if(y){const r=d.map(d=>{const da=a.filter(x=>x.date===d);return da.length?Math.round(da.filter(x=>x.status==='present').length/da.length*100):0});ch.push(new Chart(y,{type:'bar',data:{labels:d.map(d=>new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short'})),datasets:[{data:r,backgroundColor:'#0D9488',borderRadius:6,maxBarThickness:32}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#F1F5F9'}},x:{grid:{display:false}}},plugins:{legend:{display:false}}}}))}};
 
-  async markInitialized() {
-    await db.collection('_meta').doc('init').set({done: true});
+VW['aS']=()=>{const s=U().filter(u=>u.role==='student');return '<div class="space-y-4"><div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between"><div class="relative w-full sm:w-72"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i><input id="ss" type="text" placeholder="Search..." class="w-full pl-9 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm" oninput="fSt()"></div><button onclick="sf()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700"><i class="fas fa-plus"></i>Add</button></div><div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Class</th><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Parent</th><th class="px-5 py-3 text-right text-[11px] font-semibold text-slate-500 uppercase">Actions</th></tr></thead><tbody id="stb" class="divide-y divide-slate-50">'+rSR(s)+'</tbody></table></div></div>'};
+function rSR(s){return s.map(x=>'<tr class="dr"><td class="px-5 py-3"><div class="flex items-center gap-3">'+av(x.name)+'<span class="text-sm font-medium text-slate-800">'+x.name+'</span></div></td><td class="px-5 py-3 text-sm text-slate-600">'+x.rollNo+'</td><td class="px-5 py-3">'+cB(x.classId)+'</td><td class="px-5 py-3 text-sm text-slate-600">'+(x.parentName||'--')+'</td><td class="px-5 py-3 text-right"><button onclick="sf(\''+x.id+'\')" class="w-8 h-8 rounded hover:bg-blue-50 text-slate-400 hover:text-blue-600"><i class="fas fa-pen text-xs"></i></button><button onclick="dSt(\''+x.id+'\')" class="w-8 h-8 rounded hover:bg-red-50 text-slate-400 hover:text-red-500"><i class="fas fa-trash text-xs"></i></button></td></tr>').join('')}
+function fSt(){const q=$('ss').value.toLowerCase();$('stb').innerHTML=rSR(U().filter(u=>u.role==='student').filter(s=>s.name.toLowerCase().includes(q)||String(s.rollNo).includes(q)))}
+function sf(eid){const cl=CL();let s=eid?U().find(u=>u.id===eid):null;sM('<div class="p-6"><h3 class="text-lg font-bold text-slate-800 mb-5">'+(s?'Edit':'Add')+' Student</h3><form class="space-y-4" onsubmit="sSt(event,\''+(eid||'')+'\')"><div class="grid grid-cols-2 gap-4"><div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Name</label><input name="name" value="'+(s?.name||'')+'" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select name="classId" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm">'+cl.map(c=>'<option value="'+c.id+'" '+(s?.classId===c.id?'selected':'')+'>'+c.name+' - '+c.section+'</option>').join('')+'</select></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Roll No</label><input name="rollNo" type="number" value="'+(s?.rollNo||'')+'" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">DOB</label><input name="dob" type="date" value="'+(s?.dob||'')+'" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Gender</label><select name="gender" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"><option value="Male" '+(s?.gender==='Male'?'selected':'')+'>Male</option><option value="Female" '+(s?.gender==='Female'?'selected':'')+'>Female</option></select></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Parent</label><input name="parentName" value="'+(s?.parentName||'')+'" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Phone</label><input name="parentPhone" value="'+(s?.parentPhone||'')+'" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>'+(!s?'<div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Username</label><input name="username" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>':'')+'</div><div class="flex gap-3 justify-end pt-2"><button type="button" onclick="hM()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium">Cancel</button><button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700">'+(s?'Update':'Add')+'</button></div></form></div>')}
+async function sSt(e,eid){e.preventDefault();const fd=new FormData(e.target),d=Object.fromEntries(fd);if(eid){const a=U(),i=a.findIndex(u=>u.id===eid);if(i>=0){Object.assign(a[i],d);a[i].rollNo=parseInt(d.rollNo);await wU(a[i])}toa('Updated')}else{await wU({id:gI(),username:d.username,password:'student123',role:'student',name:d.name,classId:d.classId,rollNo:parseInt(d.rollNo),dob:d.dob,gender:d.gender,parentName:d.parentName,parentPhone:d.parentPhone});toa('Added')}hM();nav('aS')}
+async function dSt(id){cA('Delete this student?',async()=>{await rU(id);await rSD(id);toa('Deleted','warning');nav('aS')})}
+
+VW['aT']=()=>{const t=U().filter(u=>u.role==='teacher');return '<div class="space-y-4"><div class="flex justify-end"><button onclick="tf()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700"><i class="fas fa-plus"></i>Add</button></div><div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">'+t.map(t=>'<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100"><div class="flex items-start gap-4">'+av(t.name,'w-12 h-12 text-base')+'<div class="flex-1 min-w-0"><h4 class="text-sm font-bold text-slate-800 truncate">'+t.name+'</h4><p class="text-xs text-slate-400 mt-0.5">'+(t.qualification||'--')+'</p><div class="flex flex-wrap gap-1.5 mt-3">'+(t.subjects||[]).map(s=>sB(s)).join('')+'</div><div class="flex flex-wrap gap-1.5 mt-2">'+(t.classIds||[]).map(c=>cB(c)).join('')+'</div><div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-end gap-1"><button onclick="tf(\''+t.id+'\')" class="w-7 h-7 rounded hover:bg-blue-50 text-slate-400 hover:text-blue-600"><i class="fas fa-pen text-[10px]"></i></button><button onclick="dTc(\''+t.id+'\')" class="w-7 h-7 rounded hover:bg-red-50 text-slate-400 hover:text-red-500"><i class="fas fa-trash text-[10px]"></i></button></div></div></div></div>').join('')+'</div></div>'};
+function tf(eid){const su=SU(),cl=CL();let t=eid?U().find(u=>u.id===eid):null;sM('<div class="p-6"><h3 class="text-lg font-bold text-slate-800 mb-5">'+(t?'Edit':'Add')+' Teacher</h3><form class="space-y-4" onsubmit="sTc(event,\''+(eid||'')+'\')"><div class="grid grid-cols-2 gap-4"><div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Name</label><input name="name" value="'+(t?.name||'')+'" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>'+(!t?'<div class="col-span-2 grid grid-cols-2 gap-4"><div><label class="block text-xs font-semibold text-slate-600 mb-1">Username</label><input name="username" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Password</label><input name="password" value="teacher123" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div></div>':'')+'<div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Subjects</label><div class="flex flex-wrap gap-2">'+su.map(s=>'<label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 cursor-pointer text-sm '+((t?.subjects||[]).includes(s.id)?'bg-primary-50 border-primary-300':'')+'"><input type="checkbox" name="subjects" value="'+s.id+'" '+((t?.subjects||[]).includes(s.id)?'checked':'')+' class="accent-primary-600"><span>'+s.name+'</span></label>').join('')+'</div></div><div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Classes</label><div class="flex flex-wrap gap-2">'+cl.map(c=>'<label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 cursor-pointer text-sm '+((t?.classIds||[]).includes(c.id)?'bg-primary-50 border-primary-300':'')+'"><input type="checkbox" name="classIds" value="'+c.id+'" '+((t?.classIds||[]).includes(c.id)?'checked':'')+' class="accent-primary-600"><span>'+c.name+' - '+c.section+'</span></label>').join('')+'</div></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Phone</label><input name="phone" value="'+(t?.phone||'')+'" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Qualification</label><input name="qualification" value="'+(t?.qualification||'')+'" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div></div><div class="flex gap-3 justify-end pt-2"><button type="button" onclick="hM()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium">Cancel</button><button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700">'+(t?'Update':'Add')+'</button></div></form></div>')}
+async function sTc(e,eid){e.preventDefault();const fd=new FormData(e.target),d={name:fd.get('name'),phone:fd.get('phone'),qualification:fd.get('qualification'),subjects:fd.getAll('subjects'),classIds:fd.getAll('classIds')};if(eid){const a=U(),i=a.findIndex(u=>u.id===eid);if(i>=0){Object.assign(a[i],d);await wU(a[i])}toa('Updated')}else{await wU({id:gI(),username:fd.get('username'),password:fd.get('password'),role:'teacher',...d});toa('Added')}hM();nav('aT')}
+async function dTc(id){cA('Delete?',async()=>{await rU(id);toa('Deleted','warning');nav('aT')})}
+
+VW['aC']=()=>{const cl=CL(),st=U().filter(u=>u.role==='student');return '<div class="space-y-4"><div class="flex justify-end"><button onclick="cf()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700"><i class="fas fa-plus"></i>Add</button></div><div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">'+cl.map(c=>{const tc=U().find(u=>u.id===c.classTeacherId),cnt=st.filter(s=>s.classId===c.id).length;return '<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100"><div class="flex items-center justify-between mb-4"><div><h4 class="text-base font-bold text-slate-800">'+c.name+'</h4><p class="text-xs text-slate-400">Section: '+c.section+'</p></div><div class="flex gap-1"><button onclick="cf(\''+c.id+'\')" class="w-7 h-7 rounded hover:bg-blue-50 text-slate-400 hover:text-blue-600"><i class="fas fa-pen text-[10px]"></i></button><button onclick="dCl(\''+c.id+'\')" class="w-7 h-7 rounded hover:bg-red-50 text-slate-400 hover:text-red-500"><i class="fas fa-trash text-[10px]"></i></button></div></div><div class="flex items-center gap-3 text-sm text-slate-600"><div class="flex-1"><p class="text-xs text-slate-400 mb-1">Teacher</p><p class="font-medium">'+(tc?tc.name:'Not Assigned')+'</p></div><div class="text-right"><p class="text-xs text-slate-400 mb-1">Students</p><p class="text-2xl font-extrabold text-primary-600">'+cnt+'</p></div></div></div>'}).join('')+'</div></div>'};
+function cf(eid){const cl=CL(),tc=U().filter(u=>u.role==='teacher');let c=eid?cl.find(x=>x.id===eid):null;sM('<div class="p-6"><h3 class="text-lg font-bold text-slate-800 mb-5">'+(c?'Edit':'Add')+' Class</h3><form onsubmit="sCl(event,\''+(eid||'')+'\')" class="space-y-4"><div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-semibold text-slate-600 mb-1">Name</label><input name="name" value="'+(c?.name||'')+'" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Section</label><input name="section" value="'+(c?.section||'')+'" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div><div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Teacher</label><select name="classTeacherId" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"><option value="">-- None --</option>'+tc.map(t=>'<option value="'+t.id+'" '+(c?.classTeacherId===t.id?'selected':'')+'>'+t.name+'</option>').join('')+'</select></div></div><div class="flex gap-3 justify-end pt-2"><button type="button" onclick="hM()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium">Cancel</button><button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700">'+(c?'Update':'Add')+'</button></div></form></div>')}
+async function sCl(e,eid){e.preventDefault();const fd=new FormData(e.target),d=Object.fromEntries(fd);if(eid){const a=CL(),i=a.findIndex(c=>c.id===eid);if(i>=0){Object.assign(a[i],d);await wC(a[i])}toa('Updated')}else{await wC({id:gI(),...d});toa('Added')}hM();nav('aC')}
+async function dCl(id){cA('Delete?',async()=>{await rC(id);toa('Deleted','warning');nav('aC')})}
+
+VW['aA']=()=>{const cl=CL(),at=AT(),dates=[...new Set(at.map(a=>a.date))].sort().reverse().slice(0,10);return '<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end"><div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="ac" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="lAA()">'+cl.map(c=>'<option value="'+c.id+'">'+c.name+' - '+c.section+'</option>').join('')+'</select></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Date</label><input id="ad2" type="date" value="'+(dates[0]||tdy())+'" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="lAA()"></div></div><div id="aat" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>'};
+HK['aA']=()=>lAA();
+function lAA(){const cid=$('ac')?.value,dt=$('ad2')?.value;if(!cid)return;const at=AT(),st=U().filter(u=>u.role==='student'&&u.classId===cid).sort((a,b)=>a.rollNo-b.rollNo),da=at.filter(a=>a.classId===cid&&a.date===dt),sn=s=>{const c={present:'bg-emerald-100 text-emerald-700',absent:'bg-red-100 text-red-700',late:'bg-amber-100 text-amber-700'};return '<span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold '+(c[s]||'bg-slate-100 text-slate-600')+' capitalize">'+(s||'Not Marked')+'</span>'};$('aat').innerHTML='<table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Status</th></tr></thead><tbody class="divide-y divide-slate-50">'+st.map(s=>'<tr class="dr"><td class="px-5 py-3 text-sm text-slate-500">'+s.rollNo+'</td><td class="px-5 py-3"><div class="flex items-center gap-3">'+av(s.name)+'<span class="text-sm font-medium text-slate-800">'+s.name+'</span></div></td><td class="px-5 py-3">'+sn(da.find(a=>a.studentId===s.id)?.status)+'</td></tr>').join('')+'</tbody></table>'}
+
+VW['aG']=()=>{const cl=CL();return '<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end"><div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="gc" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="lAG()">'+cl.map(c=>'<option value="'+c.id+'">'+c.name+' - '+c.section+'</option>').join('')+'</select></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Exam</label><select id="ge" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="lAG()"><option>Mid-Term</option><option>Unit Test 1</option></select></div></div><div id="agt" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>'};
+HK['aG']=()=>lAG();
+function lAG(){const cid=$('gc')?.value,ex=$('ge')?.value;if(!cid)return;const gr=GR(),su=SU(),st=U().filter(u=>u.role==='student'&&u.classId===cid).sort((a,b)=>a.rollNo-b.rollNo);$('agt').innerHTML='<table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>'+su.map(s=>'<th class="px-4 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">'+s.code+'</th>').join('')+'<th class="px-4 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">%</th></tr></thead><tbody class="divide-y divide-slate-50">'+st.map(s=>{let t=0,mx=0;const cells=su.map(sub=>{const g=gr.find(x=>x.studentId===s.id&&x.subjectId===sub.id&&x.examType===ex),m=g?.marks||0,M=g?.maxMarks||100;t+=m;mx+=M;const p=M?Math.round(m/M*100):0;return '<td class="px-4 py-3 text-center text-sm font-medium '+(p>=80?'text-emerald-600':p>=60?'text-amber-600':'text-red-500')+'">'+(g?m:'--')+'</td>'}).join('');const p=mx?Math.round(t/mx*100):0;return '<tr class="dr"><td class="px-4 py-3"><div class="flex items-center gap-2">'+av(s.name,'w-7 h-7 text-[10px]')+'<span class="text-sm font-medium text-slate-800">'+s.name+'</span></div></td>'+cells+'<td class="px-4 py-3 text-center text-sm font-bold '+(p>=60?'text-primary-600':'text-red-500')+'">'+p+'%</td></tr>'}).join('')+'</tbody></table>'}
+
+VW['aTt']=()=>{const cl=CL();return '<div class="space-y-4"><div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="ttc" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="lTT()">'+cl.map(c=>'<option value="'+c.id+'">'+c.name+' - '+c.section+'</option>').join('')+'</select></div><div id="ttg" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>'};
+HK['aTt']=()=>lTT();
+function lTT(){const cid=$('ttc')?.value;if(!cid)return;const tt=TT(),su=SU(),days=['Mon','Tue','Wed','Thu','Fri'];let h='<table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase w-20">Day</th>';for(let p=1;p<=6;p++)h+='<th class="px-3 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">P'+p+'</th>';h+='</tr></thead><tbody class="divide-y divide-slate-50">';days.forEach(d=>{h+='<tr class="dr"><td class="px-4 py-3 text-sm font-semibold text-slate-700">'+d+'</td>';for(let p=1;p<=6;p++){const e=tt.find(t=>t.classId===cid&&t.day===d&&t.period===p),s=e?su.find(x=>x.id===e.subjectId):null;h+='<td class="px-2 py-2 text-center">'+(s?'<div class="tc '+(SC[s.code]||'')+'">'+s.code+'</div>':'--')+'</td>'}h+='</tr>'});h+='</tbody></table>';$('ttg').innerHTML=h}
+
+// TEACHER VIEWS
+VW['tD']=()=>{const u=Au.user,cl=CL(),su=SU(),mc=(u.classIds||[]).map(id=>cl.find(c=>c.id===id)).filter(Boolean),ms=U().filter(s=>s.role==='student'&&(u.classIds||[]).includes(s.classId)),tt=TT(),dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],tn=dn[new Date().getDay()],tp=tt.filter(t=>(u.classIds||[]).includes(t.classId)&&t.day===tn).sort((a,b)=>a.period-b.period),mg=GR().filter(g=>(u.subjects||[]).includes(g.subjectId)&&(u.classIds||[]).includes(g.classId)&&g.examType==='Mid-Term'),ap=mg.length?Math.round(mg.reduce((s,g)=>s+(g.marks/g.maxMarks*100),0)/mg.length):0;return '<div class="space-y-6"><div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">'+sC('fa-school','Classes',mc.length,'bg-teal-500')+sC('fa-users','Students',ms.length,'bg-blue-500')+sC('fa-clock','Today',tp.length,'bg-indigo-500')+sC('fa-chart-simple','Avg Perf',ap+'%','bg-amber-500')+'</div><div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Performance</h3><canvas id="c3" height="220"></canvas></div><div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Today - '+tn+'</h3><div class="space-y-3">'+tp.map(t=>{const s=su.find(x=>x.id===t.subjectId),c=cl.find(x=>x.id===t.classId);return '<div class="flex items-center gap-4 p-3 rounded-lg bg-slate-50"><div class="text-center w-12"><p class="text-lg font-extrabold text-primary-600">P'+t.period+'</p></div><div class="flex-1"><p class="text-sm font-semibold text-slate-800">'+(s?.name||'--')+'</p><p class="text-xs text-slate-400">'+(c?.name||'')+' - '+(c?.section||'')+'</p></div>'+(s?'<span class="tc '+(SC[s.code]||'')+'">'+s.code+'</span>':'')+'</div>'}).join('')+'</div></div></div></div>'};
+HK['tD']=()=>{const u=Au.user,cl=CL(),gr=GR(),ctx=$('c3');if(!ctx)return;const d=(u.classIds||[]).map(cid=>{const c=cl.find(x=>x.id===cid),cg=gr.filter(g=>g.classId===cid&&(u.subjects||[]).includes(g.subjectId)&&g.examType==='Mid-Term');return{label:c?c.name+' '+c.section:'',value:cg.length?Math.round(cg.reduce((s,g)=>s+(g.marks/g.maxMarks*100),0)/cg.length):0}});ch.push(new Chart(ctx,{type:'bar',data:{labels:d.map(x=>x.label),datasets:[{data:d.map(x=>x.value),backgroundColor:'#0D9488',borderRadius:6,maxBarThickness:48}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#F1F5F9'}},x:{grid:{display:false}}},plugins:{legend:{display:false}}}}))};
+
+VW['tSc']=()=>{const u=Au.user,tt=TT(),su=SU(),cl=CL(),days=['Mon','Tue','Wed','Thu','Fri'],mt=tt.filter(t=>(u.classIds||[]).includes(t.classId));let h='<table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase w-20">Day</th>';for(let p=1;p<=6;p++)h+='<th class="px-3 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">P'+p+'</th>';h+='</tr></thead><tbody class="divide-y divide-slate-50">';days.forEach(d=>{h+='<tr class="dr"><td class="px-4 py-3 text-sm font-semibold text-slate-700">'+d+'</td>';for(let p=1;p<=6;p++){const e=mt.find(t=>t.day===d&&t.period===p),s=e?su.find(x=>x.id===e.subjectId):null,c=e?cl.find(x=>x.id===e.classId):null;h+='<td class="px-2 py-2 text-center">'+(s?'<div class="tc '+(SC[s.code]||'')+'">'+s.code+'<br><span class="font-normal opacity-75">'+(c?.name?.replace('Class ','')||'')+'</span></div>':'--')+'</td>'}h+='</tr>'});return '<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><div class="overflow-x-auto">'+h+'</tbody></table></div></div>'};
+
+VW['tAt']=()=>{const u=Au.user,cl=CL();return '<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end"><div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="tac" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="lTA()">'+(u.classIds||[]).map(cid=>{const c=cl.find(x=>x.id===cid);return c?'<option value="'+c.id+'">'+c.name+' - '+c.section+'</option>':''}).join('')+'</select></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Date</label><input id="tad" type="date" value="'+tdy()+'" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="lTA()"></div></div><div id="taf" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>'};
+HK['tAt']=()=>lTA();
+function lTA(){const cid=$('tac')?.value,dt=$('tad')?.value;if(!cid)return;const at=AT(),st=U().filter(u=>u.role==='student'&&u.classId===cid).sort((a,b)=>a.rollNo-b.rollNo),ex=at.filter(a=>a.classId===cid&&a.date===dt);let h='<table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th><th class="px-5 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">Present</th><th class="px-5 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">Absent</th><th class="px-5 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">Late</th></tr></thead><tbody class="divide-y divide-slate-50">';st.forEach(s=>{const r=ex.find(a=>a.studentId===s.id),st2=r?.status||'present';h+='<tr class="dr"><td class="px-5 py-3 text-sm text-slate-500">'+s.rollNo+'</td><td class="px-5 py-3"><div class="flex items-center gap-3">'+av(s.name)+'<span class="text-sm font-medium text-slate-800">'+s.name+'</span></div></td><td class="px-5 py-3 text-center"><input type="radio" name="a-'+s.id+'" value="present" '+(st2==='present'?'checked':'')+' class="ar"></td><td class="px-5 py-3 text-center"><input type="radio" name="a-'+s.id+'" value="absent" '+(st2==='absent'?'checked':'')+' class="ar ab"></td><td class="px-5 py-3 text-center"><input type="radio" name="a-'+s.id+'" value="late" '+(st2==='late'?'checked':'')+' class="ar la"></td></tr>'});h+='</tbody></table><div class="p-4 border-t border-slate-100 flex justify-end"><button onclick="sTA()" class="px-6 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700"><i class="fas fa-save mr-2"></i>Save</button></div>';$('taf').innerHTML=h}
+async function sTA(){const cid=$('tac')?.value,dt=$('tad')?.value;if(!cid||!dt)return;const st=U().filter(u=>u.role==='student'&&u.classId===cid),recs=st.map(s=>{const v=document.querySelector('input[name="a-'+s.id+'"]:checked')?.value||'present',ex=AT().find(a=>a.classId===cid&&a.date===dt&&a.studentId===s.id);return ex?{...ex,status:v}:{id:gI(),date:dt,classId:cid,studentId:s.id,status:v}});await wA(recs);toa('Saved');lTA()}
+
+VW['tGr']=()=>{const u=Au.user,cl=CL();return '<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end"><div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="tgc" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="lTG()">'+(u.classIds||[]).map(cid=>{const c=cl.find(x=>x.id===cid);return c?'<option value="'+c.id+'">'+c.name+' - '+c.section+'</option>':''}).join('')+'</select></div><div><label class="block text-xs font-semibold text-slate-600 mb-1">Exam</label><select id="tge" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="lTG()"><option>Mid-Term</option><option>Unit Test 1</option></select></div></div><div id="tgf" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>'};
+HK['tGr']=()=>lTG();
+function lTG(){const cid=$('tgc')?.value,ex=$('tge')?.value;if(!cid)return;const u=Au.user,su=SU().filter(s=>(u.subjects||[]).includes(s.id)),st=U().filter(s=>s.role==='student'&&s.classId===cid).sort((a,b)=>a.rollNo-b.rollNo),mx=ex?.includes('Unit')?25:100;let h='<table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>'+su.map(s=>'<th class="px-4 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">'+s.code+' ('+mx+')</th>').join('')+'</tr></thead><tbody class="divide-y divide-slate-50">';st.forEach(s=>{h+='<tr class="dr"><td class="px-4 py-3"><div class="flex items-center gap-2">'+av(s.name,'w-7 h-7 text-[10px]')+'<span class="text-sm font-medium text-slate-800">'+s.name+'</span></div></td>';su.forEach(sub=>{const g=GR().find(x=>x.studentId===s.id&&x.subjectId===sub.id&&x.examType===ex);h+='<td class="px-4 py-2 text-center"><input type="number" min="0" max="'+mx+'" value="'+(g?.marks||'')+'" data-s="'+s.id+'" data-sub="'+sub.id+'" class="w-16 px-2 py-1.5 rounded border border-slate-200 text-sm text-center font-medium"></td>'});h+='</tr>'});h+='</tbody></table><div class="p-4 border-t border-slate-100 flex justify-end"><button onclick="sTG(\''+ex+'\','+mx+')" class="px-6 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700"><i class="fas fa-save mr-2"></i>Save</button></div>';$('tgf').innerHTML=h}
+async function sTG(exam,maxM){const cid=$('tgc')?.value;if(!cid)return;const inputs=$('tgf').querySelectorAll('input[type="number"]'),recs=[];inputs.forEach(inp=>{const sid=inp.dataset.s,subId=inp.dataset.sub,m=parseInt(inp.value);if(isNaN(m))return;const ex=GR().find(x=>x.studentId===sid&&x.subjectId===subId&&x.examType===exam&&x.classId===cid);if(ex)recs.push({...ex,marks:m});else recs.push({id:gI(),studentId:sid,classId:cid,subjectId:subId,examType:exam,marks:m,maxMarks:maxM})});if(recs.length)await wG(recs);toa('Saved')}
+
+VW['tSt']=()=>{const u=Au.user,cl=CL(),mc=u.classIds||[];return '<div class="space-y-4"><div class="flex gap-2 flex-wrap">'+mc.map((cid,i)=>{const c=cl.find(x=>x.id===cid);return c?'<button onclick="tSL(\''+cid+'\')" class="ttb px-4 py-2 rounded-lg text-sm font-semibold '+(i===0?'bg-primary-600 text-white':'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50')+'" data-cid="'+cid+'">'+c.name+' - '+c.section+'</button>':''}).join('')+'</div><div id="tsl" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>'};
+HK['tSt']=()=>{const cid=(Au.user.classIds||[])[0];if(cid)tSL(cid)};
+function tSL(cid){document.querySelectorAll('.ttb').forEach(b=>{b.className=b.dataset.cid===cid?'ttb px-4 py-2 rounded-lg text-sm font-semibold bg-primary-600 text-white':'ttb px-4 py-2 rounded-lg text-sm font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'});const st=U().filter(u=>u.role==='student'&&u.classId===cid).sort((a,b)=>a.rollNo-b.rollNo);$('tsl').innerHTML='<table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Name</th><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Gender</th><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Parent</th><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Phone</th></tr></thead><tbody class="divide-y divide-slate-50">'+st.map(s=>'<tr class="dr"><td class="px-5 py-3 text-sm text-slate-500">'+s.rollNo+'</td><td class="px-5 py-3"><div class="flex items-center gap-3">'+av(s.name)+'<span class="text-sm font-medium text-slate-800">'+s.name+'</span></div></td><td class="px-5 py-3 text-sm text-slate-600">'+(s.gender||'--')+'</td><td class="px-5 py-3 text-sm text-slate-600">'+(s.parentName||'--')+'</td><td class="px-5 py-3 text-sm text-slate-600">'+(s.parentPhone||'--')+'</td></tr>').join('')+'</tbody></table>'}
+
+// STUDENT VIEWS
+VW['sD']=()=>{const u=Au.user,cl=CL(),su=SU(),cls=cl.find(c=>c.id===u.classId),at=AT().filter(a=>a.studentId===u.id),pr=at.filter(a=>a.status==='present').length,ap=at.length?Math.round(pr/at.length*100):0,gr=GR().filter(g=>g.studentId===u.id&&g.examType==='Mid-Term'),tm=gr.reduce((s,g)=>s+g.marks,0),tx=gr.reduce((s,g)=>s+g.maxMarks,0),op=tx?Math.round(tm/tx*100):0,dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],tn=dn[new Date().getDay()],tt=TT().filter(t=>t.classId===u.classId&&t.day===tn).sort((a,b)=>a.period-b.period);return '<div class="space-y-6"><div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">'+sC('fa-school','Class',cls?cls.name+' '+cls.section:'--','bg-teal-500','Roll: '+u.rollNo)+sC('fa-clipboard-check','Attendance',ap+'%','bg-blue-500',pr+'/'+at.length)+sC('fa-chart-line','Overall',op+'%','bg-indigo-500')+sC('fa-star','Grade',gG(tm,tx),'bg-amber-500')+'</div><div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Performance</h3><canvas id="c4" height="220"></canvas></div><div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Today - '+tn+'</h3><div class="space-y-3">'+tt.map(t=>{const s=su.find(x=>x.id===t.subjectId);return '<div class="flex items-center gap-4 p-3 rounded-lg bg-slate-50"><div class="text-center w-12"><p class="text-lg font-extrabold text-primary-600">P'+t.period+'</p></div><div class="flex-1"><p class="text-sm font-semibold text-slate-800">'+(s?.name||'--')+'</p></div>'+(s?'<span class="tc '+(SC[s.code]||'')+'">'+s.code+'</span>':'')+'</div>'}).join('')+'</div></div></div></div>'};
+HK['sD']=()=>{const u=Au.user,su=SU(),gr=GR(),ctx=$('c4');if(!ctx)return;const mg=gr.filter(g=>g.studentId===u.id&&g.examType==='Mid-Term'),d=su.map(sub=>{const g=mg.find(x=>x.subjectId===sub.id);return g?Math.round(g.marks/g.maxMarks*100):0});ch.push(new Chart(ctx,{type:'radar',data:{labels:su.map(s=>s.code),datasets:[{data:d,backgroundColor:'rgba(13,148,136,0.15)',borderColor:'#0D9488',borderWidth:2,pointBackgroundColor:'#0D9488',pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:5}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{beginAtZero:true,max:100,ticks:{stepSize:20,font:{size:10}},grid:{color:'#E2E8F0'},pointLabels:{font:{size:12,weight:'600'}}}},plugins:{legend:{display:false}}}}))};
+
+VW['sP']=()=>{const u=Au.user,cls=CL().find(c=>c.id===u.classId),f=[['Name',u.name],['Username',u.username],['Roll',u.rollNo],['Class',cls?cls.name+' '+cls.section:'--'],['DOB',u.dob?fD(u.dob):'--'],['Gender',u.gender||'--'],['Parent',u.parentName||'--'],['Phone',u.parentPhone||'--'],['Address',u.address||'--']];return '<div class="max-w-2xl mx-auto"><div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><div class="bg-gradient-to-r from-primary-600 to-primary-700 px-8 py-10 text-center"><div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold backdrop-blur-sm">'+gN(u.name)+'</div><h3 class="text-xl font-bold text-white">'+u.name+'</h3><p class="text-primary-100 text-sm mt-1">'+(cls?cls.name+' - '+cls.section:'')+' | Roll: '+u.rollNo+'</p></div><div class="p-6">'+f.map(([l,v])=>'<div class="flex items-center justify-between py-3 border-b border-slate-100 last:border-0"><span class="text-sm text-slate-500">'+l+'</span><span class="text-sm font-semibold text-slate-800 text-right max-w-[60%]">'+v+'</span></div>').join('')+'</div></div></div>'};
+
+VW['sAt']=()=>{const u=Au.user,at=AT().filter(a=>a.studentId===u.id).sort((a,b)=>b.date.localeCompare(a.date)),pr=at.filter(a=>a.status==='present').length,ab=at.filter(a=>a.status==='absent').length,lt=at.filter(a=>a.status==='late').length,pct=at.length?Math.round(pr/at.length*100):0,bc=pct>=80?'bg-emerald-500':pct>=60?'bg-amber-500':'bg-red-500';return '<div class="space-y-6"><div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><div class="flex items-center justify-between mb-4"><h3 class="text-sm font-bold text-slate-800">Overall</h3><span class="text-2xl font-extrabold '+(pct>=80?'text-emerald-600':pct>=60?'text-amber-600':'text-red-500')+'">'+pct+'%</span></div><div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden mb-4"><div class="'+bc+' h-full rounded-full" style="width:'+pct+'%"></div></div><div class="grid grid-cols-3 gap-4 text-center"><div class="p-3 rounded-lg bg-emerald-50"><p class="text-lg font-bold text-emerald-600">'+pr+'</p><p class="text-xs text-emerald-600">Present</p></div><div class="p-3 rounded-lg bg-red-50"><p class="text-lg font-bold text-red-500">'+ab+'</p><p class="text-xs text-red-500">Absent</p></div><div class="p-3 rounded-lg bg-amber-50"><p class="text-lg font-bold text-amber-600">'+lt+'</p><p class="text-xs text-amber-600">Late</p></div></div></div><div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><div class="px-6 py-4 border-b border-slate-100"><h3 class="text-sm font-bold text-slate-800">Records</h3></div><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Date</th><th class="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Day</th><th class="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Status</th></tr></thead><tbody class="divide-y divide-slate-50">'+at.slice(0,30).map(a=>{const dt=new Date(a.date),day=dt.toLocaleDateString('en-IN',{weekday:'short'}),sn2={present:'bg-emerald-100 text-emerald-700',absent:'bg-red-100 text-red-700',late:'bg-amber-100 text-amber-700'};return '<tr class="dr"><td class="px-6 py-3 text-sm text-slate-700">'+fD(a.date)+'</td><td class="px-6 py-3 text-sm text-slate-500">'+day+'</td><td class="px-6 py-3"><span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold '+(sn2[a.status]||'')+' capitalize">'+a.status+'</span></td></tr>'}).join('')+'</tbody></table></div></div>'};
+
+VW['sGr']=()=>'<div class="space-y-4"><div><label class="block text-xs font-semibold text-slate-600 mb-1">Exam</label><select id="sge" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="lSG()"><option>Mid-Term</option><option>Unit Test 1</option></select></div><div id="sgr" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>';
+HK['sGr']=()=>lSG();
+function lSG(){const exam=$('sge')?.value,u=Au.user,su=SU(),gr=GR(),mg=gr.filter(g=>g.studentId===u.id&&g.examType===exam);let tm=0,tx=0;let rows=su.map(sub=>{const g=mg.find(x=>x.subjectId===sub.id),m=g?.marks||0,mx=g?.maxMarks||100;tm+=m;tx+=mx;const p=mx?Math.round(m/mx*100):0,rm=p>=80?'Excellent':p>=60?'Good':p>=50?'Average':'Needs Improvement',cl2=p>=80?'text-emerald-600':p>=60?'text-amber-600':'text-red-500';return '<tr class="dr"><td class="px-5 py-3"><div class="flex items-center gap-3">'+(sub?'<span class="tc '+(SC[sub.code]||'')+'">'+sub.code+'</span>':'')+'<span class="text-sm font-medium text-slate-800">'+(sub?.name||'')+'</span></div></td><td class="px-5 py-3 text-center text-sm font-bold text-slate-800">'+(g?m:'--')+'</td><td class="px-5 py-3 text-center text-sm text-slate-500">'+(g?mx:'--')+'</td><td class="px-5 py-3 text-center"><span class="text-sm font-bold '+cl2+'">'+(g?gG(m,mx):'--')+'</span></td><td class="px-5 py-3 text-center text-sm text-slate-500">'+(g?rm:'--')+'</td></tr>'}).join('');const p=tx?Math.round(tm/tx*100):0;$('sgr').innerHTML='<div class="p-6 border-b border-slate-100 text-center"><h3 class="text-lg font-bold text-slate-800">'+exam+' Report</h3><p class="text-sm text-slate-400 mt-1">'+u.name+' | Roll: '+u.rollNo+'</p></div><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase">Subject</th><th class="px-5 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">Marks</th><th class="px-5 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">Max</th><th class="px-5 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">Grade</th><th class="px-5 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">Remarks</th></tr></thead><tbody class="divide-y divide-slate-50">'+rows+'</tbody><tfoot><tr class="bg-slate-50 border-t-2 border-slate-200"><td class="px-5 py-4 text-sm font-bold text-slate-800">Total</td><td class="px-5 py-4 text-center text-sm font-bold text-slate-800">'+tm+'</td><td class="px-5 py-4 text-center text-sm font-bold text-slate-800">'+tx+'</td><td class="px-5 py-4 text-center text-sm font-bold '+(p>=60?'text-primary-600':'text-red-500')+'">'+p+'%</td><td class="px-5 py-4 text-center"><span class="text-xs font-semibold px-3 py-1 rounded-full '+(p>=80?'bg-emerald-100 text-emerald-700':p>=60?'bg-amber-100 text-amber-700':'bg-red-100 text-red-700')+'">'+gG(tm,tx)+'</span></td></tr></tfoot></table>'}
+
+VW['sSc']=()=>{const u=Au.user,tt=TT(),su=SU(),days=['Mon','Tue','Wed','Thu','Fri'],mt=tt.filter(t=>t.classId===u.classId);let h='<table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase w-20">Day</th>';for(let p=1;p<=6;p++)h+='<th class="px-3 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">P'+p+'</th>';h+='</tr></thead><tbody class="divide-y divide-slate-50">';days.forEach(d=>{h+='<tr class="dr"><td class="px-4 py-3 text-sm font-semibold text-slate-700">'+d+'</td>';for(let p=1;p<=6;p++){const e=mt.find(t=>t.day===d&&t.period===p),s=e?su.find(x=>x.id===e.subjectId):null;h+='<td class="px-2 py-2 text-center">'+(s?'<div class="tc '+(SC[s.code]||'')+'">'+s.code+'<br><span class="font-normal opacity-75 text-[10px]">'+s.name+'</span></div>':'--')+'</td>'}h+='</tr>'});return '<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><div class="overflow-x-auto">'+h+'</tbody></table></div></div>'};
+
+// LOGIN/LOGOUT
+function fL(u,p){$('lu').value=u;$('lp').value=p;$('le').classList.add('hidden')}
+function dL(){const u=$('lu').value.trim(),p=$('lp').value;if(!u||!p){const el=$('le');el.classList.remove('hidden');el.querySelector('span').textContent='Enter username and password';return}if(Au.login(u,p)){eA()}else{const el=$('le');el.classList.remove('hidden');el.querySelector('span').textContent='Invalid credentials'}}
+function dO(){Au.logout();$('as').classList.add('hidden');$('ls').style.display='';$('lu').value='';$('lp').value='';$('le').classList.add('hidden')}
+function eA(){$('ls').style.display='none';$('as').classList.remove('hidden');$('sidebar').classList.remove('cl');$('ma').style.marginLeft='260px';nav(Au.user.role==='admin'?'ad':Au.user.role==='teacher'?'tD':'sD')}
+
+// SEED DB
+async function seedDB(){
+  $('lt').textContent='Creating data...';
+  const subjects=[{id:'SUB001',name:'Mathematics',code:'MATH'},{id:'SUB002',name:'Science',code:'SCI'},{id:'SUB003',name:'English',code:'ENG'},{id:'SUB004',name:'Hindi',code:'HIN'},{id:'SUB005',name:'Social Studies',code:'SST'}];
+  const classes=[{id:'CLS001',name:'Class 8',section:'A',classTeacherId:'USR002'},{id:'CLS002',name:'Class 9',section:'A',classTeacherId:'USR003'},{id:'CLS003',name:'Class 10',section:'A',classTeacherId:'USR002'}];
+  const sn=[['Aarav Sharma','Diya Patel','Arjun Reddy','Ananya Gupta','Rohan Singh','Kavya Nair'],['Vihaan Mehta','Ishika Joshi','Aditya Kumar','Sneha Iyer','Karthik Rao','Meera Pillai'],['Arjun Malhotra','Tanya Agarwal','Rishi Verma','Pooja Desai','Nikhil Chauhan','Shruti Bhatt']];
+  const gn=['Male','Female','Male','Female','Male','Female'];
+  const users=[{id:'USR001',username:'admin',password:'admin123',role:'admin',name:'Dr. Suresh Mishra'},{id:'USR002',username:'rajesh.kumar',password:'teacher123',role:'teacher',name:'Rajesh Kumar',subjects:['SUB001','SUB002'],classIds:['CLS001','CLS003'],qualification:'M.Sc, B.Ed'},{id:'USR003',username:'priya.sharma',password:'teacher123',role:'teacher',name:'Priya Sharma',subjects:['SUB003','SUB004'],classIds:['CLS001','CLS002'],qualification:'M.A, B.Ed'}];
+  let uid=4;
+  classes.forEach((cls,ci)=>{sn[ci].forEach((sname,si)=>{users.push({id:'USR'+String(uid).padStart(3,'0'),username:sname.toLowerCase().replace(' ','.'),password:'student123',role:'student',name:sname,classId:cls.id,rollNo:si+1,dob:'200'+(10-ci)+'-'+String(3+si*2).padStart(2,'0'),gender:gn[si],parentName:'Mr. '+sname.split(' ')[1],parentPhone:'9'+String(Math.floor(Math.random()*900000000+100000000))});uid++})});
+  const tt=[],sids=subjects.map(s=>s.id),days=['Mon','Tue','Wed','Thu','Fri'];
+  classes.forEach(cls=>{days.forEach(day=>{for(let p=1;p<=6;p++)tt.push({id:gI(),classId:cls.id,day,period:p,subjectId:sids[(p+days.indexOf(day)*3+classes.indexOf(cls))%sids.length]})})});
+  const att=[],students=users.filter(u=>u.role==='student');let d=new Date();d.setDate(d.getDate()-35);
+  for(let i=0;i<25;i++){d.setDate(d.getDate()+1);if(d.getDay()===0||d.getDay()===6)continue;const ds=d.toISOString().split('T')[0];students.forEach(st=>{const r=Math.random();att.push({id:gI(),date:ds,classId:st.classId,studentId:st.id,status:r<.82?'present':r<.94?'absent':'late'})})}
+  const grades=[];
+  ['Mid-Term','Unit Test 1'].forEach(exam=>{students.forEach(st=>{subjects.forEach(sub=>{const mx=exam==='Mid-Term'?100:25;grades.push({id:gI(),studentId:st.id,classId:st.classId,subjectId:sub.id,examType:exam,marks:Math.floor(Math.random()*(mx*.55)+mx*.4),maxMarks:mx})})})});
+
+  $('lt').textContent='Writing to Firestore...';
+  const cs=400;
+  for(let i=0;i<users.length;i+=cs){const b=db.batch();users.slice(i,i+cs).forEach(u=>{const{id,...d}=u;b.set(db.collection('users').doc(id),d)});await b.commit()}
+  let b=db.batch();subjects.forEach(s=>{const{id,...d}=s;b.set(db.collection('subjects').doc(id),d)});await b.commit();
+  b=db.batch();classes.forEach(c=>{const{id,...d}=c;b.set(db.collection('classes').doc(id),d)});await b.commit();
+  for(let i=0;i<tt.length;i+=cs){b=db.batch();tt.slice(i,i+cs).forEach(t=>{const{id,...d}=t;b.set(db.collection('timetable').doc(id),d)});await b.commit()}
+  for(let i=0;i<att.length;i+=cs){b=db.batch();att.slice(i,i+cs).forEach(a=>{const{id,...d}=a;b.set(db.collection('attendance').doc(id),d)});await b.commit()}
+  for(let i=0;i<grades.length;i+=cs){b=db.batch();grades.slice(i,i+cs).forEach(g=>{const{id,...d}=g;b.set(db.collection('grades').doc(id),d)});await b.commit()}
+  CA.s('users',users);CA.s('subjects',subjects);CA.s('classes',classes);CA.s('timetable',tt);CA.s('attendance',att);CA.s('grades',grades);
+  await FS.mi();
+}
+
+// INIT
+async function init(){
+  try{
+    $('lt').textContent='Step 1: Checking SDK...';
+    if(typeof firebase==='undefined') throw new Error('Firebase SDK not loaded. Check internet or ad blocker.');
+    $('lt').textContent='Step 2: Checking config...';
+    if(!firebaseConfig.projectId || firebaseConfig.projectId.includes('PLACEHOLDER')) throw new Error('Firebase config is PLACEHOLDER. Replace lines 21-26 with your real config from Firebase Console > Project Settings > Your Apps.');
+    $('lt').textContent='Step 3: Connecting...';
+    const testDoc = await db.collection('_meta').doc('init').get();
+    if(!testDoc.exists || !testDoc.data().done){await seedDB()} else {$('lt').textContent='Loading data...';await lC()}
+    $('lt').textContent='Ready!';
+    if(Au.restore()) eA(); else $('ls').style.display='';
+    setTimeout(()=>{$('lo').classList.add('hd');setTimeout(()=>$('lo').style.display='none',300)},300);
+  } catch(err){
+    console.error('SPS ERROR:', err);
+    $('lo').innerHTML='<div style="max-width:480px;text-align:center;padding:40px"><div style="width:64px;height:64px;border-radius:50%;background:#FEE2E2;display:flex;align-items:center;justify-content:center;margin:0 auto 20px"><i class="fas fa-exclamation-triangle" style="color:#EF4444;font-size:28px"></i></div><p style="font-size:18px;font-weight:700;color:#1E293B;margin-bottom:8px">Connection Failed</p><p style="font-size:13px;color:#64748B;margin-bottom:16px;line-height:1.6">'+err.message+'</p><div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:16px;margin:16px 0;text-align:left"><p style="font-size:12px;font-weight:700;color:#334155;margin-bottom:8px">Fix steps:</p><ol style="font-size:12px;color:#64748B;line-height:2;padding-left:16px"><li>Firebase Console > Project Settings > Your Apps</li><li>Click Web app > Copy firebaseConfig</li><li>Replace PLACEHOLDER in index.html lines 21-26</li><li>Firestore > Rules > allow read, write: if true</li><li>Save, push to GitHub, wait 2 min, refresh</li></ol></div><button onclick="location.reload()" style="padding:12px 32px;border-radius:10px;background:#0D9488;color:white;border:none;font-size:14px;font-weight:600;cursor:pointer">Retry</button></div>';
   }
-};
-
-// ==================== LOCAL CACHE (speed ke liye) ====================
-// Firebase se ek baar load karo, phir local cache use karo
-// Write hote hi dono jagah update karo
-const Cache = {
-  _data: {},
-  set(key, val) { this._data[key] = val; },
-  get(key) { return this._data[key] || null; },
-  clear() { this._data = {}; }
-};
-
-// Helper: Firebase se load karo cache mein
-async function loadCache() {
-  const [users, subjects, classes, timetable, attendance, grades] = await Promise.all([
-    FStore.getCollection('users'),
-    FStore.getCollection('subjects'),
-    FStore.getCollection('classes'),
-    FStore.getCollection('timetable'),
-    FStore.getCollection('attendance'),
-    FStore.getCollection('grades')
-  ]);
-  Cache.set('users', users);
-  Cache.set('subjects', subjects);
-  Cache.set('classes', classes);
-  Cache.set('timetable', timetable);
-  Cache.set('attendance', attendance);
-  Cache.set('grades', grades);
 }
 
-// Helper: Cache se read karo (sync)
-function getUsers() { return Cache.get('users') || []; }
-function getSubjects() { return Cache.get('subjects') || []; }
-function getClasses() { return Cache.get('classes') || []; }
-function getTimetable() { return Cache.get('timetable') || []; }
-function getAttendance() { return Cache.get('attendance') || []; }
-function getGrades() { return Cache.get('grades') || []; }
-
-// Helper: Cache + Firebase dono mein update karo
-async function saveUser(user) {
-  const {id, ...data} = user;
-  // Remove undefined fields
-  Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
-  await FStore.setDoc('users', id, data);
-  const users = getUsers();
-  const idx = users.findIndex(u => u.id === id);
-  if (idx >= 0) users[idx] = user; else users.push(user);
-  Cache.set('users', users);
-}
-async function removeUser(id) {
-  await FStore.deleteDoc('users', id);
-  Cache.set('users', getUsers().filter(u => u.id !== id));
-}
-async function saveClass(cls) {
-  const {id, ...data} = cls;
-  Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
-  await FStore.setDoc('classes', id, data);
-  const classes = getClasses();
-  const idx = classes.findIndex(c => c.id === id);
-  if (idx >= 0) classes[idx] = cls; else classes.push(cls);
-  Cache.set('classes', classes);
-}
-async function removeClass(id) {
-  await FStore.deleteDoc('classes', id);
-  Cache.set('classes', getClasses().filter(c => c.id !== id));
-}
-async function saveAttendance(records) {
-  // Batch write for performance
-  const batch = db.batch();
-  records.forEach(r => {
-    const {id, ...data} = r;
-    Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
-    batch.set(db.collection('attendance').doc(id), data, {merge: true});
-  });
-  await batch.commit();
-  // Update cache
-  const existing = getAttendance();
-  records.forEach(r => {
-    const idx = existing.findIndex(e => e.id === r.id);
-    if (idx >= 0) existing[idx] = r; else existing.push(r);
-  });
-  Cache.set('attendance', existing);
-}
-async function saveGrades(records) {
-  const batch = db.batch();
-  records.forEach(r => {
-    const {id, ...data} = r;
-    Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
-    batch.set(db.collection('grades').doc(id), data, {merge: true});
-  });
-  await batch.commit();
-  const existing = getGrades();
-  records.forEach(r => {
-    const idx = existing.findIndex(e => e.id === r.id);
-    if (idx >= 0) existing[idx] = r; else existing.push(r);
-  });
-  Cache.set('grades', existing);
-}
-async function removeStudentData(studentId) {
-  await FStore.deleteWhere('attendance', 'studentId', '==', studentId);
-  await FStore.deleteWhere('grades', 'studentId', '==', studentId);
-  const att = getAttendance().filter(a => a.studentId !== studentId);
-  const gr = getGrades().filter(g => g.studentId !== studentId);
-  Cache.set('attendance', att);
-  Cache.set('grades', gr);
-}
-
-// ==================== SEED DATA (pehli baar run hone par) ====================
-async function seedDatabase() {
-  $('loading-text').textContent = 'Setting up database (first time)...';
-
-  const subjects = [
-    {id:'SUB001',name:'Mathematics',code:'MATH'},
-    {id:'SUB002',name:'Science',code:'SCI'},
-    {id:'SUB003',name:'English',code:'ENG'},
-    {id:'SUB004',name:'Hindi',code:'HIN'},
-    {id:'SUB005',name:'Social Studies',code:'SST'}
-  ];
-  const classes = [
-    {id:'CLS001',name:'Class 8',section:'A',classTeacherId:'USR002'},
-    {id:'CLS002',name:'Class 9',section:'A',classTeacherId:'USR003'},
-    {id:'CLS003',name:'Class 10',section:'A',classTeacherId:'USR002'}
-  ];
-
-  const studentNames = [
-    ['Aarav Sharma','Diya Patel','Arjun Reddy','Ananya Gupta','Rohan Singh','Kavya Nair'],
-    ['Vihaan Mehta','Ishika Joshi','Aditya Kumar','Sneha Iyer','Karthik Rao','Meera Pillai'],
-    ['Arjun Malhotra','Tanya Agarwal','Rishi Verma','Pooja Desai','Nikhil Chauhan','Shruti Bhatt']
-  ];
-  const genders = ['Male','Female','Male','Female','Male','Female'];
-
-  const users = [
-    {id:'USR001',username:'admin',password:'admin123',role:'admin',name:'Dr. Suresh Mishra',email:'admin@sps.edu.in',phone:'9876543210'},
-    {id:'USR002',username:'rajesh.kumar',password:'teacher123',role:'teacher',name:'Rajesh Kumar',email:'rajesh@sps.edu.in',phone:'9876543211',subjects:['SUB001','SUB002'],classIds:['CLS001','CLS003'],qualification:'M.Sc, B.Ed',joinDate:'2018-06-01'},
-    {id:'USR003',username:'priya.sharma',password:'teacher123',role:'teacher',name:'Priya Sharma',email:'priya@sps.edu.in',phone:'9876543212',subjects:['SUB003','SUB004'],classIds:['CLS001','CLS002'],qualification:'M.A, B.Ed',joinDate:'2020-06-01'}
-  ];
-  let uid = 4;
-  classes.forEach((cls, ci) => {
-    studentNames[ci].forEach((sname, si) => {
-      users.push({
-        id:'USR'+String(uid).padStart(3,'0'), username:sname.toLowerCase().replace(' ','.'), password:'student123', role:'student', name:sname,
-        classId:cls.id, rollNo:si+1, dob:`200${10-ci}-${String(3+si*2).padStart(2,'0')}`,
-        gender:genders[si], parentName:'Mr. '+sname.split(' ')[1], parentPhone:'9'+String(Math.floor(Math.random()*900000000+100000000)),
-        address:`${Math.floor(Math.random()*200+1)}, Sector ${Math.floor(Math.random()*50+1)}, New Delhi`
-      });
-      uid++;
-    });
-  });
-
-  // Timetable
-  const tt = [];
-  const subIds = subjects.map(s => s.id);
-  const days = ['Mon','Tue','Wed','Thu','Fri'];
-  classes.forEach(cls => {
-    days.forEach(day => {
-      for(let p=1; p<=6; p++){
-        const si = (p + days.indexOf(day)*3 + classes.indexOf(cls)) % subIds.length;
-        tt.push({id:genId(), classId:cls.id, day, period:p, subjectId:subIds[si]});
-      }
-    });
-  });
-
-  // Attendance (past 25 working days)
-  const att = [];
-  const students = users.filter(u => u.role === 'student');
-  let d = new Date(); d.setDate(d.getDate() - 35);
-  for(let i=0; i<25; i++){
-    d.setDate(d.getDate()+1);
-    if(d.getDay()===0 || d.getDay()===6) continue;
-    const dateStr = d.toISOString().split('T')[0];
-    students.forEach(st => {
-      const r = Math.random();
-      att.push({id:genId(), date:dateStr, classId:st.classId, studentId:st.id, status: r<.82?'present':r<.94?'absent':'late'});
-    });
-  }
-
-  // Grades
-  const grades = [];
-  ['Mid-Term','Unit Test 1'].forEach(exam => {
-    students.forEach(st => {
-      subjects.forEach(sub => {
-        const max = exam==='Mid-Term'?100:25;
-        const marks = Math.floor(Math.random()*(max*.55)+max*.4);
-        grades.push({id:genId(), studentId:st.id, classId:st.classId, subjectId:sub.id, examType:exam, marks, maxMarks:max});
-      });
-    });
-  });
-
-  // Batch write sab collections
-  $('loading-text').textContent = 'Writing data to Firestore...';
-
-  // Users ko chunks mein likho (Firestore batch limit = 500)
-  const chunkSize = 400;
-  for(let i=0; i<users.length; i+=chunkSize){
-    const batch = db.batch();
-    const chunk = users.slice(i, i+chunkSize);
-    chunk.forEach(u => {
-      const {id, ...data} = u;
-      batch.set(db.collection('users').doc(id), data);
-    });
-    await batch.commit();
-  }
-
-  // Subjects batch
-  let batch = db.batch();
-  subjects.forEach(s => { const {id,...d}=s; batch.set(db.collection('subjects').doc(id),d); });
-  await batch.commit();
-
-  // Classes batch
-  batch = db.batch();
-  classes.forEach(c => { const {id,...d}=c; batch.set(db.collection('classes').doc(id),d); });
-  await batch.commit();
-
-  // Timetable chunks
-  for(let i=0; i<tt.length; i+=chunkSize){
-    batch = db.batch();
-    tt.slice(i,i+chunkSize).forEach(t => { const {id,...d}=t; batch.set(db.collection('timetable').doc(id),d); });
-    await batch.commit();
-  }
-
-  // Attendance chunks
-  for(let i=0; i<att.length; i+=chunkSize){
-    batch = db.batch();
-    att.slice(i,i+chunkSize).forEach(a => { const {id,...d}=a; batch.set(db.collection('attendance').doc(id),d); });
-    await batch.commit();
-  }
-
-  // Grades chunks
-  for(let i=0; i<grades.length; i+=chunkSize){
-    batch = db.batch();
-    grades.slice(i,i+chunkSize).forEach(g => { const {id,...d}=g; batch.set(db.collection('grades').doc(id),d); });
-    await batch.commit();
-  }
-
-  // Local cache bhi bhar do
-  Cache.set('users', users);
-  Cache.set('subjects', subjects);
-  Cache.set('classes', classes);
-  Cache.set('timetable', tt);
-  Cache.set('attendance', att);
-  Cache.set('grades', grades);
-
-  await FStore.markInitialized();
-}
-
-// ==================== AUTH ====================
-const Auth = {
-  user: null,
-  login(u, p) {
-    const users = getUsers();
-    const found = users.find(x => x.username === u && x.password === p);
-    if (!found) return false;
-    this.user = found;
-    sessionStorage.setItem('sps_session', found.id);
-    return true;
-  },
-  logout() { this.user = null; sessionStorage.removeItem('sps_session'); },
-  restore() {
-    const sid = sessionStorage.getItem('sps_session');
-    if (!sid) return false;
-    const found = getUsers().find(x => x.id === sid);
-    if (found) { this.user = found; return true; }
-    return false;
-  },
-  refreshUser() {
-    const found = getUsers().find(x => x.id === this.user.id);
-    if (found) this.user = found;
-  }
-};
-
-// ==================== TOAST & MODAL ====================
-function toast(msg, type='success') {
-  const colors = {success:'bg-emerald-500',error:'bg-red-500',warning:'bg-amber-500',info:'bg-blue-500'};
-  const icons = {success:'fa-check-circle',error:'fa-times-circle',warning:'fa-exclamation-triangle',info:'fa-info-circle'};
-  const el = document.createElement('div');
-  el.className = `toast flex items-center gap-3 px-5 py-3 rounded-xl ${colors[type]} text-white shadow-lg text-sm font-medium`;
-  el.innerHTML = `<i class="fas ${icons[type]}"></i><span>${msg}</span>`;
-  $('toast-container').appendChild(el);
-  setTimeout(() => el.remove(), 3100);
-}
-function showModal(html) { $('modal-box').innerHTML = html; $('modal-overlay').classList.remove('hidden'); }
-function hideModal() { $('modal-overlay').classList.add('hidden'); }
-function confirmAction(msg, onConfirm) {
-  showModal(`<div class="p-6 text-center">
-    <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4"><i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i></div>
-    <h3 class="text-lg font-bold text-slate-800 mb-2">Confirm Action</h3>
-    <p class="text-slate-500 text-sm mb-6">${msg}</p>
-    <div class="flex gap-3 justify-center">
-      <button onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-medium transition-colors">Cancel</button>
-      <button id="confirm-yes-btn" class="px-5 py-2.5 rounded-lg bg-red-500 text-white hover:bg-red-600 text-sm font-medium transition-colors">Confirm</button>
-    </div></div>`);
-  $('confirm-yes-btn').onclick = () => { hideModal(); onConfirm(); };
-}
-
-// ==================== CHART MANAGEMENT ====================
-let charts = [];
-function destroyCharts() { charts.forEach(c => c.destroy()); charts = []; }
-
-// ==================== SIDEBAR ====================
-const menuConfig = {
-  admin:[
-    {id:'admin-dashboard',icon:'fa-gauge-high',label:'Dashboard'},
-    {id:'admin-students',icon:'fa-user-graduate',label:'Students'},
-    {id:'admin-teachers',icon:'fa-chalkboard-teacher',label:'Teachers'},
-    {id:'admin-classes',icon:'fa-school',label:'Classes'},
-    {id:'admin-attendance',icon:'fa-clipboard-check',label:'Attendance'},
-    {id:'admin-grades',icon:'fa-chart-line',label:'Grades'},
-    {id:'admin-timetable',icon:'fa-calendar-days',label:'Timetable'}
-  ],
-  teacher:[
-    {id:'teacher-dashboard',icon:'fa-gauge-high',label:'Dashboard'},
-    {id:'teacher-schedule',icon:'fa-calendar-days',label:'My Schedule'},
-    {id:'teacher-attendance',icon:'fa-clipboard-check',label:'Mark Attendance'},
-    {id:'teacher-grades',icon:'fa-pen-to-square',label:'Enter Grades'},
-    {id:'teacher-students',icon:'fa-users',label:'My Students'}
-  ],
-  student:[
-    {id:'student-dashboard',icon:'fa-gauge-high',label:'Dashboard'},
-    {id:'student-profile',icon:'fa-user',label:'My Profile'},
-    {id:'student-attendance',icon:'fa-clipboard-check',label:'My Attendance'},
-    {id:'student-grades',icon:'fa-chart-line',label:'My Grades'},
-    {id:'student-schedule',icon:'fa-calendar-days',label:'My Schedule'}
-  ]
-};
-let currentView = '';
-function buildSidebar() {
-  const items = menuConfig[Auth.user.role] || [];
-  $('sidebar-nav').innerHTML = items.map(it => `
-    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium transition-all ${currentView===it.id?'active':''}" data-view="${it.id}">
-      <i class="fas ${it.icon} w-5 text-center flex-shrink-0"></i>
-      <span class="nav-text">${it.label}</span>
-    </button>`).join('');
-  $('sidebar-nav').querySelectorAll('.nav-item').forEach(btn => { btn.onclick = () => navigate(btn.dataset.view); });
-  $('sidebar-avatar').textContent = getInitials(Auth.user.name);
-  $('sidebar-name').textContent = Auth.user.name;
-  $('sidebar-role').textContent = Auth.user.role;
-  $('topbar-avatar').textContent = getInitials(Auth.user.name);
-  $('topbar-date').textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-}
-function toggleSidebar() {
-  const sb = $('sidebar'); sb.classList.toggle('collapsed');
-  $('collapse-icon').classList.toggle('fa-angles-left'); $('collapse-icon').classList.toggle('fa-angles-right');
-  $('main-area').style.marginLeft = sb.classList.contains('collapsed') ? '72px' : '260px';
-}
-function toggleMobileSidebar() {
-  $('sidebar').classList.toggle('mobile-open');
-  $('sidebar-overlay').classList.toggle('show');
-}
-
-// ==================== NAVIGATION ====================
-function navigate(view) {
-  currentView = view; destroyCharts(); buildSidebar();
-  $('sidebar').classList.remove('mobile-open'); $('sidebar-overlay').classList.remove('show');
-  const titles = {'admin-dashboard':'Dashboard','admin-students':'Student Management','admin-teachers':'Teacher Management','admin-classes':'Class Management','admin-attendance':'Attendance Records','admin-grades':'Grade Records','admin-timetable':'Class Timetable','teacher-dashboard':'Dashboard','teacher-schedule':'My Schedule','teacher-attendance':'Mark Attendance','teacher-grades':'Enter Grades','teacher-students':'My Students','student-dashboard':'Dashboard','student-profile':'My Profile','student-attendance':'My Attendance','student-grades':'My Grades','student-schedule':'My Schedule'};
-  $('page-title').textContent = titles[view] || '';
-  if (Views[view]) $('main-content').innerHTML = Views[view]();
-  if (ViewHooks[view]) setTimeout(ViewHooks[view], 50);
-}
-
-// ==================== HELPERS ====================
-function statCard(icon,label,value,bgColor,sub='') {
-  return `<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-    <div class="flex items-center justify-between">
-      <div><p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${label}</p>
-      <p class="text-2xl font-extrabold text-slate-800 mt-1">${value}</p>
-      ${sub?`<p class="text-xs mt-1.5 text-slate-400">${sub}</p>`:''}</div>
-      <div class="w-12 h-12 rounded-xl ${bgColor} flex items-center justify-center"><i class="fas ${icon} text-white"></i></div>
-    </div></div>`;
-}
-function avatarCircle(name,size='w-9 h-9 text-sm') {
-  const colors = ['bg-teal-100 text-teal-700','bg-blue-100 text-blue-700','bg-amber-100 text-amber-700','bg-indigo-100 text-indigo-700','bg-rose-100 text-rose-700','bg-emerald-100 text-emerald-700'];
-  return `<div class="${size} rounded-full ${colors[name.charCodeAt(0)%colors.length]} flex items-center justify-center font-bold flex-shrink-0">${getInitials(name)}</div>`;
-}
-function classBadge(classId) {
-  const cls = getClasses().find(c => c.id === classId);
-  return cls ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-50 text-primary-700">${cls.name} - ${cls.section}</span>` : '—';
-}
-function subjectBadge(subId) {
-  const sub = getSubjects().find(s => s.id === subId);
-  return sub ? `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${subjectColors[sub.code]||''}">${sub.code}</span>` : '—';
-}
-
-// ==================== VIEWS & HOOKS ====================
-const Views = {};
-const ViewHooks = {};
-
-// ---- ADMIN DASHBOARD ----
-Views['admin-dashboard'] = () => {
-  const students = getUsers().filter(u => u.role==='student');
-  const teachers = getUsers().filter(u => u.role==='teacher');
-  const classes = getClasses();
-  const att = getAttendance();
-  const avgAtt = att.length ? Math.round(att.filter(a=>a.status==='present').length/att.length*100) : 0;
-  return `<div class="space-y-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      ${statCard('fa-user-graduate','Total Students',students.length,'bg-teal-500',classes.length+' classes')}
-      ${statCard('fa-chalkboard-teacher','Total Teachers',teachers.length,'bg-blue-500','Active staff')}
-      ${statCard('fa-school','Total Classes',classes.length,'bg-indigo-500','All sections')}
-      ${statCard('fa-clipboard-check','Avg Attendance',avgAtt+'%','bg-amber-500','This month')}
-    </div>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Students per Class</h3><canvas id="chart-class-dist" height="220"></canvas></div>
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Recent Attendance Trend</h3><canvas id="chart-att-trend" height="220"></canvas></div>
-    </div>
-    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Recently Enrolled Students</h3>
-      <div class="space-y-3">${students.slice(-5).reverse().map(s=>`<div class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">${avatarCircle(s.name)}<div class="flex-1 min-w-0"><p class="text-sm font-semibold text-slate-800 truncate">${s.name}</p><p class="text-xs text-slate-400">Roll No: ${s.rollNo}</p></div>${classBadge(s.classId)}</div>`).join('')}</div>
-    </div></div>`;
-};
-ViewHooks['admin-dashboard'] = () => {
-  const students = getUsers().filter(u=>u.role==='student'); const classes = getClasses();
-  const ctx1 = $('chart-class-dist');
-  if(ctx1) charts.push(new Chart(ctx1,{type:'doughnut',data:{labels:classes.map(c=>c.name+' '+c.section),datasets:[{data:classes.map(c=>students.filter(s=>s.classId===c.id).length),backgroundColor:['#0D9488','#3B82F6','#6366F1'],borderWidth:0,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyle:'circle',font:{size:12,family:'Plus Jakarta Sans'}}}}}}));
-  const att = getAttendance(); const dates = [...new Set(att.map(a=>a.date))].sort().slice(-10);
-  const ctx2 = $('chart-att-trend');
-  if(ctx2){const rates=dates.map(d=>{const da=att.filter(a=>a.date===d);return da.length?Math.round(da.filter(a=>a.status==='present').length/da.length*100):0});charts.push(new Chart(ctx2,{type:'bar',data:{labels:dates.map(d=>{const dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}),datasets:[{label:'Attendance %',data:rates,backgroundColor:'#0D9488',borderRadius:6,maxBarThickness:32}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%',font:{size:11}},grid:{color:'#F1F5F9'}},x:{grid:{display:false},ticks:{font:{size:10}}}},plugins:{legend:{display:false}}}}));}
-};
-
-// ---- ADMIN STUDENTS ----
-Views['admin-students'] = () => {
-  const students = getUsers().filter(u=>u.role==='student');
-  return `<div class="space-y-4">
-    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-      <div class="relative w-full sm:w-72"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-        <input id="student-search" type="text" placeholder="Search students..." class="w-full pl-9 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm" oninput="filterStudents()"></div>
-      <button onclick="showStudentForm()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm"><i class="fas fa-plus"></i>Add Student</button>
-    </div>
-    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><div class="overflow-x-auto"><table class="w-full">
-      <thead><tr class="border-b border-slate-100 bg-slate-50/50">
-        <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>
-        <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th>
-        <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Class</th>
-        <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Parent</th>
-        <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Phone</th>
-        <th class="px-5 py-3.5 text-right text-[11px] font-semibold text-slate-500 uppercase">Actions</th>
-      </tr></thead><tbody id="students-tbody" class="divide-y divide-slate-50">${renderStudentRows(students)}</tbody>
-    </table></div></div></div>`;
-};
-function renderStudentRows(students) {
-  return students.map(s=>`<tr class="data-row"><td class="px-5 py-3.5"><div class="flex items-center gap-3">${avatarCircle(s.name)}<span class="text-sm font-medium text-slate-800">${s.name}</span></div></td>
-    <td class="px-5 py-3.5 text-sm text-slate-600">${s.rollNo}</td><td class="px-5 py-3.5">${classBadge(s.classId)}</td>
-    <td class="px-5 py-3.5 text-sm text-slate-600">${s.parentName||'—'}</td><td class="px-5 py-3.5 text-sm text-slate-600">${s.parentPhone||'—'}</td>
-    <td class="px-5 py-3.5 text-right"><div class="flex items-center justify-end gap-1">
-      <button onclick="showStudentForm('${s.id}')" class="w-8 h-8 rounded-lg hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-pen-to-square text-xs"></i></button>
-      <button onclick="deleteStudent('${s.id}')" class="w-8 h-8 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-trash text-xs"></i></button>
-    </div></td></tr>`).join('');
-}
-function filterStudents() {
-  const q = $('student-search').value.toLowerCase();
-  const filtered = getUsers().filter(u=>u.role==='student').filter(s=>s.name.toLowerCase().includes(q)||String(s.rollNo).includes(q));
-  $('students-tbody').innerHTML = renderStudentRows(filtered);
-}
-function showStudentForm(editId) {
-  const classes = getClasses(); let s = editId ? getUsers().find(u=>u.id===editId) : null;
-  showModal(`<div class="p-6"><h3 class="text-lg font-bold text-slate-800 mb-5">${s?'Edit Student':'Add New Student'}</h3>
-    <form id="student-form" class="space-y-4" onsubmit="saveStudent(event,'${editId||''}')">
-      <div class="grid grid-cols-2 gap-4">
-        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label><input name="name" value="${s?.name||''}" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select name="classId" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm">${classes.map(c=>`<option value="${c.id}" ${s?.classId===c.id?'selected':''}>${c.name} - ${c.section}</option>`).join('')}</select></div>
-        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Roll Number</label><input name="rollNo" type="number" value="${s?.rollNo||''}" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Date of Birth</label><input name="dob" type="date" value="${s?.dob||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Gender</label><select name="gender" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"><option value="Male" ${s?.gender==='Male'?'selected':''}>Male</option><option value="Female" ${s?.gender==='Female'?'selected':''}>Female</option></select></div>
-        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Parent Name</label><input name="parentName" value="${s?.parentName||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Parent Phone</label><input name="parentPhone" value="${s?.parentPhone||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Address</label><textarea name="address" rows="2" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm">${s?.address||''}</textarea></div>
-        ${!s?`<div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Username</label><input name="username" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm" placeholder="e.g. john.doe"></div>`:''}
-      </div>
-      <div class="flex gap-3 justify-end pt-2"><button type="button" onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">Cancel</button>
-      <button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors">${s?'Update':'Add'} Student</button></div>
-    </form></div>`);
-}
-async function saveStudent(e, editId) {
-  e.preventDefault(); const fd = new FormData(e.target); const data = Object.fromEntries(fd);
-  if (editId) {
-    const users = getUsers(); const idx = users.findIndex(u=>u.id===editId);
-    if(idx>=0) { Object.assign(users[idx], data); users[idx].rollNo = parseInt(data.rollNo); await saveUser(users[idx]); }
-    toast('Student updated successfully');
-  } else {
-    const newUser = {id:genId(), username:data.username, password:'student123', role:'student', name:data.name, classId:data.classId, rollNo:parseInt(data.rollNo), dob:data.dob, gender:data.gender, parentName:data.parentName, parentPhone:data.parentPhone, address:data.address};
-    await saveUser(newUser);
-    toast('Student added successfully');
-  }
-  hideModal(); navigate('admin-students');
-}
-async function deleteStudent(id) {
-  confirmAction('Are you sure you want to delete this student? This cannot be undone.', async () => {
-    await removeUser(id); await removeStudentData(id);
-    toast('Student deleted', 'warning'); navigate('admin-students');
-  });
-}
-
-// ---- ADMIN TEACHERS ----
-Views['admin-teachers'] = () => {
-  const teachers = getUsers().filter(u=>u.role==='teacher');
-  return `<div class="space-y-4"><div class="flex justify-end">
-    <button onclick="showTeacherForm()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm"><i class="fas fa-plus"></i>Add Teacher</button></div>
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-      ${teachers.map(t=>`<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-        <div class="flex items-start gap-4">${avatarCircle(t.name,'w-12 h-12 text-base')}
-          <div class="flex-1 min-w-0"><h4 class="text-sm font-bold text-slate-800 truncate">${t.name}</h4><p class="text-xs text-slate-400 mt-0.5">${t.qualification||'—'}</p>
-            <div class="flex flex-wrap gap-1.5 mt-3">${(t.subjects||[]).map(sid=>subjectBadge(sid)).join('')}</div>
-            <div class="flex flex-wrap gap-1.5 mt-2">${(t.classIds||[]).map(cid=>classBadge(cid)).join('')}</div>
-            <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
-              <p class="text-xs text-slate-400"><i class="fas fa-phone mr-1"></i>${t.phone||'—'}</p>
-              <div class="flex gap-1"><button onclick="showTeacherForm('${t.id}')" class="w-7 h-7 rounded hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-pen text-[10px]"></i></button>
-              <button onclick="deleteTeacher('${t.id}')" class="w-7 h-7 rounded hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-trash text-[10px]"></i></button></div>
-            </div></div></div></div>`).join('')}
-    </div></div>`;
-};
-function showTeacherForm(editId) {
-  const subjects=getSubjects(); const classes=getClasses(); let t=editId?getUsers().find(u=>u.id===editId):null;
-  showModal(`<div class="p-6"><h3 class="text-lg font-bold text-slate-800 mb-5">${t?'Edit Teacher':'Add New Teacher'}</h3>
-    <form class="space-y-4" onsubmit="saveTeacher(event,'${editId||''}')">
-      <div class="grid grid-cols-2 gap-4">
-        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label><input name="name" value="${t?.name||''}" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-        ${!t?`<div><label class="block text-xs font-semibold text-slate-600 mb-1">Username</label><input name="username" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Password</label><input name="password" value="teacher123" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>`:''}
-        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Subjects</label><div class="flex flex-wrap gap-2">${subjects.map(s=>`<label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 text-sm ${(t?.subjects||[]).includes(s.id)?'bg-primary-50 border-primary-300':''}"><input type="checkbox" name="subjects" value="${s.id}" ${(t?.subjects||[]).includes(s.id)?'checked':''} class="accent-primary-600"><span class="text-slate-700">${s.name}</span></label>`).join('')}</div></div>
-        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Assigned Classes</label><div class="flex flex-wrap gap-2">${classes.map(c=>`<label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 text-sm ${(t?.classIds||[]).includes(c.id)?'bg-primary-50 border-primary-300':''}"><input type="checkbox" name="classIds" value="${c.id}" ${(t?.classIds||[]).includes(c.id)?'checked':''} class="accent-primary-600"><span class="text-slate-700">${c.name} - ${c.section}</span></label>`).join('')}</div></div>
-        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Phone</label><input name="phone" value="${t?.phone||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Email</label><input name="email" value="${t?.email||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Qualification</label><input name="qualification" value="${t?.qualification||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-      </div>
-      <div class="flex gap-3 justify-end pt-2"><button type="button" onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">Cancel</button>
-      <button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors">${t?'Update':'Add'} Teacher</button></div>
-    </form></div>`);
-}
-async function saveTeacher(e, editId) {
-  e.preventDefault(); const fd=new FormData(e.target);
-  const data = {name:fd.get('name'),phone:fd.get('phone'),email:fd.get('email'),qualification:fd.get('qualification'),subjects:fd.getAll('subjects'),classIds:fd.getAll('classIds')};
-  if(editId){const users=getUsers();const idx=users.findIndex(u=>u.id===editId);if(idx>=0){Object.assign(users[idx],data);await saveUser(users[idx])}toast('Teacher updated successfully');}
-  else{await saveUser({id:genId(),username:fd.get('username'),password:fd.get('password'),role:'teacher',...data});toast('Teacher added successfully');}
-  hideModal(); navigate('admin-teachers');
-}
-async function deleteTeacher(id) {
-  confirmAction('Delete this teacher?', async()=>{await removeUser(id);toast('Teacher deleted','warning');navigate('admin-teachers');});
-}
-
-// ---- ADMIN CLASSES ----
-Views['admin-classes'] = () => {
-  const classes=getClasses(); const students=getUsers().filter(u=>u.role==='student');
-  return `<div class="space-y-4"><div class="flex justify-end">
-    <button onclick="showClassForm()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm"><i class="fas fa-plus"></i>Add Class</button></div>
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-      ${classes.map(c=>{const teacher=getUsers().find(u=>u.id===c.classTeacherId);const count=students.filter(s=>s.classId===c.id).length;
-        return `<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-          <div class="flex items-center justify-between mb-4"><div><h4 class="text-base font-bold text-slate-800">${c.name}</h4><p class="text-xs text-slate-400">Section: ${c.section}</p></div>
-            <div class="flex gap-1"><button onclick="showClassForm('${c.id}')" class="w-7 h-7 rounded hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-pen text-[10px]"></i></button>
-            <button onclick="deleteClass('${c.id}')" class="w-7 h-7 rounded hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-trash text-[10px]"></i></button></div></div>
-          <div class="flex items-center gap-3 text-sm text-slate-600"><div class="flex-1"><p class="text-xs text-slate-400 mb-1">Class Teacher</p><p class="font-medium">${teacher?teacher.name:'Not Assigned'}</p></div>
-            <div class="text-right"><p class="text-xs text-slate-400 mb-1">Students</p><p class="text-2xl font-extrabold text-primary-600">${count}</p></div></div></div>`;}).join('')}
-    </div></div>`;
-};
-function showClassForm(editId) {
-  const classes=getClasses(); const teachers=getUsers().filter(u=>u.role==='teacher');
-  let c=editId?classes.find(cl=>cl.id===editId):null;
-  showModal(`<div class="p-6"><h3 class="text-lg font-bold text-slate-800 mb-5">${c?'Edit Class':'Add New Class'}</h3>
-    <form onsubmit="saveClass(event,'${editId||''}')" class="space-y-4"><div class="grid grid-cols-2 gap-4">
-      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class Name</label><input name="name" value="${c?.name||''}" required placeholder="e.g. Class 8" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Section</label><input name="section" value="${c?.section||''}" required placeholder="e.g. A" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
-      <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Class Teacher</label><select name="classTeacherId" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"><option value="">-- Not Assigned --</option>${teachers.map(t=>`<option value="${t.id}" ${c?.classTeacherId===t.id?'selected':''}>${t.name}</option>`).join('')}</select></div>
-    </div><div class="flex gap-3 justify-end pt-2"><button type="button" onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">Cancel</button>
-    <button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors">${c?'Update':'Add'} Class</button></div></form></div>`);
-}
-async function saveClass(e,editId) {
-  e.preventDefault(); const fd=new FormData(e.target); const data=Object.fromEntries(fd);
-  if(editId){const classes=getClasses();const idx=classes.findIndex(c=>c.id===editId);if(idx>=0){Object.assign(classes[idx],data);await saveClass(classes[idx])}toast('Class updated successfully');}
-  else{await saveClass({id:genId(),...data});toast('Class added successfully');}
-  hideModal(); navigate('admin-classes');
-}
-async function deleteClass(id) {
-  confirmAction('Delete this class?', async()=>{await removeClass(id);toast('Class deleted','warning');navigate('admin-classes');});
-}
-
-// ---- ADMIN ATTENDANCE VIEW ----
-Views['admin-attendance'] = () => {
-  const classes=getClasses(); const att=getAttendance(); const dates=[...new Set(att.map(a=>a.date))].sort().reverse().slice(0,10);
-  return `<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end">
-    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="att-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminAtt()">${classes.map(c=>`<option value="${c.id}">${c.name} - ${c.section}</option>`).join('')}</select></div>
-    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Date</label><input id="att-date" type="date" value="${dates[0]||today()}" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminAtt()"></div>
-  </div><div id="att-admin-table" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
-};
-ViewHooks['admin-attendance'] = () => loadAdminAtt();
-function loadAdminAtt() {
-  const clsId=$('att-cls')?.value;const date=$('att-date')?.value;if(!clsId)return;
-  const att=getAttendance();const students=getUsers().filter(u=>u.role==='student'&&u.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
-  const dayAtt=att.filter(a=>a.classId===clsId&&a.date===date);
-  const sb=s=>{const c={present:'bg-emerald-100 text-emerald-700',absent:'bg-red-100 text-red-700',late:'bg-amber-100 text-amber-700'};return `<span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${c[s]||'bg-slate-100 text-slate-600'} capitalize">${s||'Not Marked'}</span>`};
-  $('att-admin-table').innerHTML=`<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Status</th></tr></thead><tbody class="divide-y divide-slate-50">
-  ${students.map(s=>{const rec=dayAtt.find(a=>a.studentId===s.id);return `<tr class="data-row"><td class="px-5 py-3 text-sm text-slate-500">${s.rollNo}</td><td class="px-5 py-3"><div class="flex items-center gap-3">${avatarCircle(s.name)}<span class="text-sm font-medium text-slate-800">${s.name}</span></div></td><td class="px-5 py-3">${sb(rec?.status)}</td></tr>`}).join('')}
-  ${students.length===0?'<tr><td colspan="3" class="px-5 py-8 text-center text-slate-400 text-sm">No students found</td></tr>':''}
-  </tbody></table></div>`;
-}
-
-// ---- ADMIN GRADES VIEW ----
-Views['admin-grades'] = () => {
-  const classes=getClasses();
-  return `<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end">
-    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="grade-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminGrades()">${classes.map(c=>`<option value="${c.id}">${c.name} - ${c.section}</option>`).join('')}</select></div>
-    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Exam</label><select id="grade-exam" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminGrades()"><option>Mid-Term</option><option>Unit Test 1</option></select></div>
-  </div><div id="grade-admin-table" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
-};
-ViewHooks['admin-grades'] = () => loadAdminGrades();
-function loadAdminGrades() {
-  const clsId=$('grade-cls')?.value;const exam=$('grade-exam')?.value;if(!clsId)return;
-  const grades=getGrades();const subjects=getSubjects();const students=getUsers().filter(u=>u.role==='student'&&u.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
-  $('grade-admin-table').innerHTML=`<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>${subjects.map(s=>`<th class="px-4 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">${s.code}</th>`).join('')}<th class="px-4 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">%</th></tr></thead><tbody class="divide-y divide-slate-50">
-  ${students.map(st=>{let total=0,maxT=0;const cells=subjects.map(sub=>{const g=grades.find(x=>x.studentId===st.id&&x.subjectId===sub.id&&x.examType===exam);const m=g?.marks||0;const mx=g?.maxMarks||100;total+=m;maxT+=mx;const pct=mx?Math.round(m/mx*100):0;return `<td class="px-4 py-3 text-center text-sm font-medium ${pct>=80?'text-emerald-600':pct>=60?'text-amber-600':'text-red-500'}">${g?m:'—'}</td>`;}).join('');const pct=maxT?Math.round(total/maxT*100):0;return `<tr class="data-row"><td class="px-4 py-3"><div class="flex items-center gap-2">${avatarCircle(st.name,'w-7 h-7 text-[10px]')}<span class="text-sm font-medium text-slate-800">${st.name}</span></div></td>${cells}<td class="px-4 py-3 text-center text-sm font-bold ${pct>=60?'text-primary-600':'text-red-500'}">${pct}%</td></tr>`;}).join('')}
-  </tbody></table></div>`;
-}
-
-// ---- ADMIN TIMETABLE VIEW ----
-Views['admin-timetable'] = () => {
-  const classes=getClasses();
-  return `<div class="space-y-4"><div><label class="block text-xs font-semibold text-slate-600 mb-1">Select Class</label><select id="tt-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTimetable()">${classes.map(c=>`<option value="${c.id}">${c.name} - ${c.section}</option>`).join('')}</select></div>
-  <div id="tt-grid" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
-};
-ViewHooks['admin-timetable'] = () => loadTimetable();
-function loadTimetable() {
-  const clsId=$('tt-cls')?.value;if(!clsId)return;
-  const tt=getTimetable();const subjects=getSubjects();const days=['Mon','Tue','Wed','Thu','Fri'];
-  let html='<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase w-20">Day</th>';
-  for(let p=1;p<=6;p++)html+=`<th class="px-3 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">P${p}</th>`;
-  html+='</tr></thead><tbody class="divide-y divide-slate-50">';
-  days.forEach(day=>{html+=`<tr class="data-row"><td class="px-4 py-3 text-sm font-semibold text-slate-700">${day}</td>`;
-    for(let p=1;p<=6;p++){const entry=tt.find(t=>t.classId===clsId&&t.day===day&&t.period===p);const sub=entry?subjects.find(s=>s.id===entry.subjectId):null;
-      html+=`<td class="px-2 py-2 text-center">${sub?`<div class="tt-cell ${subjectColors[sub.code]||'bg-slate-100 text-slate-600'}">${sub.code}</div>`:'<span class="text-slate-300">—</span>'}</td>`;}
-    html+='</tr>';});
-  html+='</tbody></table></div>';$('tt-grid').innerHTML=html;
-}
-
-// ---- TEACHER DASHBOARD ----
-Views['teacher-dashboard'] = () => {
-  const u=Auth.user;const classes=getClasses();const subjects=getSubjects();
-  const myClasses=(u.classIds||[]).map(id=>classes.find(c=>c.id===id)).filter(Boolean);
-  const myStudents=getUsers().filter(s=>s.role==='student'&&(u.classIds||[]).includes(s.classId));
-  const tt=getTimetable();const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const todayName=dayNames[new Date().getDay()];
-  const todayPeriods=tt.filter(t=>(u.classIds||[]).includes(t.classId)&&t.day===todayName).sort((a,b)=>a.period-b.period);
-  const myGrades=getGrades().filter(g=>(u.subjects||[]).includes(g.subjectId)&&(u.classIds||[]).includes(g.classId)&&g.examType==='Mid-Term');
-  const avgPerf=myGrades.length?Math.round(myGrades.reduce((s,g)=>s+(g.marks/g.maxMarks*100),0)/myGrades.length):0;
-  return `<div class="space-y-6"><div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-    ${statCard('fa-school','My Classes',myClasses.length,'bg-teal-500')}
-    ${statCard('fa-users','Total Students',myStudents.length,'bg-blue-500')}
-    ${statCard('fa-clock',"Today's Periods",todayPeriods.length,'bg-indigo-500')}
-    ${statCard('fa-chart-simple','Avg Performance',avgPerf+'%','bg-amber-500','Mid-Term')}
-  </div><div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Class-wise Avg Performance</h3><canvas id="chart-tchr-perf" height="220"></canvas></div>
-    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Today's Schedule</h3>
-      <div class="space-y-3">${todayPeriods.length===0?'<p class="text-slate-400 text-sm text-center py-8">No classes today</p>':''}
-      ${todayPeriods.map(tp=>{const sub=subjects.find(s=>s.id===tp.subjectId);const cls=classes.find(c=>c.id===tp.classId);return `<div class="flex items-center gap-4 p-3 rounded-lg bg-slate-50"><div class="text-center w-12"><p class="text-lg font-extrabold text-primary-600">P${tp.period}</p></div><div class="flex-1"><p class="text-sm font-semibold text-slate-800">${sub?.name||'—'}</p><p class="text-xs text-slate-400">${cls?.name||''} - ${cls?.section||''}</p></div>${sub?`<span class="tt-cell ${subjectColors[sub.code]||''}">${sub.code}</span>`:''}</div>`;}).join('')}</div>
-    </div></div></div>`;
-};
-ViewHooks['teacher-dashboard'] = () => {
-  const u=Auth.user;const classes=getClasses();const grades=getGrades();const ctx=$('chart-tchr-perf');if(!ctx)return;
-  const data=(u.classIds||[]).map(cid=>{const cls=classes.find(c=>c.id===cid);const cg=grades.filter(g=>g.classId===cid&&(u.subjects||[]).includes(g.subjectId)&&g.examType==='Mid-Term');return{label:cls?cls.name+' '+cls.section:cid,value:cg.length?Math.round(cg.reduce((s,g)=>s+(g.marks/g.maxMarks*100),0)/cg.length):0}});
-  charts.push(new Chart(ctx,{type:'bar',data:{labels:data.map(d=>d.label),datasets:[{label:'Average %',data:data.map(d=>d.value),backgroundColor:'#0D9488',borderRadius:6,maxBarThickness:48}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#F1F5F9'}},x:{grid:{display:false}}},plugins:{legend:{display:false}}}}));
-};
-
-// ---- TEACHER SCHEDULE ----
-Views['teacher-schedule'] = () => {
-  const u=Auth.user;const tt=getTimetable();const subjects=getSubjects();const classes=getClasses();const days=['Mon','Tue','Wed','Thu','Fri'];
-  const myTT=tt.filter(t=>(u.classIds||[]).includes(t.classId));
-  let html='<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase w-20">Day</th>';
-  for(let p=1;p<=6;p++)html+=`<th class="px-3 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">P${p}</th>`;
-  html+='</tr></thead><tbody class="divide-y divide-slate-50">';
-  days.forEach(day=>{html+=`<tr class="data-row"><td class="px-4 py-3 text-sm font-semibold text-slate-700">${day}</td>`;
-    for(let p=1;p<=6;p++){const entry=myTT.find(t=>t.day===day&&t.period===p);const sub=entry?subjects.find(s=>s.id===entry.subjectId):null;const cls=entry?classes.find(c=>c.id===entry.classId):null;
-      html+=`<td class="px-2 py-2 text-center">${sub?`<div class="tt-cell ${subjectColors[sub.code]||''}">${sub.code}<br><span class="font-normal opacity-75">${cls?.name?.replace('Class ','')||''}</span></div>`:'<span class="text-slate-300">—</span>'}</td>`;}
-    html+='</tr>';});html+='</tbody></table></div></div>';return html;
-};
-
-// ---- TEACHER MARK ATTENDANCE ----
-Views['teacher-attendance'] = () => {
-  const u=Auth.user;const classes=getClasses();
-  return `<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end">
-    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="t-att-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherAtt()">${(u.classIds||[]).map(cid=>{const c=classes.find(x=>x.id===cid);return c?`<option value="${c.id}">${c.name} - ${c.section}</option>`:''}).join('')}</select></div>
-    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Date</label><input id="t-att-date" type="date" value="${today()}" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherAtt()"></div>
-  </div><div id="t-att-form" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
-};
-ViewHooks['teacher-attendance'] = () => loadTeacherAtt();
-function loadTeacherAtt() {
-  const clsId=$('t-att-cls')?.value;const date=$('t-att-date')?.value;if(!clsId)return;
-  const att=getAttendance();const students=getUsers().filter(u=>u.role==='student'&&u.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
-  const existing=att.filter(a=>a.classId===clsId&&a.date===date);
-  let html=`<div class="p-4 border-b border-slate-100"><p class="text-sm text-slate-500">${existing.length?'Update attendance:':'Mark attendance for each student'}</p></div><div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th><th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Present</th><th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Absent</th><th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Late</th></tr></thead><tbody class="divide-y divide-slate-50">`;
-  students.forEach(s=>{const rec=existing.find(a=>a.studentId===s.id);const st=rec?.status||'present';
-    html+=`<tr class="data-row"><td class="px-5 py-3 text-sm text-slate-500">${s.rollNo}</td><td class="px-5 py-3"><div class="flex items-center gap-3">${avatarCircle(s.name)}<span class="text-sm font-medium text-slate-800">${s.name}</span></div></td>
-    <td class="px-5 py-3 text-center"><input type="radio" name="att-${s.id}" value="present" ${st==='present'?'checked':''} class="att-radio"></td>
-    <td class="px-5 py-3 text-center"><input type="radio" name="att-${s.id}" value="absent" ${st==='absent'?'checked':''} class="att-radio absent"></td>
-    <td class="px-5 py-3 text-center"><input type="radio" name="att-${s.id}" value="late" ${st==='late'?'checked':''} class="att-radio late"></td></tr>`;});
-  html+=`</tbody></table></div><div class="p-4 border-t border-slate-100 flex justify-end"><button onclick="saveTeacherAtt()" class="px-6 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors"><i class="fas fa-save mr-2"></i>Save Attendance</button></div>`;
-  $('t-att-form').innerHTML=html;
-}
-async function saveTeacherAtt() {
-  const clsId=$('t-att-cls')?.value;const date=$('t-att-date')?.value;if(!clsId||!date)return;
-  const students=getUsers().filter(u=>u.role==='student'&&u.classId===clsId);
-  const records=students.map(s=>{const val=document.querySelector(`input[name="att-${s.id}"]:checked`)?.value||'present';
-    const existing=getAttendance().find(a=>a.classId===clsId&&a.date===date&&a.studentId===s.id);
-    return existing?{...existing,status:val}:{id:genId(),date,classId:clsId,studentId:s.id,status:val};});
-  await saveAttendance(records);toast('Attendance saved to Firebase');loadTeacherAtt();
-}
-
-// ---- TEACHER ENTER GRADES ----
-Views['teacher-grades'] = () => {
-  const u=Auth.user;const classes=getClasses();
-  return `<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end">
-    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="t-gr-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherGrades()">${(u.classIds||[]).map(cid=>{const c=classes.find(x=>x.id===cid);return c?`<option value="${c.id}">${c.name} - ${c.section}</option>`:''}).join('')}</select></div>
-    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Exam</label><select id="t-gr-exam" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherGrades()"><option>Mid-Term</option><option>Unit Test 1</option></select></div>
-  </div><div id="t-gr-form" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
-};
-ViewHooks['teacher-grades'] = () => loadTeacherGrades();
-function loadTeacherGrades() {
-  const clsId=$('t-gr-cls')?.value;const exam=$('t-gr-exam')?.value;if(!clsId)return;
-  const u=Auth.user;const subjects=getSubjects().filter(s=>(u.subjects||[]).includes(s.id));
-  const students=getUsers().filter(s=>s.role==='student'&&s.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
-  const maxM=exam?.includes('Unit')?25:100;
-  let html=`<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>${subjects.map(s=>`<th class="px-4 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">${s.code}<br><span class="font-normal text-slate-400">(Max: ${maxM})</span></th>`).join('')}</tr></thead><tbody class="divide-y divide-slate-50">`;
-  students.forEach(st=>{html+=`<tr class="data-row"><td class="px-4 py-3"><div class="flex items-center gap-2">${avatarCircle(st.name,'w-7 h-7 text-[10px]')}<span class="text-sm font-medium text-slate-800">${st.name}</span></div></td>`;
-    subjects.forEach(sub=>{const g=getGrades().find(x=>x.studentId===st.id&&x.subjectId===sub.id&&x.examType===exam);
-      html+=`<td class="px-4 py-2 text-center"><input type="number" min="0" max="${maxM}" value="${g?.marks||''}" data-student="${st.id}" data-subject="${sub.id}" class="w-16 px-2 py-1.5 rounded border border-slate-200 text-sm text-center font-medium"></td>`;});
-    html+='</tr>';});
-  html+=`</tbody></table></div><div class="p-4 border-t border-slate-100 flex justify-end"><button onclick="saveTeacherGrades('${exam}',${maxM})" class="px-6 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors"><i class="fas fa-save mr-2"></i>Save Grades</button></div>`;
-  $('t-gr-form').innerHTML=html;
-}
-async function saveTeacherGrades(exam,maxM) {
-  const clsId=$('t-gr-cls')?.value;if(!clsId)return;
-  const inputs=$('t-gr-form').querySelectorAll('input[type="number"]');const records=[];
-  inputs.forEach(inp=>{const sid=inp.dataset.student;const subId=inp.dataset.subject;const marks=parseInt(inp.value);if(isNaN(marks))return;
-    const existing=getGrades().find(x=>x.studentId===sid&&x.subjectId===subId&&x.examType===exam&&x.classId===clsId);
-    if(existing)records.push({...existing,marks});else records.push({id:genId(),studentId:sid,classId:clsId,subjectId:subId,examType:exam,marks,maxMarks:maxM});});
-  if(records.length)await saveGrades(records);toast('Grades saved to Firebase');
-}
-
-// ---- TEACHER MY STUDENTS ----
-Views['teacher-students'] = () => {
-  const u=Auth.user;const classes=getClasses();const myClassIds=u.classIds||[];
-  return `<div class="space-y-4"><div class="flex gap-2 flex-wrap">${myClassIds.map((cid,i)=>{const c=classes.find(x=>x.id===cid);return c?`<button onclick="showTeacherStudents('${cid}')" class="tch-cls-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${i===0?'bg-primary-600 text-white':'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}" data-cid="${cid}">${c.name} - ${c.section}</button>`:''}).join('')}</div>
-  <div id="tch-students-list" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
-};
-ViewHooks['teacher-students'] = () => { const cid=(Auth.user.classIds||[])[0]; if(cid) showTeacherStudents(cid); };
-function showTeacherStudents(cid) {
-  document.querySelectorAll('.tch-cls-tab').forEach(b=>{b.className=b.dataset.cid===cid?'tch-cls-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-primary-600 text-white':'tch-cls-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'});
-  const students=getUsers().filter(u=>u.role==='student'&&u.classId===cid).sort((a,b)=>a.rollNo-b.rollNo);
-  $('tch-students-list').innerHTML=`<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Gender</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold
+ $('mo').addEventListener('click',e=>{if(e.target===$('mo'))hM()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hM()});
+window.addEventListener('resize',()=>{if(window.innerWidth>768){$('sidebar').classList.remove('mo');$('so').classList.remove('sh')}});
+init();
+</script>
+</body>
+</html>
