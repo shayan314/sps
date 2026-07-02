@@ -3,208 +3,286 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPS School Management System</title>
+<title>SPS School System</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--p:#047857;--pd:#065F46;--a:#B45309;--al:#D97706;--d:#DC2626;--sb:#022C22;--bg:#F1F5F0;--c:#fff;--t:#1A2E1A;--m:#5F7A5F;--b:#D1DDD1;--sw:248px}
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--t);overflow-x:hidden}
-.ld{position:fixed;inset:0;background:var(--sb);display:flex;align-items:center;justify-content:center;z-index:200;transition:opacity .4s}.ld.h{opacity:0;pointer-events:none}
-.lr{width:46px;height:46px;border:4px solid rgba(255,255,255,.12);border-top-color:#34D399;border-radius:50%;animation:sp .7s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
-#ls{min-height:100vh;display:flex;background:var(--sb)}
-.ll{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;color:#fff;position:relative;overflow:hidden}
-.ll::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(52,211,153,.12) 0%,transparent 60%)}
-.ll h1{font-size:clamp(32px,5vw,50px);font-weight:900;color:#34D399;letter-spacing:-1px;position:relative;z-index:1}
-.ll p{color:rgba(255,255,255,.5);margin-top:8px;font-size:14px;position:relative;z-index:1}
-.llf{margin-top:36px;position:relative;z-index:1;display:flex;flex-direction:column;gap:12px}
-.llf div{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.55);font-size:13px}.llf i{color:#34D399;width:18px;text-align:center}
-.lrr{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;background:#fff}
-.lb{width:100%;max-width:380px}.lb h2{font-size:24px;font-weight:800;margin-bottom:4px}
-.lb .ls{color:var(--m);font-size:13px;margin-bottom:24px}
-.rt{display:flex;gap:0;margin-bottom:22px;background:#F1F5F0;border-radius:10px;padding:3px}
-.rt button{flex:1;padding:9px;text-align:center;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--m);border-radius:8px;cursor:pointer;transition:all .2s}
+:root{--p:#047857;--pd:#065F46;--a:#B45309;--al:#D97706;--d:#DC2626;--sb:#0A1F1A;--bg:#F1F5F0;--c:#fff;--t:#1A2E1A;--m:#5F7A5F;--b:#D1DDD1;--sw:250px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--t);overflow-x:hidden}
+.ld{position:fixed;inset:0;background:var(--sb);display:flex;align-items:center;justify-content:center;z-index:200;transition:opacity .5s}.ld.h{opacity:0;pointer-events:none}
+.lr{width:50px;height:50px;border:4px solid rgba(255,255,255,.1);border-top-color:#34D399;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+#hp{display:none}
+.hnav{position:fixed;top:0;left:0;right:0;z-index:20;background:rgba(10,31,26,.92);backdrop-filter:blur(12px);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06)}
+.lgb{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#047857,#34D399);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px}
+.lgt{color:#fff;font-weight:800;font-size:18px}.lgt span{color:#34D399}
+.hnav-r{display:flex;gap:8px;align-items:center}
+.hnav-r a{color:rgba(255,255,255,.6);text-decoration:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;transition:all .2s}
+.hnav-r a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.hnb{background:var(--p);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.hnb:hover{background:#065F46}
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:80px 24px}
+.hero-bg{position:absolute;inset:0;background:url('https://picsum.photos/seed/schlbldg99/1400/800') center/cover}
+.hero-ov{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,31,26,.93),rgba(4,120,87,.85),rgba(10,31,26,.9))}
+.hero-c{position:relative;z-index:1;max-width:700px}
+.hero-c h1{font-size:clamp(36px,6vw,62px);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-1px}
+.hero-c h1 em{font-style:normal;color:#34D399}
+.hero-c p{color:rgba(255,255,255,.6);font-size:clamp(15px,2vw,18px);margin-top:18px;line-height:1.7}
+.hero-b{margin-top:32px;display:flex;gap:14px;flex-wrap:wrap}
+.hb1{background:var(--p);color:#fff;border:none;padding:14px 28px;border-radius:12px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:all .25s}
+.hb1:hover{background:#065F46;transform:translateY(-2px);box-shadow:0 8px 24px rgba(4,120,87,.4)}
+.hb2{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.25);padding:14px 28px;border-radius:12px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:all .25s}
+.hb2:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.05)}
+.hsts{display:grid;grid-template-columns:repeat(4,1fr);position:relative;z-index:1;margin-top:80px}
+.hst{background:rgba(255,255,255,.06);backdrop-filter:blur(8px);padding:28px 20px;text-align:center;border-right:1px solid rgba(255,255,255,.08)}
+.hst:last-child{border-right:none}
+.hst .n{font-size:32px;font-weight:900;color:#34D399}
+.hst .l{font-size:11px;color:rgba(255,255,255,.5);font-weight:500;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+.hsc{padding:80px 24px;max-width:1200px;margin:0 auto}
+.hsct{text-align:center;margin-bottom:50px}
+.hsct h2{font-size:30px;font-weight:900}
+.hsct p{color:var(--m);font-size:15px;margin-top:8px;max-width:500px;margin-left:auto;margin-right:auto}
+.hab{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hab-img{border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.12)}
+.hab-img img{width:100%;height:400px;object-fit:cover;display:block}
+.hab-c h3{font-size:22px;font-weight:800;margin-bottom:16px;color:var(--p)}
+.hab-c p{color:var(--m);font-size:14px;line-height:1.8;margin-bottom:12px}
+.hfg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.hfc{border-radius:16px;overflow:hidden;position:relative;height:260px;cursor:pointer;transition:transform .3s}
+.hfc:hover{transform:translateY(-4px)}
+.hfc img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.hfc:hover img{transform:scale(1.05)}
+.hfc-o{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,transparent 60%);padding:20px;display:flex;flex-direction:column;justify-content:flex-end}
+.hfc-o h4{color:#fff;font-size:17px;font-weight:700}
+.hfc-o p{color:rgba(255,255,255,.7);font-size:12px;margin-top:4px}
+.hgal{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hgal div{border-radius:12px;overflow:hidden;height:200px}
+.hgal img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.hgal div:hover img{transform:scale(1.08)}
+.hft{background:var(--sb);color:rgba(255,255,255,.4);padding:40px 24px;text-align:center;font-size:13px}
+#ls{display:none;min-height:100vh;flex-direction:row;background:var(--sb)}
+.ll{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;color:#fff;position:relative}
+.ll::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(52,211,153,.1) 0%,transparent 60%)}
+.ll h2{font-size:28px;font-weight:800;color:#fff;position:relative;z-index:1}
+.ll p{color:rgba(255,255,255,.4);font-size:13px;margin-top:6px;position:relative;z-index:1}
+.ll-f{margin-top:36px;position:relative;z-index:1;display:flex;flex-direction:column;gap:14px}
+.ll-f div{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.5);font-size:13px}
+.ll-f i{color:#34D399;width:18px;text-align:center}
+.lrr{flex:1;display:flex;align-items:center;justify-content:center;padding:48px;background:#fff}
+.lbx{width:100%;max-width:400px}
+.lbx h2{font-size:24px;font-weight:800;margin-bottom:4px}
+.lbx .ls{color:var(--m);font-size:13px;margin-bottom:28px}
+.rt{display:flex;gap:0;margin-bottom:24px;background:#F1F5F0;border-radius:10px;padding:3px}
+.rt button{flex:1;padding:10px;text-align:center;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--m);border-radius:8px;cursor:pointer;transition:all .2s}
 .rt button.on{background:var(--p);color:#fff;box-shadow:0 2px 8px rgba(4,120,87,.3)}
-.fg{margin-bottom:14px}.fl{display:block;font-size:12.5px;font-weight:600;color:var(--m);margin-bottom:5px}
-.fi{width:100%;padding:10px 13px;border:1.5px solid var(--b);border-radius:10px;font-family:inherit;font-size:13.5px;background:#fff;outline:none;transition:border .2s}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:12.5px;font-weight:600;color:var(--m);margin-bottom:5px}
+.fi{width:100%;padding:10px 14px;border:1.5px solid var(--b);border-radius:10px;font-family:inherit;font-size:13.5px;background:#fff;outline:none;transition:all .2s}
 .fi:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(4,120,87,.1)}
 select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M6 8L1 3h10z' fill='%235F7A5F'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border:none;border-radius:10px;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .2s}
-.bp{background:var(--p);color:#fff}.bp:hover{background:var(--pd);transform:translateY(-1px);box-shadow:0 4px 14px rgba(4,120,87,.3)}
-.ba{background:var(--al);color:#fff}.ba:hover{background:var(--a)}
-.bo{background:transparent;color:var(--t);border:1.5px solid var(--b)}.bo:hover{border-color:var(--p);color:var(--p)}
-.bd{background:var(--d);color:#fff}.bd:hover{background:#B91C1C}
-.bw{background:#25D366;color:#fff}.bw:hover{background:#128C7E}
-.bs{padding:6px 13px;font-size:12.5px;border-radius:8px}
-.bf{width:100%;justify-content:center}
-.le{color:var(--d);font-size:12.5px;font-weight:500;margin-bottom:10px;display:none}
-.vl{display:block;text-align:center;margin-top:18px;color:var(--p);font-size:12.5px;font-weight:600;cursor:pointer}.vl:hover{text-decoration:underline}
+.le{color:var(--d);font-size:12px;font-weight:500;margin-bottom:10px;display:none}
+.vl{display:block;text-align:center;margin-top:20px;color:var(--p);font-size:13px;font-weight:600;cursor:pointer}
+.vl:hover{text-decoration:underline}
+#ap{display:none}
 #sb{position:fixed;left:0;top:0;bottom:0;width:var(--sw);background:var(--sb);color:#fff;z-index:40;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.sbb{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.07)}.sbb h1{font-size:18px;font-weight:800;color:#34D399}.sbb p{font-size:10.5px;color:rgba(255,255,255,.3);margin-top:2px}
-.sbr{padding:8px 18px;background:rgba(255,255,255,.04);font-size:10.5px;font-weight:600;color:var(--al);text-transform:uppercase;letter-spacing:.5px}
-.sbn{flex:1;padding:8px 8px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
-.nb{display:flex;align-items:center;gap:10px;width:100%;padding:10px 13px;border:none;background:transparent;color:rgba(255,255,255,.5);font-family:inherit;font-size:13px;font-weight:500;border-radius:9px;cursor:pointer;transition:all .15s;text-align:left}
-.nb:hover{background:rgba(255,255,255,.06);color:#fff}.nb.on{background:var(--p);color:#fff;font-weight:600}
-.nb i{width:18px;text-align:center;font-size:13.5px}
-.sbf{padding:12px 18px;border-top:1px solid rgba(255,255,255,.07)}
-.sbf button{display:flex;align-items:center;gap:7px;width:100%;padding:7px 0;border:none;background:transparent;color:rgba(255,255,255,.4);font-family:inherit;font-size:12.5px;cursor:pointer}.sbf button:hover{color:#FCA5A5}
-#mh{display:none;position:fixed;top:0;left:0;right:0;height:54px;background:var(--sb);z-index:30;align-items:center;padding:0 12px;gap:10px}
-#mh .hb{background:none;border:none;color:#fff;font-size:17px;cursor:pointer;padding:5px}#mh .mt{color:#34D399;font-weight:700;font-size:15px}
-#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35;backdrop-filter:blur(2px)}#ov.sh{display:block}
-#mw{margin-left:var(--sw);min-height:100vh;transition:margin .3s;position:relative}
-#mw::before{content:'';position:fixed;top:0;right:0;width:400px;height:400px;background:radial-gradient(circle,rgba(4,120,87,.04) 0%,transparent 70%);pointer-events:none}
-#mc{padding:24px;max-width:1240px;position:relative;z-index:1}
+.sb-h{padding:16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px}
+.sb-r{padding:8px 16px;font-size:10px;font-weight:600;color:var(--al);text-transform:uppercase;letter-spacing:.8px;background:rgba(255,255,255,.03)}
+.sb-n{flex:1;padding:8px;overflow-y:auto;display:flex;flex-direction:column;gap:1px}
+.nb{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:none;background:transparent;color:rgba(255,255,255,.5);font-family:inherit;font-size:13px;font-weight:500;border-radius:8px;cursor:pointer;transition:all .15s;text-align:left;position:relative}
+.nb:hover{background:rgba(255,255,255,.05);color:#fff}
+.nb.on{background:var(--p);color:#fff;font-weight:600}
+.nb i{width:18px;text-align:center;font-size:13px}
+.nb .bnc{position:absolute;right:10px;background:var(--d);color:#fff;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700}
+.sb-ft{padding:10px 16px;border-top:1px solid rgba(255,255,255,.06)}
+.sb-ft button{display:flex;align-items:center;gap:8px;width:100%;padding:8px 0;border:none;background:transparent;color:rgba(255,255,255,.35);font-family:inherit;font-size:12px;cursor:pointer}
+.sb-ft button:hover{color:#FCA5A5}
+#mhd{display:none;position:fixed;top:0;left:0;right:0;height:56px;background:var(--sb);z-index:30;align-items:center;padding:0 14px;gap:10px}
+#mhd .hmb{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:6px}
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35;backdrop-filter:blur(2px)}
+#ov.sh{display:block}
+#mw{margin-left:var(--sw);min-height:100vh;transition:margin .3s}
+#mc{padding:24px;max-width:1240px}
 .cd{background:var(--c);border-radius:14px;border:1px solid var(--b);box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.sc{padding:18px 20px;display:flex;align-items:flex-start;gap:13px}
+.sc{padding:18px 20px;display:flex;align-items:flex-start;gap:14px}
 .si{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.sl{font-size:12px;color:var(--m);font-weight:500}.sv{font-size:24px;font-weight:800;line-height:1.1;margin-top:3px}.ss{font-size:11px;margin-top:4px;font-weight:500}
+.sl{font-size:12px;color:var(--m);font-weight:500}
+.sv{font-size:24px;font-weight:800;line-height:1.1;margin-top:3px}
+.ss{font-size:11px;margin-top:4px;font-weight:500}
 .bg{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600}
-.bg-p{background:#D1FAE5;color:#065F46}.bg-u{background:#FEE2E2;color:#991B1B}.bg-r{background:#FEF3C7;color:#92400E}
+.bgp{background:#D1FAE5;color:#065F46}
+.bgu{background:#FEE2E2;color:#991B1B}
+.bgr{background:#FEF3C7;color:#92400E}
 .dt{width:100%;border-collapse:collapse;font-size:13px}
 .dt th{text-align:left;padding:10px 12px;background:#F6F9F6;color:var(--m);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid var(--b)}
-.dt td{padding:10px 12px;border-bottom:1px solid #EEF2EE;vertical-align:middle}.dt tr:hover td{background:#FAFCFA}
-.tb{display:flex;gap:0;border-bottom:2px solid var(--b);margin-bottom:20px;overflow-x:auto}
-.tb button{padding:9px 16px;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--m);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap}
-.tb button:hover{color:var(--t)}.tb button.on{color:var(--p);border-bottom-color:var(--p)}
+.dt td{padding:10px 12px;border-bottom:1px solid #EEF2EE;vertical-align:middle}
+.dt tr:hover td{background:#FAFCFA}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border:none;border-radius:9px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.btnp{background:var(--p);color:#fff}
+.btnp:hover{background:var(--pd);transform:translateY(-1px);box-shadow:0 4px 12px rgba(4,120,87,.3)}
+.btna{background:var(--al);color:#fff}
+.btno{background:transparent;color:var(--t);border:1.5px solid var(--b)}
+.btno:hover{border-color:var(--p);color:var(--p)}
+.btnd{background:var(--d);color:#fff}
+.btnw{background:#25D366;color:#fff}
+.btnw:hover{background:#128C7E}
+.btns{padding:6px 12px;font-size:12px;border-radius:7px}
+.btnf{width:100%;justify-content:center}
+.tbr{display:flex;gap:0;border-bottom:2px solid var(--b);margin-bottom:20px;overflow-x:auto}
+.tbr button{padding:9px 16px;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--m);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap}
+.tbr button:hover{color:var(--t)}
+.tbr button.on{color:var(--p);border-bottom-color:var(--p)}
 .cw{position:relative;width:100%;height:220px}
-.cbb{padding:16px 18px}.cbb h3{font-size:14px;font-weight:700;margin-bottom:12px}
+.cbb{padding:16px 18px}
+.cbb h3{font-size:14px;font-weight:700;margin-bottom:12px}
 .mb{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:flex;align-items:center;justify-content:center;padding:12px;backdrop-filter:blur(3px)}
-.mx{background:#fff;border-radius:16px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mi .25s ease}
+.mx{background:#fff;border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mi .25s ease}
 @keyframes mi{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .mhd{padding:16px 20px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between}
-.mhd h2{font-size:16px;font-weight:700}.mcl{background:none;border:none;font-size:17px;color:var(--m);cursor:pointer;padding:3px}
-.mbd{padding:20px}.mft{padding:12px 20px;border-top:1px solid var(--b);display:flex;justify-content:flex-end;gap:8px}
+.mhd h2{font-size:16px;font-weight:700}
+.mcl{background:none;border:none;font-size:17px;color:var(--m);cursor:pointer;padding:3px}
+.mbd{padding:20px}
+.mft{padding:12px 20px;border-top:1px solid var(--b);display:flex;justify-content:flex-end;gap:8px}
 .tst{position:fixed;bottom:20px;right:20px;z-index:60;padding:12px 18px;border-radius:10px;color:#fff;font-weight:600;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.15);transform:translateY(18px);opacity:0;transition:all .3s}
-.tst.sh{transform:translateY(0);opacity:1}.t-ok{background:var(--p)}.t-e{background:var(--d)}.t-w{background:var(--al)}
-.fi-in{animation:fi .3s ease}@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-#hs{display:none}
-.hh{background:linear-gradient(135deg,#022C22 0%,#065F46 50%,#047857 100%);color:#fff;padding:70px 20px 50px;text-align:center;position:relative;overflow:hidden}
-.hh::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 80%,rgba(52,211,153,.15) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(217,119,6,.1) 0%,transparent 50%)}
-.hh h1{font-size:clamp(32px,6vw,58px);font-weight:900;color:#34D399;position:relative;z-index:1;letter-spacing:-1px}
-.hh p{font-size:clamp(14px,2vw,17px);color:rgba(255,255,255,.55);margin-top:10px;position:relative;z-index:1;max-width:580px;margin-left:auto;margin-right:auto;line-height:1.6}
-.hh .hbtn{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
-.hst{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;max-width:700px;margin:-28px auto 0;padding:0 20px;position:relative;z-index:2}
-.hst div{background:#fff;border-radius:12px;padding:18px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.08)}
-.hst .n{font-size:28px;font-weight:900;color:var(--p)}.hst .l{font-size:11px;color:var(--m);font-weight:600;margin-top:2px}
-.hsec{max-width:1060px;margin:0 auto;padding:50px 20px}
-.hsec h2{font-size:26px;font-weight:800;margin-bottom:6px}.hsec .sub{color:var(--m);font-size:14px;margin-bottom:28px}
-.hg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-.hc{background:#fff;border-radius:14px;padding:24px 20px;border:1px solid var(--b);transition:all .25s}
-.hc:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.07)}
-.hc .hi{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
-.hc h3{font-size:15px;font-weight:700;margin-bottom:6px}.hc p{font-size:13px;color:var(--m);line-height:1.5}
-.hft{background:var(--sb);color:rgba(255,255,255,.35);text-align:center;padding:24px 20px;font-size:12.5px}
-.hbk{position:fixed;top:14px;left:14px;z-index:10;background:rgba(0,0,0,.4);color:#fff;border:none;width:38px;height:38px;border-radius:10px;font-size:15px;cursor:pointer;backdrop-filter:blur(4px)}
+.tst.sh{transform:translateY(0);opacity:1}
+.tok{background:var(--p)}.ter{background:var(--d)}.twa{background:var(--al)}
+.fin{animation:fi .3s ease}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .vp{background:#fff;border:2px solid #1a1a1a;border-radius:4px;padding:24px;max-width:640px;margin:0 auto;font-family:'Courier New',Courier,monospace;font-size:12px;line-height:1.5}
-.vp .vh{text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:10px;margin-bottom:10px}.vp .vh h2{font-size:18px;font-weight:900;letter-spacing:1px}
+.vp .vh{text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:10px;margin-bottom:10px}
+.vp .vh h2{font-size:18px;font-weight:900;letter-spacing:1px}
 .vp .vm{display:flex;justify-content:space-between;flex-wrap:wrap;margin-bottom:8px;padding-bottom:7px;border-bottom:1px dashed #999;font-size:11.5px}
-.vp .vs{background:#f7f7f7;padding:7px 10px;margin-bottom:10px}.vp .vs div{display:flex}.vp .vs span:first-child{width:120px;font-weight:700;flex-shrink:0}
+.vp .vs{background:#f7f7f7;padding:7px 10px;margin-bottom:10px}
+.vp .vs div{display:flex}
+.vp .vs span:first-child{width:120px;font-weight:700;flex-shrink:0}
 .vp table{width:100%;border-collapse:collapse;margin-bottom:8px}
 .vp table th{background:#1a1a1a;color:#fff;padding:6px 9px;text-align:left;font-size:11px}
-.vp table td{padding:6px 9px;border-bottom:1px solid #ddd}.vp table td:last-child{text-align:right}
+.vp table td{padding:6px 9px;border-bottom:1px solid #ddd}
+.vp table td:last-child{text-align:right}
 .vp .tr{background:#f0f0f0;font-weight:700}
 .vp .vbk{background:#FFF9E6;border:1px solid #E6D68A;padding:7px 10px;margin:8px 0;font-size:11.5px}
-.vp .vsg{display:flex;justify-content:space-between;margin-top:40px}.vp .vsg div{text-align:center;width:130px}
+.vp .vsg{display:flex;justify-content:space-between;margin-top:40px}
+.vp .vsg div{text-align:center;width:130px}
 .vp .vsg .sl2{border-top:1px solid #1a1a1a;padding-top:3px;margin-top:24px;font-size:11.5px}
-.ttg{display:grid;grid-template-columns:72px repeat(5,1fr);gap:1px;background:var(--b);border-radius:10px;overflow:hidden;font-size:12px}
-.ttc{background:#fff;padding:6px 5px;min-height:38px}
-.tth{background:var(--pd);color:#fff;font-weight:700;text-align:center;padding:8px 5px;font-size:11px}
-.ttt{background:#F6F9F6;font-weight:600;color:var(--m);display:flex;align-items:center;justify-content:center;font-size:10.5px}
-.tts{font-weight:600;font-size:11px}.ttt2{font-size:9.5px;color:var(--m);margin-top:1px}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#C1D1C1;border-radius:3px}
+/* Timetable responsive */
+.tt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ttg{display:grid;grid-template-columns:80px repeat(5,minmax(100px,1fr));gap:1px;background:var(--b);border-radius:10px;overflow:hidden;font-size:12px;min-width:600px}
+.ttc{background:#fff;padding:8px 6px;min-height:42px}
+.tth{background:var(--pd);color:#fff;font-weight:700;text-align:center;padding:10px 6px;font-size:11px}
+.ttt{background:#F6F9F6;font-weight:600;color:var(--m);display:flex;align-items:center;justify-content:center;font-size:10px;line-height:1.3}
+.tts{font-weight:600;font-size:11px;line-height:1.2}
+.ttt2{font-size:9.5px;color:var(--m);margin-top:2px}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#C1D1C1;border-radius:3px}
 @media(max-width:768px){
-#ls{flex-direction:column}.ll{padding:28px 18px;min-height:auto}.ll h1{font-size:30px}.llf{display:none}.lrr{padding:28px 18px}
-#sb{transform:translateX(-100%)}#sb.op{transform:translateX(0)}#mh{display:flex}
-#mw{margin-left:0;padding-top:54px}#mc{padding:12px}.sv{font-size:19px}.cw{height:180px}
-.hh{padding:44px 14px 34px}.hst{grid-template-columns:repeat(2,1fr);gap:8px}.hsec{padding:34px 14px}
+.hnav{padding:0 16px}.hnav-r a{display:none}.hnav-r .hnb{padding:8px 14px;font-size:12px}
+.hsts{grid-template-columns:repeat(2,1fr);gap:1px}.hst{padding:20px 12px}.hst .n{font-size:24px}
+.hsc{padding:50px 16px}.hsct h2{font-size:24px}
+.hab{grid-template-columns:1fr;gap:28px}.hab-img img{height:250px}
+.hfg{grid-template-columns:1fr 1fr}.hfc{height:200px}
+.hgal{grid-template-columns:repeat(2,1fr)}
+#ls{flex-direction:column}.ll{padding:28px 18px;min-height:auto}.ll h2{font-size:24px}.ll-f{display:none}.lrr{padding:28px 18px}
+#sb{transform:translateX(-100%)}
+#sb.op{transform:translateX(0)}
+#mhd{display:flex}
+#mw{margin-left:0;padding-top:56px}
+#mc{padding:14px}
+.sv{font-size:19px}
+.cw{height:180px}
 .hm{display:none!important}
-.vp{padding:14px;font-size:10px}.vp .vs span:first-child{width:95px}.vp .vm{flex-direction:column;gap:2px}.vp .vsg{flex-direction:column;gap:20px;align-items:center}
-.ttg{grid-template-columns:56px repeat(5,1fr);font-size:10.5px}.ttc{padding:4px 3px}
+.smo{display:flex!important}
+.vp{padding:14px;font-size:10px}
+.vp .vs span:first-child{width:90px}
+.vp .vm{flex-direction:column;gap:2px}
+.vp .vsg{flex-direction:column;gap:20px;align-items:center}
+.ttg{grid-template-columns:64px repeat(5,minmax(80px,1fr));min-width:480px;font-size:11px}
+.ttc{padding:5px 4px;min-height:36px}
+.tts{font-size:10px}.ttt2{font-size:9px}
 }
 @media(min-width:769px){.smo{display:none!important}}
 </style>
-</head>
+</head> 
+ 
 <body>
+<!-- LOADER -->
 <div class="ld" id="ldr"><div style="text-align:center"><div class="lr"></div><p style="color:#34D399;margin-top:14px;font-weight:600;font-size:13px">Loading SPS System...</p></div></div>
 
+<!-- HOME PAGE -->
+<div id="hp">
+<nav class="hnav"><div style="display:flex;align-items:center;gap:10px"><div class="lgb">SPS</div><div class="lgt">SPS <span>School</span></div></div>
+<div class="hnav-r"><a href="#about">About</a><a href="#facilities">Facilities</a><a href="#gallery">Gallery</a><button class="hnb" onclick="goLogin()">Login Portal</button></div></nav>
+<section class="hero"><div class="hero-bg"></div><div class="hero-ov"></div>
+<div class="hero-c"><h1>Shaping Future <em>Leaders</em> of Pakistan</h1>
+<p>Established in 1995, SPS School is one of Lahore's premier institutions offering academic excellence, character building, and holistic development from Class 6 to Matric.</p>
+<div class="hero-b"><button class="hb1" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Discover More</button><button class="hb2" onclick="goLogin()">Student Portal</button></div></div>
+<div class="hsts"><div class="hst"><div class="n">500+</div><div class="l">Students</div></div><div class="hst"><div class="n">35+</div><div class="l">Teachers</div></div><div class="hst"><div class="n">30+</div><div class="l">Years</div></div><div class="hst"><div class="n">98%</div><div class="l">Pass Rate</div></div></div></section>
+
+<section class="hsc" id="about"><div class="hsct"><h2>About Our School</h2><p>A legacy of three decades in nurturing young minds with knowledge, discipline, and values.</p></div>
+<div class="hab"><div class="hab-img"><img src="https://picsum.photos/seed/spscampus7/700/500" alt="Campus"></div>
+<div class="hab-c"><h3>Why Choose SPS?</h3><p>SPS School is affiliated with the Board of Intermediate and Secondary Education (BISE), Lahore. Our curriculum is designed to meet national standards while fostering critical thinking and creativity.</p>
+<p>Our experienced faculty, modern facilities, and supportive environment ensure every student reaches their full potential. We believe in producing not just good students, but good citizens.</p>
+<p>With separate campuses for boys and girls, well-equipped science and computer labs, a vast library, and excellent sports facilities — SPS provides a complete educational experience.</p></div></div></section>
+
+<section class="hsc" id="facilities" style="background:#F6F9F6;border-radius:24px;max-width:100%;padding-left:0;padding-right:0"><div style="max-width:1200px;margin:0 auto;padding:80px 24px">
+<div class="hsct"><h2>Our Facilities</h2><p>State-of-the-art infrastructure to support every aspect of learning.</p></div>
+<div class="hfg">
+<div class="hfc"><img src="https://picsum.photos/seed/scilab22/500/400" alt="Science Lab"><div class="hfc-o"><h4>Science Laboratories</h4><p>Physics, Chemistry & Biology labs with modern equipment</p></div></div>
+<div class="hfc"><img src="https://picsum.photos/seed/complab33/500/400" alt="Computer Lab"><div class="hfc-o"><h4>Computer Lab</h4><p>40+ systems with high-speed internet and latest software</p></div></div>
+<div class="hfc"><img src="https://picsum.photos/seed/slibrary44/500/400" alt="Library"><div class="hfc-o"><h4>Library</h4><p>5,000+ books, journals, and digital learning resources</p></div></div>
+<div class="hfc"><img src="https://picsum.photos/seed/ssport55/500/400" alt="Sports"><div class="hfc-o"><h4>Sports Complex</h4><p>Cricket, football, basketball courts and indoor games</p></div></div>
+<div class="hfc"><img src="https://picsum.photos/seed/stransport66/500/400" alt="Transport"><div class="hfc-o"><h4>Transport Fleet</h4><p>Safe and reliable transport covering all Lahore areas</p></div></div>
+<div class="hfc"><img src="https://picsum.photos/seed/smosque77/500/400" alt="Mosque"><div class="hfc-o"><h4>Mosque & Hifiz</h4><p>On-campus mosque with Quran Hifiz classes available</p></div></div>
+</div></div></section>
+
+<section class="hsc" id="gallery"><div class="hsct"><h2>Campus Gallery</h2><p>A glimpse into life at SPS School.</p></div>
+<div class="hgal">
+<div><img src="https://picsum.photos/seed/spg1/400/300" alt="Gallery 1"></div>
+<div><img src="https://picsum.photos/seed/spg2/400/300" alt="Gallery 2"></div>
+<div><img src="https://picsum.photos/seed/spg3/400/300" alt="Gallery 3"></div>
+<div><img src="https://picsum.photos/seed/spg4/400/300" alt="Gallery 4"></div>
+</div></section>
+
+<footer class="hft"><div style="max-width:1200px;margin:0 auto">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;text-align:left;margin-bottom:32px">
+<div><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><div class="lgb">SPS</div><div style="color:#fff;font-weight:800;font-size:16px">SPS <span style="color:#34D399">School</span></div></div><p style="font-size:13px;line-height:1.7">Main Boulevard, Gulberg III, Lahore, Pakistan. Affiliated with BISE Lahore.</p></div>
+<div><h4 style="color:#fff;font-size:14px;font-weight:700;margin-bottom:12px">Quick Links</h4><div style="display:flex;flex-direction:column;gap:8px"><a href="#about" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:13px">About Us</a><a href="#facilities" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:13px">Facilities</a><a href="#gallery" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:13px">Gallery</a><a href="javascript:goLogin()" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:13px">Student Portal</a></div></div>
+<div><h4 style="color:#fff;font-size:14px;font-weight:700;margin-bottom:12px">Contact</h4><div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.5)"><div><i class="fa-solid fa-phone" style="width:16px;color:#34D399"></i> 042-35761234</div><div><i class="fa-solid fa-envelope" style="width:16px;color:#34D399"></i> info@sps.edu.pk</div><div><i class="fa-solid fa-clock" style="width:16px;color:#34D399"></i> Mon-Sat: 8AM - 2PM</div></div></div>
+</div><div style="border-top:1px solid rgba(255,255,255,.08);padding-top:20px">&copy; 2025 SPS School System. All Rights Reserved.</div>
+</div></footer>
+</div>
+
 <!-- LOGIN -->
-<div id="ls">
-<div class="ll"><h1>SPS School</h1><p>Excellence in Education Since 1995</p>
-<div class="llf">
-<div><i class="fa-solid fa-check-circle"></i> Complete Student Management</div>
-<div><i class="fa-solid fa-check-circle"></i> Automated Fee Vouchers</div>
-<div><i class="fa-solid fa-check-circle"></i> Digital Results & Reports</div>
-<div><i class="fa-solid fa-check-circle"></i> Attendance Tracking</div>
-<div><i class="fa-solid fa-check-circle"></i> WhatsApp Voucher Delivery</div>
-</div></div>
-<div class="lrr"><div class="lb">
-<h2>Welcome Back</h2><p class="ls">Sign in to access your portal</p>
-<div class="le" id="le">Invalid credentials. Please try again.</div>
+<div id="ls" style="display:none">
+<div class="ll"><div style="display:flex;align-items:center;gap:10px;margin-bottom:40px;position:relative;z-index:1"><div class="lgb">SPS</div><div class="lgt">SPS <span>School</span></div></div>
+<h2>Welcome Back</h2><p>Sign in to access your portal</p>
+<div class="ll-f"><div><i class="fa-solid fa-check-circle"></i> Complete Student Management</div><div><i class="fa-solid fa-check-circle"></i> Automated Fee Vouchers & WhatsApp</div><div><i class="fa-solid fa-check-circle"></i> Digital Results & Reports</div><div><i class="fa-solid fa-check-circle"></i> Attendance Tracking System</div><div><i class="fa-solid fa-check-circle"></i> Teacher & Admin Portals</div></div></div>
+<div class="lrr"><div class="lbx">
+<h2>Sign In</h2><p class="ls">Access your role-based portal</p>
+<div class="le" id="le">Invalid credentials. Try again.</div>
 <div class="rt" id="rtabs"><button class="on" onclick="setR('admin',this)">Admin</button><button onclick="setR('teacher',this)">Teacher</button><button onclick="setR('student',this)">Student</button></div>
 <div class="fg"><label class="fl" id="lbu">Username</label><input class="fi" id="iu" placeholder="Enter username"></div>
 <div class="fg"><label class="fl">Password</label><input class="fi" id="ip" type="password" placeholder="Enter password"></div>
-<button class="btn bp bf" style="margin-top:6px" onclick="doLogin()">Sign In</button>
-<a class="vl" onclick="showHP()">Visit School Website</a>
+<button class="btn btnp btnf" style="margin-top:6px" onclick="doLogin()">Sign In</button>
+<a class="vl" onclick="goHome()">Back to Website</a>
 </div></div></div>
 
-<!-- HOME PAGE -->
-<div id="hs">
-<button class="hbk" onclick="hideHP()"><i class="fa-solid fa-arrow-left"></i></button>
-<div class="hh"><h1>SPS School System</h1>
-<p>Nurturing minds, building character, and shaping the future of Pakistan since 1995. Affiliated with BISE, Lahore.</p>
-<div class="hbtn">
-<button class="btn bp" onclick="hideHP();document.getElementById('ls').style.display='flex'">Login to Portal</button>
-<button class="btn" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)" onclick="document.getElementById('adms').scrollIntoView({behavior:'smooth'})">Admissions 2025</button>
-</div></div>
-<div class="hst">
-<div><div class="n">500+</div><div class="l">Students</div></div>
-<div><div class="n">35+</div><div class="l">Teachers</div></div>
-<div><div class="n">30+</div><div class="l">Years</div></div>
-<div><div class="n">98%</div><div class="l">Pass Rate</div></div>
-</div>
-<div class="hsec"><h2>About SPS School</h2><p class="sub">One of Lahore's leading educational institutions, committed to academic excellence and holistic development.</p>
-<div class="hg">
-<div class="hc"><div class="hi" style="background:#D1FAE5;color:#065F46"><i class="fa-solid fa-microscope"></i></div><h3>Science Labs</h3><p>Fully equipped Physics, Chemistry and Biology laboratories for practical learning.</p></div>
-<div class="hc"><div class="hi" style="background:#FEF3C7;color:#92400E"><i class="fa-solid fa-laptop-code"></i></div><h3>Computer Lab</h3><p>Modern lab with 40+ systems, high-speed internet and latest software tools.</p></div>
-<div class="hc"><div class="hi" style="background:#E0E7FF;color:#3730A3"><i class="fa-solid fa-book-open"></i></div><h3>Library</h3><p>Extensive library with over 5,000 books, journals, and digital resources.</p></div>
-<div class="hc"><div class="hi" style="background:#FCE7F3;color:#9D174D"><i class="fa-solid fa-futbol"></i></div><h3>Sports Complex</h3><p>Cricket, football, basketball courts and indoor sports facilities.</p></div>
-<div class="hc"><div class="hi" style="background:#FEE2E2;color:#991B1B"><i class="fa-solid fa-bus"></i></div><h3>Transport</h3><p>Safe and reliable transport fleet covering all major areas of Lahore.</p></div>
-<div class="hc"><div class="hi" style="background:#CCFBF1;color:#0F766E"><i class="fa-solid fa-mosque"></i></div><h3>Mosque</h3><p>On-campus mosque with regular Namaz facilities and Quran Hifiz classes.</p></div>
-</div></div>
-<div class="hsec" id="adms" style="background:#F6F9F6"><h2>Admissions Open 2025-26</h2><p class="sub">Secure your child's future with SPS. Admissions open from Class 6 to Class 10.</p>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px">
-<div><h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:var(--p)"><i class="fa-solid fa-list-ol" style="margin-right:8px"></i>Process</h3>
-<div style="display:flex;flex-direction:column;gap:14px">
-<div style="display:flex;gap:14px"><div style="width:32px;height:32px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">1</div><div><div style="font-weight:600;font-size:14px">Get Prospectus</div><div style="font-size:12px;color:var(--m)">Collect from office for Rs. 500</div></div></div>
-<div style="display:flex;gap:14px"><div style="width:32px;height:32px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">2</div><div><div style="font-weight:600;font-size:14px">Submit Form</div><div style="font-size:12px;color:var(--m)">Fill and submit with documents</div></div></div>
-<div style="display:flex;gap:14px"><div style="width:32px;height:32px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">3</div><div><div style="font-weight:600;font-size:14px">Entry Test</div><div style="font-size:12px;color:var(--m)">Written test and interview</div></div></div>
-<div style="display:flex;gap:14px"><div style="width:32px;height:32px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">4</div><div><div style="font-weight:600;font-size:14px">Confirmation</div><div style="font-size:12px;color:var(--m)">Pay fee and confirm admission</div></div></div>
-</div></div>
-<div><h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:var(--p)"><i class="fa-solid fa-phone" style="margin-right:8px"></i>Contact</h3>
-<div style="display:flex;flex-direction:column;gap:14px">
-<div style="display:flex;gap:12px"><i class="fa-solid fa-location-dot" style="color:var(--p);margin-top:3px;width:18px;text-align:center"></i><div><div style="font-weight:600;font-size:13px">Address</div><div style="font-size:12px;color:var(--m)">Main Boulevard, Gulberg III, Lahore</div></div></div>
-<div style="display:flex;gap:12px"><i class="fa-solid fa-phone" style="color:var(--p);margin-top:3px;width:18px;text-align:center"></i><div><div style="font-weight:600;font-size:13px">Phone</div><div style="font-size:12px;color:var(--m)">042-35761234, 0300-1234567</div></div></div>
-<div style="display:flex;gap:12px"><i class="fa-solid fa-envelope" style="color:var(--p);margin-top:3px;width:18px;text-align:center"></i><div><div style="font-weight:600;font-size:13px">Email</div><div style="font-size:12px;color:var(--m)">info@sps.edu.pk</div></div></div>
-<div style="display:flex;gap:12px"><i class="fa-solid fa-clock" style="color:var(--p);margin-top:3px;width:18px;text-align:center"></i><div><div style="font-weight:600;font-size:13px">Hours</div><div style="font-size:12px;color:var(--m)">Mon-Sat: 8:00 AM - 2:00 PM</div></div></div>
-</div></div></div></div>
-<div class="hft">SPS School System &copy; 2025. All Rights Reserved. | Main Boulevard, Gulberg III, Lahore</div>
-</div>
-
-<!-- APP -->
-<div id="mw" style="display:none">
-<div id="mh"><button class="hb" onclick="togSB()"><i class="fa-solid fa-bars"></i></button><span class="mt">SPS System</span></div>
+<!-- APP SHELL -->
+<div id="ap" style="display:none">
+<div id="mhd"><button class="hmb" onclick="togSB()"><i class="fa-solid fa-bars"></i></button><div class="lgt" style="font-size:15px">SPS <span>School</span></div></div>
 <div id="ov" onclick="togSB()"></div>
-<aside id="sb"><div class="sbb"><h1>SPS System</h1><p>School Management Portal</p></div>
-<div class="sbr" id="srole">ADMIN PANEL</div>
-<nav class="sbn" id="snav"></nav>
-<div class="sbf"><button onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button></div>
+<aside id="sb"><div class="sb-h"><div class="lgb">SPS</div><div class="lgt" style="font-size:15px">SPS <span>School</span></div></div>
+<div class="sb-r" id="srole">ADMIN PANEL</div>
+<nav class="sb-n" id="snav"></nav>
+<div class="sb-ft"><button onclick="goLogin()"><i class="fa-solid fa-gear"></i> Change Account</button><button onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button></div>
 </aside>
-<div id="mc"></div></div>
+<div id="mw"><div id="mc"></div></div></div>
 <div id="mroot"></div>
 
 <script>
-/* ===== DATA ===== */
+/* ========== DATA ========== */
 const STU=[
 {id:1,name:"Ahmed Raza Khan",roll:601,cls:"6-A",father:"Raza Hussain Khan",contact:"0300-1234567",g:"M"},
 {id:2,name:"Fatima Zahra",roll:602,cls:"6-A",father:"Zahoor Ahmed",contact:"0312-9876543",g:"F"},
@@ -232,41 +310,63 @@ const STU=[
 {id:24,name:"Rabia Khan",roll:1004,cls:"10-B",father:"Khan Muhammad",contact:"0311-7890123",g:"F"}
 ];
 const TCH=[
-{id:1,name:"Qari Muhammad Iqbal",sub:"Islamiat",phone:"0301-1122334"},
-{id:2,name:"Sana Fatima",sub:"English",phone:"0312-2233445"},
-{id:3,name:"Faisal Mehmood",sub:"Mathematics",phone:"0333-3344556"},
-{id:4,name:"Dr. Khawar Hayat",sub:"Science",phone:"0345-4455667"},
-{id:5,name:"Nasreen Akhtar",sub:"Urdu",phone:"0321-5566778"},
-{id:6,name:"Tahira Bibi",sub:"Pak Studies",phone:"0302-6677889"},
-{id:7,name:"Imtiaz Ahmad",sub:"Computer",phone:"0334-7788990"},
-{id:8,name:"Shahid Raza",sub:"Mathematics",phone:"0308-8899001"},
-{id:9,name:"Farah Deeba",sub:"English",phone:"0316-9900112"},
-{id:10,name:"Azhar Hussain",sub:"Science",phone:"0304-0011223"}
+{id:1,name:"Qari Muhammad Iqbal",sub:"Islamiat",phone:"0301-1122334",emp:"T-001"},
+{id:2,name:"Sana Fatima",sub:"English",phone:"0312-2233445",emp:"T-002"},
+{id:3,name:"Faisal Mehmood",sub:"Mathematics",phone:"0333-3344556",emp:"T-003"},
+{id:4,name:"Dr. Khawar Hayat",sub:"Science",phone:"0345-4455667",emp:"T-004"},
+{id:5,name:"Nasreen Akhtar",sub:"Urdu",phone:"0321-5566778",emp:"T-005"},
+{id:6,name:"Tahira Bibi",sub:"Pak Studies",phone:"0302-6677889",emp:"T-006"},
+{id:7,name:"Imtiaz Ahmad",sub:"Computer",phone:"0334-7788990",emp:"T-007"},
+{id:8,name:"Shahid Raza",sub:"Mathematics",phone:"0308-8899001",emp:"T-008"},
+{id:9,name:"Farah Deeba",sub:"English",phone:"0316-9900112",emp:"T-009"},
+{id:10,name:"Azhar Hussain",sub:"Science",phone:"0304-0011223",emp:"T-010"}
 ];
 const FS={"6":{t:2000,e:400,l:200,s:200,lb:0},"7":{t:2500,e:500,l:250,s:250,lb:0},"8":{t:3000,e:600,l:300,s:300,lb:200},"9":{t:3500,e:600,l:300,s:300,lb:300},"10":{t:4000,e:700,l:400,s:400,lb:400}};
 const SUBS=["English","Urdu","Mathematics","Science","Islamiat","Pak Studies"];
 const CML="July 2025";
-let FR=[],RD=[],ATT=[],NTC=[],NID=5,nxtId=25,curRole='admin',curUser=null,curView='dashboard',aC={},feeTab='status',resCls='6-A',attDate='';
-STU.forEach(s=>{const cn=s.cls.split("-")[0],f=FS[cn],tot=f.t+f.e+f.l+f.s+f.lb,r=Math.random();let st,pd;if(r<.55){st='paid';pd=`2025-07-${String(Math.floor(Math.random()*10)+1).padStart(2,'0')}`}else if(r<.75){st='partial';pd=null}else{st='unpaid';pd=null}FR.push({sid:s.id,mo:CML,st,pd,amt:tot,paid:st==='partial'?Math.floor(tot*.5):(st==='paid'?tot:0)})});
+let FR=[],RD=[],ATT=[],NTC=[],NID=5,nxtId=25,curRole='admin',curUser=null,aC={},feeTab='status',resCls='6-A',attDate='';
+
+/* Generate fee records */
+STU.forEach(s=>{const cn=s.cls.split("-")[0],f=FS[cn],tot=f.t+f.e+f.l+f.s+f.lb,r=Math.random();let st,pd;
+if(r<.55){st='paid';pd=`2025-07-${String(Math.floor(Math.random()*10)+1).padStart(2,'0')}`}
+else if(r<.75){st='partial';pd=null}else{st='unpaid';pd=null}
+FR.push({sid:s.id,mo:CML,st,pd,amt:tot,paid:st==='partial'?Math.floor(tot*.5):(st==='paid'?tot:0)})});
+
+/* Generate results */
 STU.forEach(s=>{const m={};SUBS.forEach(sub=>{m[sub]=Math.floor(Math.random()*40)+55});RD.push({sid:s.id,m})});
+
+/* Generate attendance */
 const today=new Date().toISOString().split('T')[0];attDate=today;
 STU.forEach(s=>{const r=Math.random();ATT.push({sid:s.id,date:today,st:r<.8?'present':r<.9?'late':'absent'})});
-NTC=[
-{id:1,title:"Summer Vacation Notice",date:"2025-06-15",body:"School will remain closed from 16th June to 14th July 2025 for summer vacations. Office will remain open from 9 AM to 12 PM.",pri:"high"},
-{id:2,title:"Mid-Term Exam Schedule",date:"2025-06-10",body:"Mid-term examinations will commence from 25th June 2025. Date sheets have been distributed.",pri:"high"},
-{id:3,title:"Parent-Teacher Meeting",date:"2025-07-01",body:"PTM for all classes will be held on 5th July 2025 from 9 AM to 1 PM.",pri:"medium"},
-{id:4,title:"Independence Day Celebration",date:"2025-07-28",body:"Students should come in green/white dress on 14th August. Special assembly will be held.",pri:"medium"},
-{id:5,title:"Fee Reminder - July 2025",date:"2025-07-05",body:"Please deposit July fee before 10th July to avoid late fee of Rs. 200.",pri:"low"}
-];
-const CREDS={admin:{u:"admin",p:"admin123",name:"Malik Tahir Mehmood",role:"Admin"},teacher:{u:"teacher",p:"teacher123",name:"Sana Fatima",role:"Teacher"},student:{u:"student",p:"student123",name:"Ahmed Raza Khan",role:"Student"}};
-const TT={times:["08:00-08:40","08:40-09:20","09:20-10:00","10:00-10:30","10:30-11:10","11:10-11:50","11:50-12:30"],days:["Mon","Tue","Wed","Thu","Fri"],
-g:[[["English","Sana Fatima"],["Maths","Faisal Mehmood"],["Urdu","Nasreen Akhtar"],["-","-"],["Science","Dr. Khawar"],["Islamiat","Qari M. Iqbal"],["Pak St.","Tahira Bibi"]],
-[["Maths","Faisal Mehmood"],["English","Sana Fatima"],["Science","Dr. Khawar"],["-","-"],["Urdu","Nasreen Akhtar"],["Computer","Imtiaz Ahmad"],["Islamiat","Qari M. Iqbal"]],
-[["Science","Dr. Khawar"],["Urdu","Nasreen Akhtar"],["English","Farah Deeba"],["-","-"],["Maths","Shahid Raza"],["Pak St.","Tahira Bibi"],["Computer","Imtiaz Ahmad"]],
-[["Urdu","Nasreen Akhtar"],["Science","Azhar Hussain"],["Maths","Faisal Mehmood"],["-","-"],["English","Sana Fatima"],["Islamiat","Qari M. Iqbal"],["Computer","Imtiaz Ahmad"]],
-[["English","Farah Deeba"],["Maths","Shahid Raza"],["Islamiat","Qari M. Iqbal"],["-","-"],["Pak St.","Tahira Bibi"],["Sports","-"],["-","-"]]]};
 
-/* ===== UTILS ===== */
+/* Notices */
+NTC=[
+{id:1,title:"Summer Vacation Notice",date:"2025-06-15",body:"School will remain closed from 16th June to 14th July 2025. Office remains open 9AM-12PM.",pri:"high"},
+{id:2,title:"Mid-Term Exam Schedule",date:"2025-06-10",body:"Mid-term examinations commence from 25th June 2025. Date sheets distributed to all students.",pri:"high"},
+{id:3,title:"Parent-Teacher Meeting",date:"2025-07-01",body:"PTM for all classes on 5th July 2025 from 9 AM to 1 PM. Collect report cards.",pri:"medium"},
+{id:4,title:"Independence Day Celebration",date:"2025-07-28",body:"Students come in green/white dress on 14th August. Special assembly will be held.",pri:"medium"},
+{id:5,title:"Fee Reminder July 2025",date:"2025-07-05",body:"Deposit July fee before 10th to avoid late fee of Rs. 200.",pri:"low"}
+];
+
+/* Login credentials */
+const CREDS={
+admin:{u:"admin",p:"admin123",name:"Malik Tahir Mehmood",role:"Admin"},
+teacher:{u:"teacher",p:"teacher123",name:"Sana Fatima",role:"Teacher"},
+student:{u:"student",p:"student123",name:"Ahmed Raza Khan",role:"Student"}
+};
+
+/* Timetable */
+const TT={times:["08:00-08:40","08:40-09:20","09:20-10:00","10:00-10:30","10:30-11:10","11:10-11:50","11:50-12:30"],
+days:["Monday","Tuesday","Wednesday","Thursday","Friday"],
+g:[
+[["English","Sana Fatima"],["Mathematics","Faisal M."],["Urdu","Nasreen Akhtar"],["BREAK","-"],["Science","Dr. Khawar"],["Islamiat","Qari M. Iqbal"],["Pak Studies","Tahira Bibi"]],
+[["Mathematics","Faisal M."],["English","Sana Fatima"],["Science","Dr. Khawar"],["BREAK","-"],["Urdu","Nasreen Akhtar"],["Computer","Imtiaz Ahmad"],["Islamiat","Qari M. Iqbal"]],
+[["Science","Dr. Khawar"],["Urdu","Nasreen Akhtar"],["English","Farah Deeba"],["BREAK","-"],["Mathematics","Shahid Raza"],["Pak Studies","Tahira Bibi"],["Computer","Imtiaz Ahmad"]],
+[["Urdu","Nasreen Akhtar"],["Science","Azhar Hussain"],["Mathematics","Faisal M."],["BREAK","-"],["English","Sana Fatima"],["Islamiat","Qari M. Iqbal"],["Computer","Imtiaz Ahmad"]],
+[["English","Farah Deeba"],["Mathematics","Shahid Raza"],["Islamiat","Qari M. Iqbal"],["BREAK","-"],["Pak Studies","Tahira Bibi"],["Sports","-"],["Activity","-"]]
+]};
+
+/* ========== UTILS ========== */
 const $=id=>document.getElementById(id);
 const fR=n=>'Rs. '+Number(n).toLocaleString('en-PK');
 function ntw(n){const o=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],t=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];if(!n)return'Zero';function c(n){if(n<20)return o[n];if(n<100)return t[Math.floor(n/10)]+(n%10?' '+o[n%10]:'');if(n<1000)return o[Math.floor(n/100)]+' Hundred'+(n%100?' and '+c(n%100):'');if(n<100000)return c(Math.floor(n/1000))+' Thousand'+(n%1000?' '+c(n%1000):'');if(n<10000000)return c(Math.floor(n/100000))+' Lakh'+(n%100000?' '+c(n%100000):'');return c(Math.floor(n/10000000))+' Crore'+(n%10000000?' '+c(n%10000000):'')}return c(n)+' Rupees Only'}
@@ -274,150 +374,51 @@ function gTot(s){const cn=s.cls.split("-")[0],f=FS[cn];return f.t+f.e+f.l+f.s+f.
 function gFR(sid){return FR.find(f=>f.sid===sid&&f.mo===CML)}
 function gCls(){return[...new Set(STU.map(s=>s.cls))].sort()}
 function gGr(p){if(p>=90)return{g:'A+',c:'#059669'};if(p>=80)return{g:'A',c:'#059669'};if(p>=70)return{g:'B',c:'#2563EB'};if(p>=60)return{g:'C',c:'#D97706'};if(p>=50)return{g:'D',c:'#D97706'};return{g:'F',c:'#DC2626'}}
-function toast(m,t='ok'){const e=document.createElement('div');e.className=`tst t-${t}`;e.textContent=m;document.body.appendChild(e);requestAnimationFrame(()=>e.classList.add('sh'));setTimeout(()=>{e.classList.remove('sh');setTimeout(()=>e.remove(),300)},3000)}
+function toast(m,t='ok'){const e=document.createElement('div');e.className=`tst t${t==='ok'?'ok':t==='error'?'er':'wa'}`;e.textContent=m;document.body.appendChild(e);requestAnimationFrame(()=>e.classList.add('sh'));setTimeout(()=>{e.classList.remove('sh');setTimeout(()=>e.remove(),300)},3000)}
 function modal(h){$('mroot').innerHTML=`<div class="mb" onclick="if(event.target===this)cm()"><div class="mx">${h}</div></div>`}
 function cm(){$('mroot').innerHTML=''}
 function togSB(){$('sb').classList.toggle('op');$('ov').classList.toggle('sh')}
 
-/* ===== LOGIN ===== */
+/* ========== NAVIGATION ========== */
+function goHome(){$('ls').style.display='none';$('ap').style.display='none';$('hp').style.display='block';window.scrollTo(0,0)}
+function goLogin(){$('hp').style.display='none';$('ap').style.display='none';$('ls').style.display='flex';$('iu').value='';$('ip').value='';$('le').style.display='none';window.scrollTo(0,0)}
 let selRole='admin';
 function setR(r,btn){selRole=r;document.querySelectorAll('#rtabs button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');$('lbu').textContent=r==='student'?'Roll Number':'Username';$('iu').placeholder=r==='student'?'e.g. 601':'Enter username'}
-function doLogin(){const u=$('iu').value.trim(),p=$('ip').value,cr=CREDS[selRole];if(cr&&u===cr.u&&p===cr.p){curRole=selRole;curUser=cr;$('ls').style.display='none';$('hs').style.display='none';$('mw').style.display='block';buildNav();nav('dashboard')}else{$('le').style.display='block'}}
-function doLogout(){$('mw').style.display='none';$('ls').style.display='flex';$('iu').value='';$('ip').value='';$('le').style.display='none';curUser=null}
-function showHP(){$('ls').style.display='none';$('mw').style.display='none';$('hs').style.display='block'}
-function hideHP(){$('hs').style.display='none';$('ls').style.display='flex'}
+function doLogin(){const u=$('iu').value.trim(),p=$('ip').value,cr=CREDS[selRole];if(cr&&u===cr.u&&p===cr.p){curRole=selRole;curUser=cr;$('ls').style.display='none';$('hp').style.display='none';$('ap').style.display='block';buildNav();nav('dashboard');window.scrollTo(0,0)}else{$('le').style.display='block'}}
+function doLogout(){curUser=null;$('ap').style.display='none';$('hp').style.display='block';window.scrollTo(0,0)}
 
-/* ===== NAV ===== */
 function buildNav(){
 const I={admin:[['dashboard','fa-chart-pie','Dashboard'],['students','fa-users','Students'],['fees','fa-money-bill-wave','Fee Management'],['results','fa-graduation-cap','Results'],['attendance','fa-clipboard-check','Attendance'],['teachers','fa-chalkboard-user','Teachers'],['timetable','fa-calendar-days','Timetable'],['notices','fa-bullhorn','Notices']],
-teacher:[['dashboard','fa-chart-pie','Dashboard'],['results','fa-graduation-cap','Results'],['attendance','fa-clipboard-check','Attendance'],['timetable','fa-calendar-days','Timetable'],['notices','fa-bullhorn','Notices']],
+teacher:[['dashboard','fa-chart-pie','Dashboard'],['students','fa-users','Students'],['results','fa-graduation-cap','Results'],['attendance','fa-clipboard-check','Attendance'],['timetable','fa-calendar-days','Timetable'],['notices','fa-bullhorn','Notices']],
 student:[['dashboard','fa-chart-pie','Dashboard'],['fees','fa-money-bill-wave','My Fee'],['results','fa-graduation-cap','My Results'],['attendance','fa-clipboard-check','My Attendance'],['timetable','fa-calendar-days','Timetable'],['notices','fa-bullhorn','Notices']]};
  $('srole').textContent=curRole.toUpperCase()+' PANEL';
  $('snav').innerHTML=I[curRole].map(i=>`<button class="nb${i[0]==='dashboard'?' on':''}" data-v="${i[0]}" onclick="nav('${i[0]}')"><i class="fa-solid ${i[1]}"></i>${i[2]}</button>`).join('')}
-function nav(v){Object.values(aC).forEach(c=>{try{c.destroy()}catch(e){}});aC={};curView=v;document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.v===v));$('sb').classList.remove('op');$('ov').classList.remove('sh');const mc=$('mc');mc.classList.remove('fi-in');void mc.offsetWidth;mc.classList.add('fi-in');({dashboard:rDash,students:rStu,fees:rFee,results:rRes,attendance:rAtt,teachers:rTch,timetable:rTT,notices:rNtc})[v]()}
 
-/* ===== DASHBOARD ===== */
+function nav(v){Object.values(aC).forEach(c=>{try{c.destroy()}catch(e){}});aC={};
+document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+ $('sb').classList.remove('op');$('ov').classList.remove('sh');
+const mc=$('mc');mc.classList.remove('fin');void mc.offsetWidth;mc.classList.add('fin');
+({dashboard:rDash,students:rStu,fees:rFee,results:rRes,attendance:rAtt,teachers:rTch,timetable:rTT,notices:rNtc})[v]()}
+ /* ========== DASHBOARD ========== */
 function rDash(){
-const ts=STU.length,pc=FR.filter(f=>f.st==='paid').length,uc=FR.filter(f=>f.st==='unpaid').length,tc=FR.filter(f=>f.st==='paid').reduce((a,f)=>a+f.amt,0),tp=FR.filter(f=>f.st!=='paid').reduce((a,f)=>a+f.amt-f.paid,0);
+const ts=STU.length,pc=FR.filter(f=>f.st==='paid').length,uc=FR.filter(f=>f.st==='unpaid').length;
+const tc=FR.filter(f=>f.st==='paid').reduce((a,f)=>a+f.amt,0),tp=FR.filter(f=>f.st!=='paid').reduce((a,f)=>a+f.amt-f.paid,0);
 const cc={};STU.forEach(s=>{cc[s.cls]=(cc[s.cls]||0)+1});const cl=Object.keys(cc).sort(),cd=cl.map(c=>cc[c]);
 const ca={};STU.forEach(s=>{const r=RD.find(x=>x.sid===s.id);if(!r)return;const avg=SUBS.reduce((a,sub)=>a+r.m[sub],0)/SUBS.length;const cn=s.cls.split("-")[0];if(!ca[cn])ca[cn]=[];ca[cn].push(avg)});
-if(curRole==='student'){const me=STU.find(s=>s.name===curUser.name);if(!me)return;const fr=gFR(me.id),rd=RD.find(r=>r.sid===me.id),total=rd?SUBS.reduce((a,sub)=>a+rd.m[sub],0):0,pct=rd?Math.round(total/SUBS.length):0,gr=gGr(pct);
- $('mc').innerHTML=`<div style="margin-bottom:22px"><h2 style="font-size:24px;font-weight:800">Welcome, ${me.name}</h2><p style="color:var(--m);font-size:13px;margin-top:3px">Class ${me.cls} | Roll: ${me.roll}</p></div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px">
-<div class="cd sc"><div class="si" style="background:#D1FAE5;color:#065F46"><i class="fa-solid fa-user"></i></div><div><div class="sl">Father</div><div class="sv" style="font-size:15px">${me.father}</div></div></div>
-<div class="cd sc"><div class="si" style="background:#D1FAE5;color:#065F46"><i class="fa-solid fa-chart-line"></i></div><div><div class="sl">My %</div><div class="sv" style="color:${gr.c}">${pct}%</div><div class="ss" style="color:${gr.c}">Grade: ${gr.g}</div></div></div>
+
+if(curRole==='student'){const me=STU.find(s=>s.name===curUser.name);if(!me)return;
+const fr=gFR(me.id),rd=RD.find(r=>r.sid===me.id),total=rd?SUBS.reduce((a,sub)=>a+rd.m[sub],0):0,pct=rd?Math.round(total/SUBS.length):0,gr=gGr(pct);
+const myAtt=ATT.filter(a=>a.sid===me.id),apr=myAtt.filter(a=>a.st==='present').length,attPct=myAtt.length?Math.round(apr/myAtt.length*100):0;
+ $('mc').innerHTML=`<div style="margin-bottom:22px"><h2 style="font-size:22px;font-weight:800">Welcome, ${me.name}</h2><p style="color:var(--m);font-size:13px">Class ${me.cls} | Roll: ${me.roll} | Father: ${me.father}</p></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px">
+<div class="cd sc"><div class="si" style="background:#D1FAE5;color:#065F46"><i class="fa-solid fa-chart-line"></i></div><div><div class="sl">Percentage</div><div class="sv" style="color:${gr.c}">${pct}%</div><div class="ss" style="color:${gr.c}">Grade: ${gr.g}</div></div></div>
 <div class="cd sc"><div class="si" style="background:${fr&&fr.st==='paid'?'#D1FAE5':'#FEE2E2'};color:${fr&&fr.st==='paid'?'#065F46':'#991B1B'}"><i class="fa-solid fa-money-bill"></i></div><div><div class="sl">Fee Status</div><div class="sv" style="font-size:15px">${fr?fr.st.charAt(0).toUpperCase()+fr.st.slice(1):'N/A'}</div><div class="ss">${fr?fR(fr.amt):''}</div></div></div>
-<div class="cd sc"><div class="si" style="background:#E0E7FF;color:#3730A3"><i class="fa-solid fa-clipboard-check"></i></div><div><div class="sl">Today</div><div class="sv" style="font-size:15px">${ATT.find(a=>a.sid===me.id)?.st||'N/A'}</div></div></div></div>
+<div class="cd sc"><div class="si" style="background:#E0E7FF;color:#3730A3"><i class="fa-solid fa-clipboard-check"></i></div><div><div class="sl">Attendance</div><div class="sv" style="font-size:15px">${ATT.find(a=>a.sid===me.id)?.st||'N/A'}</div><div class="ss">${attPct}% this month</div></div></div>
+<div class="cd sc"><div class="si" style="background:#FEF3C7;color:#92400E"><i class="fa-solid fa-file-invoice"></i></div><div><div class="sl">Chalan</div><div class="sv" style="font-size:15px">${fr&&fr.st!=='paid'?'Pending':'Done'}</div><div class="ss"><a href="javascript:nav('fees')" style="color:var(--p);font-size:11px">View Voucher</a></div></div></div>
+</div>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
-<div class="cd cbb"><h3>My Marks</h3><div class="cw"><canvas id="c1"></canvas></div></div>
-<div class="cd cbb"><h3>Recent Notices</h3><div style="display:flex;flex-direction:column;gap:10px">${NTC.slice(0,3).map(n=>`<div style="padding:10px;background:#F6F9F6;border-radius:8px;border-left:3px solid ${n.pri==='high'?'var(--d)':n.pri==='medium'?'var(--al)':'var(--p)'}"><div style="font-weight:600;font-size:13px">${n.title}</div><div style="font-size:11px;color:var(--m);margin-top:2px">${n.date}</div></div>`).join('')}</div></div></div>`;
-if(rd){Chart.defaults.font.family="'Outfit',sans-serif";Chart.defaults.color='#5F7A5F';aC.c1=new Chart($('c1'),{type:'bar',data:{labels:SUBS,datasets:[{data:SUBS.map(s=>rd.m[s]),backgroundColor:['#047857','#059669','#10B981','#34D399','#6EE7B7','#A7F3D0'],borderRadius:6,borderSkipped:false,barPercentage:.6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},border:{display:false},ticks:{font:{size:10}}},y:{max:100,grid:{color:'#E8F0E8',drawTicks:false},border:{display:false},ticks:{font:{size:10},padding:6}}}}})}return}
- $('mc').innerHTML=`<div style="margin-bottom:22px"><h2 style="font-size:24px;font-weight:800">Dashboard</h2><p style="color:var(--m);font-size:13px;margin-top:3px">${CML}</p></div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:22px">
-<div class="cd sc"><div class="si" style="background:#D1FAE5;color:#065F46"><i class="fa-solid fa-users"></i></div><div><div class="sl">Total Students</div><div class="sv">${ts}</div><div class="ss" style="color:var(--p)">${cl.length} Classes</div></div></div>
-<div class="cd sc"><div class="si" style="background:#D1FAE5;color:#065F46"><i class="fa-solid fa-circle-check"></i></div><div><div class="sl">Collected</div><div class="sv" style="font-size:18px">${fR(tc)}</div><div class="ss" style="color:var(--p)">${pc} Paid</div></div></div>
-<div class="cd sc"><div class="si" style="background:#FEE2E2;color:#991B1B"><i class="fa-solid fa-clock"></i></div><div><div class="sl">Pending</div><div class="sv" style="font-size:18px">${fR(tp)}</div><div class="ss" style="color:var(--d)">${uc} Unpaid</div></div></div>
-<div class="cd sc"><div class="si" style="background:#FEF3C7;color:#92400E"><i class="fa-solid fa-trophy"></i></div><div><div class="sl">Avg Performance</div><div class="sv">${Math.round(Object.values(ca).map(a=>a.reduce((x,y)=>x+y,0)/a.length).reduce((a,b)=>a+b,0)/Object.values(ca).length)}%</div><div class="ss" style="color:var(--al)">Mid-Term</div></div></div></div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:22px">
-<div class="cd cbb"><h3>Students Per Class</h3><div class="cw"><canvas id="c1"></canvas></div></div>
-<div class="cd cbb"><h3>Fee Status</h3><div class="cw"><canvas id="c2"></canvas></div></div>
-<div class="cd cbb"><h3>Fee Trend</h3><div class="cw"><canvas id="c3"></canvas></div></div>
-<div class="cd cbb"><h3>Class Average %</h3><div class="cw"><canvas id="c4"></canvas></div></div></div>
-<div class="cd" style="padding:0;overflow:hidden"><div style="padding:16px 20px;border-bottom:1px solid var(--b)"><h3 style="font-size:14px;font-weight:700">Recent Payments</h3></div><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Student</th><th>Class</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead><tbody>${FR.filter(f=>f.st==='paid').slice(0,6).map(f=>{const s=STU.find(x=>x.id===f.sid);return`<tr><td style="font-weight:600">${s.name}</td><td>${s.cls}</td><td>${fR(f.amt)}</td><td>${f.pd}</td><td><span class="bg bg-p">Paid</span></td></tr>`}).join('')}</tbody></table></div></div>`;
-Chart.defaults.font.family="'Outfit',sans-serif";Chart.defaults.color='#5F7A5F';
-const bc=['#047857','#059669','#10B981','#34D399','#6EE7B7','#A7F3D0','#047857','#059669','#10B981','#34D399'];
-aC.c1=new Chart($('c1'),{type:'bar',data:{labels:cl,datasets:[{data:cd,backgroundColor:bc.slice(0,cl.length),borderRadius:7,borderSkipped:false,barPercentage:.6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#022C22',cornerRadius:8,padding:10}},scales:{x:{grid:{display:false},border:{display:false},ticks:{font:{size:10,weight:'500'}}},y:{grid:{color:'#E8F0E8',drawTicks:false},border:{display:false},ticks:{font:{size:10},stepSize:1,padding:6}}}}});
-const pd=FR.filter(f=>f.st==='paid').length,ud=FR.filter(f=>f.st==='unpaid').length,ptd=FR.filter(f=>f.st==='partial').length;
-aC.c2=new Chart($('c2'),{type:'doughnut',data:{labels:['Paid','Unpaid','Partial'],datasets:[{data:[pd,ud,ptd],backgroundColor:['#047857','#DC2626','#D97706'],borderWidth:0,cutout:'68%'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:14,usePointStyle:true,pointStyle:'circle',font:{size:11,weight:'500'}}},tooltip:{backgroundColor:'#022C22',cornerRadius:8,padding:10}}}});
-aC.c3=new Chart($('c3'),{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul'],datasets:[{data:[420000,465000,448000,510000,490000,470000,tc],borderColor:'#047857',backgroundColor:'rgba(4,120,87,.08)',fill:true,tension:.4,pointBackgroundColor:'#047857',pointBorderWidth:0,pointRadius:3,pointHoverRadius:6,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#022C22',cornerRadius:8,padding:10,callbacks:{label:c=>fR(c.parsed.y)}}},scales:{x:{grid:{display:false},border:{display:false},ticks:{font:{size:10,weight:'500'}}},y:{grid:{color:'#E8F0E8',drawTicks:false},border:{display:false},ticks:{font:{size:10},callback:v=>(v/1000)+'K',padding:6}}}}});
-const al=Object.keys(ca).sort().map(c=>'Class '+c),ad=Object.keys(ca).sort().map(c=>Math.round(ca[c].reduce((a,b)=>a+b,0)/ca[c].length)),ac=ad.map(v=>v>=80?'#047857':v>=65?'#D97706':'#DC2626');
-aC.c4=new Chart($('c4'),{type:'bar',data:{labels:al,datasets:[{data:ad,backgroundColor:ac,borderRadius:6,borderSkipped:false,barPercentage:.5}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#022C22',cornerRadius:8,padding:10,callbacks:{label:c=>c.parsed.x+'%'}}},scales:{x:{grid:{color:'#E8F0E8',drawTicks:false},border:{display:false},max:100,ticks:{font:{size:10},callback:v=>v+'%',padding:6}},y:{grid:{display:false},border:{display:false},ticks:{font:{size:11,weight:'600'}}}}}});
-}
+<div class="cd cbb"><h3>My Subject Marks</h3><div class="cw"><canvas id="c1"></canvas></div></div>
+<div class="cd cbb"><h3>Recent Notices</h3><div style="display:flex;flex-direction:column;gap:10px">${NTC.slice(0,4).map(n=>`<div style="padding:10px;background:#F6F9F6;border-radius:8px;border-left:3px solid ${n.pri==='high'?'var(--d)':n.pri==='medium'?'var(--al)':'var(--p)'}"><div style="font-weight:600;font-size:13px">${n.title}</div><div style="font-size:11px;color:var(--m);margin-top:2px">${n.date}</div></div>`).join('')}</div></div></div>`;
+if(rd){Chart.defaults.font.family="'Outfit',sans-serif";Chart.defaults.color='#5F7A5F';aC.c1=new Chart($('c1'),{type:'bar',data:{labels:SUBS,datasets:[{data:SUBS.map(s=>rd.m[s]),backgroundColor:['#047857','#059669','#10B981','#34D399','#6EE7B7','#A7F3D0'],borderRadius:6,borderSkipped:false,barPercentage:.6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},border:{display:false},ticks:{font:{size:10}}},y:{max:100,grid:{color:'#E8F0E8',drawTicks
 
-/* ===== STUDENTS ===== */
-let sF='all',sS='';
-function rStu(){if(curRole==='student'){toast('View profile from Dashboard','w');return}
-const cls=gCls();let fl=STU;if(sF!=='all')fl=fl.filter(s=>s.cls===sF);if(sS)fl=fl.filter(s=>s.name.toLowerCase().includes(sS.toLowerCase())||String(s.roll).includes(sS));
- $('mc').innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px"><div><h2 style="font-size:24px;font-weight:800">Students</h2><p style="color:var(--m);font-size:13px;margin-top:3px">${fl.length} of ${STU.length}</p></div>${curRole==='admin'?`<button class="btn bp" onclick="addSM()"><i class="fa-solid fa-plus"></i> Add</button>`:''}</div>
-<div class="cd" style="padding:14px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px"><div style="flex:1;min-width:180px"><input class="fi" placeholder="Search name or roll..." value="${sS}" oninput="sS=this.value;rStu()"></div><select class="fi" style="width:auto;min-width:130px" onchange="sF=this.value;rStu()"><option value="all" ${sF==='all'?'selected':''}>All</option>${cls.map(c=>`<option value="${c}" ${sF===c?'selected':''}>${c}</option>`).join('')}</select></div>
-<div class="smo" style="display:flex;flex-direction:column;gap:10px">${fl.map(s=>{const fr=gFR(s.id);return`<div class="cd" style="padding:14px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-weight:700;font-size:14px">${s.name}</div><div style="color:var(--m);font-size:12px;margin-top:2px">Roll: ${s.roll} | ${s.cls}</div><div style="color:var(--m);font-size:11px;margin-top:1px">${s.father}</div></div><span class="bg bg-${fr?(fr.st==='paid'?'p':fr.st==='partial'?'r':'u'):'u'}">${fr?fr.st.charAt(0).toUpperCase()+fr.st.slice(1):'N/A'}</span></div>${curRole==='admin'?`<div style="display:flex;gap:6px;margin-top:10px"><button class="btn bo bs" onclick="editSM(${s.id})"><i class="fa-solid fa-pen"></i></button><button class="btn bs" style="background:#FEE2E2;color:#991B1B" onclick="delS(${s.id})"><i class="fa-solid fa-trash"></i></button></div>`:''}</div>`}).join('')}</div>
-<div class="cd hm" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Name</th><th>Roll</th><th>Class</th><th>Father</th><th>Contact</th><th>Fee</th>${curRole==='admin'?'<th>Actions</th>':''}</tr></thead><tbody>${fl.map(s=>{const fr=gFR(s.id);return`<tr><td style="font-weight:600">${s.name}</td><td>${s.roll}</td><td>${s.cls}</td><td>${s.father}</td><td style="font-size:12px">${s.contact}</td><td><span class="bg bg-${fr?(fr.st==='paid'?'p':fr.st==='partial'?'r':'u'):'u'}">${fr?fr.st.charAt(0).toUpperCase()+fr.st.slice(1):'N/A'}</span></td>${curRole==='admin'?`<td><div style="display:flex;gap:5px"><button class="btn bo bs" onclick="editSM(${s.id})"><i class="fa-solid fa-pen"></i></button><button class="btn bs" style="background:#FEE2E2;color:#991B1B" onclick="delS(${s.id})"><i class="fa-solid fa-trash"></i></button></div></td>`:''}</tr>`}).join('')}</tbody></table></div></div>`}
-function addSM(){const cls=['6-A','6-B','7-A','7-B','8-A','8-B','9-A','9-B','10-A','10-B'];modal(`<div class="mhd"><h2>Add Student</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd"><div class="fg"><label class="fl">Full Name</label><input class="fi" id="mn" placeholder="e.g. Ahmed Raza Khan"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label class="fl">Roll</label><input class="fi" id="mr" type="number" placeholder="606"></div><div class="fg"><label class="fl">Class</label><select class="fi" id="mc2">${cls.map(c=>`<option>${c}</option>`).join('')}</select></div></div><div class="fg"><label class="fl">Father's Name</label><input class="fi" id="mf" placeholder="Father name"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label class="fl">Contact</label><input class="fi" id="mct" placeholder="0300-1234567"></div><div class="fg"><label class="fl">Gender</label><select class="fi" id="mg"><option value="M">Male</option><option value="F">Female</option></select></div></div></div><div class="mft"><button class="btn bo" onclick="cm()">Cancel</button><button class="btn bp" onclick="const n=$('mn').value.trim(),r=parseInt($('mr').value),c=$('mc2').value,f=$('mf').value.trim();if(!n||!r||!f){toast('Fill required fields','e');return}if(STU.find(s=>s.roll===r)){toast('Roll exists','e');return}const ns={id:nxtId++,name:n,roll:r,cls:c,father:f,contact:$('mct').value.trim(),g:$('mg').value};STU.push(ns);FR.push({sid:ns.id,mo:CML,st:'unpaid',pd:null,amt:gTot(ns),paid:0});cm();toast('Added');rStu()">Add</button></div>`)}
-function editSM(id){const s=STU.find(x=>x.id===id);if(!s)return;const cls=['6-A','6-B','7-A','7-B','8-A','8-B','9-A','9-B','10-A','10-B'];modal(`<div class="mhd"><h2>Edit Student</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd"><div class="fg"><label class="fl">Full Name</label><input class="fi" id="mn" value="${s.name}"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label class="fl">Roll</label><input class="fi" id="mr" type="number" value="${s.roll}"></div><div class="fg"><label class="fl">Class</label><select class="fi" id="mc2">${cls.map(c=>`<option ${c===s.cls?'selected':''}>${c}</option>`).join('')}</select></div></div><div class="fg"><label class="fl">Father</label><input class="fi" id="mf" value="${s.father}"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label class="fl">Contact</label><input class="fi" id="mct" value="${s.contact}"></div><div class="fg"><label class="fl">Gender</label><select class="fi" id="mg"><option value="M" ${s.g==='M'?'selected':''}>Male</option><option value="F" ${s.g==='F'?'selected':''}>Female</option></select></div></div></div><div class="mft"><button class="btn bo" onclick="cm()">Cancel</button><button class="btn bp" onclick="const s=STU.find(x=>x.id===${id});s.name=$('mn').value.trim()||s.name;s.roll=parseInt($('mr').value)||s.roll;s.cls=$('mc2').value;s.father=$('mf').value.trim()||s.father;s.contact=$('mct').value.trim()||s.contact;s.g=$('mg').value;cm();toast('Updated');rStu()">Update</button></div>`)}
-function delS(id){modal(`<div class="mhd"><h2>Confirm Delete</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd"><p style="font-size:14px">Are you sure? This cannot be undone.</p></div><div class="mft"><button class="btn bo" onclick="cm()">Cancel</button><button class="btn bd" onclick="let i=STU.findIndex(s=>s.id===${id});if(i>-1)STU.splice(i,1);i=FR.findIndex(f=>f.sid===${id});if(i>-1)FR.splice(i,1);cm();toast('Removed');rStu()">Delete</button></div>`)}
-
-/* ===== FEES ===== */
-function rFee(){const isStu=curRole==='student';$('mc').innerHTML=`<div style="margin-bottom:20px"><h2 style="font-size:24px;font-weight:800">${isStu?'My Fee':'Fee Management'}</h2><p style="color:var(--m);font-size:13px;margin-top:3px">${CML}</p></div>${isStu?'':`<div class="tb"><button class="${feeTab==='status'?'on':''}" onclick="feeTab='status';rFee()">Status</button><button class="${feeTab==='structure'?'on':''}" onclick="feeTab='structure';rFee()">Structure</button><button class="${feeTab==='voucher'?'on':''}" onclick="feeTab='voucher';rFee()">Voucher</button></div>`}<div id="ftc"></div>`;if(isStu)rFeeStu();else if(feeTab==='status')rFeeSt();else if(feeTab==='structure')rFeeSr();else rFeeVg()}
-function rFeeStu(){const me=STU.find(s=>s.name===curUser.name);if(!me)return;const fr=gFR(me.id);if(!fr)return;$('ftc').innerHTML=`<div class="cd" style="padding:24px;max-width:500px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div><div style="font-size:12px;color:var(--m);font-weight:600">TOTAL</div><div style="font-size:22px;font-weight:800">${fR(fr.amt)}</div></div><span class="bg bg-${fr.st==='paid'?'p':fr.st==='partial'?'r':'u'}" style="font-size:13px;padding:5px 14px">${fr.st.charAt(0).toUpperCase()+fr.st.slice(1)}</span></div>${fr.st!=='paid'?`<button class="btn bp" onclick="feeTab='voucher';rFee()"><i class="fa-solid fa-file-invoice"></i> Generate Voucher</button>`:`<p style="color:var(--p);font-size:13px"><i class="fa-solid fa-check-circle"></i> Paid on ${fr.pd}</p>`}</div>`}
-function rFeeSt(){let fl=FR;const tc=fl.reduce((a,f)=>a+f.amt,0),co=fl.filter(f=>f.st==='paid').reduce((a,f)=>a+f.amt,0),pa=fl.filter(f=>f.st==='partial').reduce((a,f)=>a+f.paid,0);
- $('ftc').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px"><div class="cd" style="padding:14px 18px"><div style="font-size:11px;color:var(--m);font-weight:600">TOTAL</div><div style="font-size:18px;font-weight:800;margin-top:3px">${fR(tc)}</div></div><div class="cd" style="padding:14px 18px"><div style="font-size:11px;color:var(--m);font-weight:600">COLLECTED</div><div style="font-size:18px;font-weight:800;margin-top:3px;color:var(--p)">${fR(co+pa)}</div></div><div class="cd" style="padding:14px 18px"><div style="font-size:11px;color:var(--m);font-weight:600">REMAINING</div><div style="font-size:18px;font-weight:800;margin-top:3px;color:var(--d)">${fR(tc-co-pa)}</div></div></div>
-<div class="smo" style="display:flex;flex-direction:column;gap:8px">${fl.map(f=>{const s=STU.find(x=>x.id===f.sid);if(!s)return'';return`<div class="cd" style="padding:12px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-weight:700;font-size:13px">${s.name}</div><div style="color:var(--m);font-size:11px">${s.cls} | Roll: ${s.roll}</div></div><span class="bg bg-${f.st==='paid'?'p':f.st==='partial'?'r':'u'}">${f.st.charAt(0).toUpperCase()+f.st.slice(1)}</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px"><span style="font-weight:700">${fR(f.amt)}</span>${f.st!=='paid'?`<button class="btn bp bs" onclick="mP(${f.sid})">Mark Paid</button>`:`<span style="font-size:11px;color:var(--p)">${f.pd}</span>`}</div></div>`}).join('')}</div>
-<div class="cd hm" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Student</th><th>Class</th><th>Roll</th><th>Fee</th><th>Paid</th><th>Status</th><th>Action</th></tr></thead><tbody>${fl.map(f=>{const s=STU.find(x=>x.id===f.sid);if(!s)return'';return`<tr><td style="font-weight:600">${s.name}</td><td>${s.cls}</td><td>${s.roll}</td><td>${fR(f.amt)}</td><td>${fR(f.paid)}</td><td><span class="bg bg-${f.st==='paid'?'p':f.st==='partial'?'r':'u'}">${f.st.charAt(0).toUpperCase()+f.st.slice(1)}</span></td><td>${f.st!=='paid'?`<button class="btn bp bs" onclick="mP(${f.sid})">Paid</button>`:`<span style="font-size:11px;color:var(--m)">${f.pd}</span>`}</td></tr>`}).join('')}</tbody></table></div></div>`}
-function mP(sid){const f=FR.find(x=>x.sid===sid&&x.mo===CML);if(f){f.st='paid';f.pd=new Date().toISOString().split('T')[0];f.paid=f.amt}toast('Marked paid');rFee()}
-function rFeeSr(){const lv=Object.keys(FS).sort();$('ftc').innerHTML=`<div class="cd" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Class</th><th>Tuition</th><th>Exam</th><th>Library</th><th>Sports</th><th>Lab</th><th style="font-weight:800">Total</th></tr></thead><tbody>${lv.map(l=>{const s=FS[l],t=s.t+s.e+s.l+s.s+s.lb;return`<tr><td style="font-weight:700">Class ${l}</td><td>${fR(s.t)}</td><td>${fR(s.e)}</td><td>${fR(s.l)}</td><td>${fR(s.s)}</td><td>${s.lb?fR(s.lb):'-'}</td><td style="font-weight:800;color:var(--p)">${fR(t)}</td></tr>`}).join('')}</tbody></table></div></div><p style="color:var(--m);font-size:12px;margin-top:10px"><i class="fa-solid fa-circle-info" style="margin-right:4px"></i>Late fee Rs. 200 after 10th of each month.</p>`}
-function rFeeVg(){const list=curRole==='student'?STU.filter(s=>s.name===curUser.name):STU;$('ftc').innerHTML=`<div class="cd" style="padding:24px;max-width:680px"><h3 style="font-size:17px;font-weight:700;margin-bottom:18px"><i class="fa-solid fa-file-invoice" style="color:var(--p);margin-right:8px"></i>Generate Fee Voucher</h3><div class="fg"><label class="fl">Search Student</label><input class="fi" id="vs" placeholder="Name or roll..." oninput="fVS(this.value)"></div><div id="vsl" style="max-height:180px;overflow-y:auto;border:1px solid var(--b);border-radius:10px;margin-bottom:16px"></div><div id="vp2"></div></div>`;fVS('')}
-function fVS(q){const el=$('vsl');if(!el)return;let fl=curRole==='student'?STU.filter(s=>s.name===curUser.name):STU;if(q)fl=fl.filter(s=>s.name.toLowerCase().includes(q.toLowerCase())||String(s.roll).includes(q));el.innerHTML=fl.length?fl.map(s=>`<div style="padding:10px 14px;border-bottom:1px solid #EEF2EE;cursor:pointer;display:flex;justify-content:space-between;transition:background .15s" onmouseover="this.style.background='#F6F9F6'" onmouseout="this.style.background=''" onclick="selVS(${s.id})"><div><span style="font-weight:600;font-size:13px">${s.name}</span><span style="color:var(--m);font-size:12px;margin-left:8px">Roll: ${s.roll}</span></div><span style="font-size:11px;color:var(--m)">${s.cls}</span></div>`).join(''):'<div style="padding:14px;text-align:center;color:var(--m);font-size:13px">Not found</div>'}
-function selVS(id){const s=STU.find(x=>x.id===id);if(!s)return;const cn=s.cls.split("-")[0],fs=FS[cn],tot=fs.t+fs.e+fs.l+fs.s+fs.lb,fr=gFR(s.id),vn='FEE-2025-'+String(id).padStart(4,'0'),td=new Date(),dd=`10-${String(td.getMonth()+1).padStart(2,'0')}-2025`,idt=`${String(td.getDate()).padStart(2,'0')}-${String(td.getMonth()+1).padStart(2,'0')}-2025`;
- $('vp2').innerHTML=`<div style="margin:14px 0 18px;padding:10px 14px;background:#F6F9F6;border-radius:10px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px"><div><strong>Selected:</strong> ${s.name} | ${s.cls} | ${fR(tot)}</div><div style="display:flex;gap:8px"><button class="btn bw bs" onclick="sendWA(${s.id})"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button><button class="btn bp bs" onclick="prVou(${s.id})"><i class="fa-solid fa-print"></i> Print</button></div></div>
-<div class="vp" id="vpr"><div class="vh"><h2>SPS SCHOOL SYSTEM</h2><div style="font-size:11px">Main Boulevard, Gulberg III, Lahore</div><div style="font-size:11px">Phone: 042-35761234 | info@sps.edu.pk</div></div>
-<div class="vm"><div><strong>Voucher:</strong> ${vn}</div><div><strong>Issue:</strong> ${idt}</div><div><strong>Month:</strong> ${CML}</div></div>
-<div class="vs"><div><span>Name:</span><span>${s.name}</span></div><div><span>Roll:</span><span>${s.roll}</span></div><div><span>Class:</span><span>${s.cls}</span></div><div><span>Father:</span><span>${s.father}</span></div></div>
-<table><tr><th>Description</th><th>Amount (Rs.)</th></tr><tr><td>Tuition Fee</td><td>${fs.t.toLocaleString('en-PK')}</td></tr><tr><td>Examination Fee</td><td>${fs.e.toLocaleString('en-PK')}</td></tr><tr><td>Library Fee</td><td>${fs.l.toLocaleString('en-PK')}</td></tr><tr><td>Sports Fee</td><td>${fs.s.toLocaleString('en-PK')}</td></tr>${fs.lb?`<tr><td>Laboratory Fee</td><td>${fs.lb.toLocaleString('en-PK')}</td></tr>`:''}<tr class="tr"><td>TOTAL</td><td>${tot.toLocaleString('en-PK')}</td></tr></table>
-<div style="margin:10px 0;font-style:italic;font-size:11px"><strong>Amount in Words:</strong> ${ntw(tot)}</div>
-<div style="margin-bottom:6px"><strong>Due:</strong> ${dd} | <strong style="color:#DC2626">Late Fee After Due: Rs. 200</strong></div>
-<div class="vbk"><strong>Bank:</strong> HBL, A/C: 1234-5678-901, Title: SPS School, Branch: Gulberg, Lahore</div>
- ${fr&&fr.st==='paid'?`<div style="text-align:center;padding:8px;background:#D1FAE5;border:1px solid #6EE7B7;border-radius:4px;margin-top:10px;font-weight:700;color:#065F46">PAID - ${fr.pd}</div>`:''}
-<div class="vsg"><div><div class="sl2">Cashier</div></div><div><div class="sl2">Principal</div></div></div></div>`}
-function prVou(id){const vp=$('vpr');if(!vp){toast('Select student first','e');return}const w=window.open('','_blank','width=800,height=900');w.document.write(`<!DOCTYPE html><html><head><title>Fee Voucher - SPS</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Courier New',monospace;padding:20px}.vp{border:2px solid #1a1a1a;border-radius:4px;padding:28px;max-width:660px;margin:0 auto;font-size:12.5px;line-height:1.5}.vh{text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:12px;margin-bottom:12px}.vh h2{font-size:19px;font-weight:900;letter-spacing:1px}.vm{display:flex;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed #999;font-size:12px}.vs{background:#f7f7f7;padding:8px 12px;margin-bottom:12px}.vs div{display:flex}.vs span:first-child{width:130px;font-weight:700}table{width:100%;border-collapse:collapse;margin-bottom:10px}th{background:#1a1a1a;color:#fff;padding:7px 10px;text-align:left;font-size:11.5px}td{padding:7px 10px;border-bottom:1px solid #ddd}td:last-child{text-align:right}.tr{background:#f0f0f0;font-weight:700}.vbk{background:#FFF9E6;border:1px solid #E6D68A;padding:8px 12px;margin:10px 0}.vsg{display:flex;justify-content:space-between;margin-top:44px}.vsg div{text-align:center;width:140px}.sl2{border-top:1px solid #1a1a1a;padding-top:4px;margin-top:26px}@media print{body{padding:0}}</style></head><body>${vp.outerHTML}<script>window.onload=function(){window.print()}<\/script></body></html>`);w.document.close()}
-function sendWA(id){const s=STU.find(x=>x.id===id);if(!s)return;const cn=s.cls.split("-")[0],fs=FS[cn],tot=fs.t+fs.e+fs.l+fs.s+fs.lb,vn='FEE-2025-'+String(id).padStart(4,'0');
-let msg=`*SPS SCHOOL - FEE VOUCHER*\n\nVoucher: ${vn}\nMonth: ${CML}\nDue: 10-07-2025\n\n*Student:* ${s.name}\n*Roll:* ${s.roll}\n*Class:* ${s.cls}\n*Father:* ${s.father}\n\n*Fee Details:*\nTuition: Rs. ${fs.t.toLocaleString('en-PK')}\nExam: Rs. ${fs.e.toLocaleString('en-PK')}\nLibrary: Rs. ${fs.l.toLocaleString('en-PK')}\nSports: Rs. ${fs.s.toLocaleString('en-PK')}\n${fs.lb?'Lab: Rs. '+fs.lb.toLocaleString('en-PK')+'\n':''}\n*Total: Rs. ${tot.toLocaleString('en-PK')}*\n\n*Words:* ${ntw(tot)}\n\n*Bank:* HBL, A/C: 1234-5678-901\nTitle: SPS School System\nBranch: Gulberg, Lahore\n\n*Late Fee Rs. 200 after due*\n\n_SPS School, Gulberg III, Lahore_`;
-const ph=s.contact.replace(/[^0-9]/g,'');const p=ph.startsWith('0')?'92'+ph.substring(1):ph;window.open(`https://wa.me/${p}?text=${encodeURIComponent(msg)}`,'_blank');toast('Opening WhatsApp...')}
-
-/* ===== RESULTS ===== */
-function rRes(){const cls=gCls();
-if(curRole==='student'){const me=STU.find(s=>s.name===curUser.name);if(!me)return;const rd=RD.find(r=>r.sid===me.id);if(!rd){$('mc').innerHTML='<p style="color:var(--m)">No results.</p>';return}const tot=SUBS.reduce((a,sub)=>a+rd.m[sub],0),pct=Math.round(tot/SUBS.length),gr=gGr(pct);
- $('mc').innerHTML=`<div style="margin-bottom:20px"><h2 style="font-size:24px;font-weight:800">My Results</h2><p style="color:var(--m);font-size:13px;margin-top:3px">Mid-Term 2025 | ${me.cls}</p></div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px">
-<div class="cd" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">TOTAL</div><div style="font-size:22px;font-weight:800;margin-top:4px">${tot}/${SUBS.length*100}</div></div>
-<div class="cd" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">PERCENTAGE</div><div style="font-size:22px;font-weight:800;margin-top:4px;color:${gr.c}">${pct}%</div></div>
-<div class="cd" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">GRADE</div><div style="font-size:22px;font-weight:800;margin-top:4px;color:${gr.c}">${gr.g}</div></div></div>
-<div class="cd" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Subject</th><th>Marks</th><th>Total</th><th>Grade</th></tr></thead><tbody>${SUBS.map(sub=>{const sg=gGr(rd.m[sub]);return`<tr><td style="font-weight:600">${sub}</td><td>${rd.m[sub]}</td><td>100</td><td><span style="font-weight:800;color:${sg.c}">${sg.g}</span></td></tr>`}).join('')}</tbody></table></div></div>`;return}
- $('mc').innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px"><div><h2 style="font-size:24px;font-weight:800">Results</h2><p style="color:var(--m);font-size:13px;margin-top:3px">Mid-Term 2025</p></div><select class="fi" style="width:auto;min-width:130px" onchange="resCls=this.value;rRes()">${cls.map(c=>`<option value="${c}" ${c===resCls?'selected':''}>${c}</option>`).join('')}</select></div>`;
-const cs=STU.filter(s=>s.cls===resCls);const res=cs.map(s=>{const rd=RD.find(r=>r.sid===s.id);return rd?Math.round(SUBS.reduce((a,sub)=>a+rd.m[sub],0)/SUBS.length):0}).filter(v=>v>0);const avg=res.length?Math.round(res.reduce((a,b)=>a+b,0)/res.length):0,hi=res.length?Math.max(...res):0,pass=res.filter(v=>v>=50).length;
- $('mc').innerHTML+=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px"><div class="cd" style="padding:14px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">AVG</div><div style="font-size:22px;font-weight:800;margin-top:3px">${avg}%</div></div><div class="cd" style="padding:14px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">HIGHEST</div><div style="font-size:22px;font-weight:800;margin-top:3px;color:var(--p)">${hi}%</div></div><div class="cd" style="padding:14px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">PASS RATE</div><div style="font-size:22px;font-weight:800;margin-top:3px;color:${pass/cs.length>=.8?'var(--p)':'var(--d)'}">${cs.length?Math.round(pass/cs.length*100):0}%</div></div></div>
-<div class="cd" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Student</th>${SUBS.map(s=>`<th class="hm">${s}</th>`).join('')}<th>Total</th><th>%</th><th>Grade</th></tr></thead><tbody>${cs.map(s=>{const rd=RD.find(r=>r.sid===s.id);if(!rd)return`<tr><td style="font-weight:600">${s.name}</td><td colspan="${SUBS.length+3}" style="color:var(--m);text-align:center">N/A</td></tr>`;const tot=SUBS.reduce((a,sub)=>a+rd.m[sub],0),pct=Math.round(tot/SUBS.length),gr=gGr(pct);return`<tr><td style="font-weight:600;white-space:nowrap">${s.name}</td>${SUBS.map(sub=>`<td class="hm">${rd.m[sub]}</td>`).join('')}<td style="font-weight:700">${tot}/${SUBS.length*100}</td><td style="font-weight:700">${pct}%</td><td><span style="font-weight:800;color:${gr.c};font-size:14px">${gr.g}</span></td></tr>`}).join('')}</tbody></table></div></div>`}
-
-/* ===== ATTENDANCE ===== */
-function rAtt(){const isStu=curRole==='student';$('mc').innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px"><div><h2 style="font-size:24px;font-weight:800">${isStu?'My Attendance':'Attendance'}</h2><p style="color:var(--m);font-size:13px;margin-top:3px">${attDate}</p></div>${!isStu?`<div style="display:flex;gap:8px;flex-wrap:wrap"><input class="fi" type="date" id="att-d" value="${attDate}" style="width:auto" onchange="attDate=this.value;rAtt()"><select class="fi" id="att-c" style="width:auto;min-width:130px" onchange="rAtt()"><option value="all">All</option>${gCls().map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div>`:''}</div><div id="attc"></div>`;
-if(isStu){const me=STU.find(s=>s.name===curUser.name);if(!me)return;const my=ATT.filter(a=>a.sid===me.id),pr=my.filter(a=>a.st==='present').length,la=my.filter(a=>a.st==='late').length,ab=my.filter(a=>a.st==='absent').length,pct=my.length?Math.round((pr+la*.5)/my.length*100):0;
- $('attc').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:18px"><div class="cd" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">PRESENT</div><div style="font-size:24px;font-weight:800;margin-top:4px;color:var(--p)">${pr}</div></div><div class="cd" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">LATE</div><div style="font-size:24px;font-weight:800;margin-top:4px;color:var(--al)">${la}</div></div><div class="cd" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">ABSENT</div><div style="font-size:24px;font-weight:800;margin-top:4px;color:var(--d)">${ab}</div></div><div class="cd" style="padding:16px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">ATT. %</div><div style="font-size:24px;font-weight:800;margin-top:4px;color:${pct>=80?'var(--p)':'var(--d)'}">${pct}%</div></div></div>
-<div class="cd" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Date</th><th>Status</th></tr></thead><tbody>${my.length?my.map(a=>`<tr><td>${a.date}</td><td><span class="bg ${a.st==='present'?'bg-p':a.st==='late'?'bg-r':'bg-u'}">${a.st.charAt(0).toUpperCase()+a.st.slice(1)}</span></td></tr>`).join(''):'<tr><td colspan="2" style="text-align:center;color:var(--m)">No records</td></tr>'}</tbody></table></div></div>`;return}
-const fc=$('att-c')?$('att-c').value:'all';let fl=STU;if(fc!=='all')fl=fl.filter(s=>s.cls===fc);const pr=fl.filter(s=>{const a=ATT.find(x=>x.sid===s.id&&x.date===attDate);return a&&a.st==='present'}).length;
- $('attc').innerHTML=`<div class="cd" style="padding:14px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:16px;align-items:center"><div><span style="font-size:12px;color:var(--m);font-weight:600">Present: </span><strong style="color:var(--p)">${pr}/${fl.length}</strong></div><button class="btn bp bs" onclick="markAll('present')"><i class="fa-solid fa-check-double"></i> All Present</button></div>
-<div class="smo" style="display:flex;flex-direction:column;gap:8px">${fl.map(s=>{const a=ATT.find(x=>x.sid===s.id&&x.date===attDate);const st=a?a.st:'nm';return`<div class="cd" style="padding:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div><div style="font-weight:600;font-size:13px">${s.name}</div><div style="color:var(--m);font-size:11px">${s.cls} | Roll: ${s.roll}</div></div><div style="display:flex;gap:5px"><button class="btn bs ${st==='present'?'bp':'bo'}" onclick="sA(${s.id},'present')"><i class="fa-solid fa-check"></i></button><button class="btn bs ${st==='late'?'ba':'bo'}" onclick="sA(${s.id},'late')"><i class="fa-solid fa-clock"></i></button><button class="btn bs ${st==='absent'?'bd':'bo'}" onclick="sA(${s.id},'absent')"><i class="fa-solid fa-xmark"></i></button></div></div>`}).join('')}</div>
-<div class="cd hm" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Student</th><th>Class</th><th>Roll</th><th>Status</th><th>Actions</th></tr></thead><tbody>${fl.map(s=>{const a=ATT.find(x=>x.sid===s.id&&x.date===attDate);const st=a?a.st:'nm';return`<tr><td style="font-weight:600">${s.name}</td><td>${s.cls}</td><td>${s.roll}</td><td><span class="bg ${st==='present'?'bg-p':st==='late'?'bg-r':st==='absent'?'bg-u':''}">${st==='nm'?'Not Marked':st.charAt(0).toUpperCase()+st.slice(1)}</span></td><td><div style="display:flex;gap:4px"><button class="btn bs ${st==='present'?'bp':'bo'}" onclick="sA(${s.id},'present')">P</button><button class="btn bs ${st==='late'?'ba':'bo'}" onclick="sA(${s.id},'late')">L</button><button class="btn bs ${st==='absent'?'bd':'bo'}" onclick="sA(${s.id},'absent')">A</button></div></td></tr>`}).join('')}</tbody></table></div></div>`}
-function sA(sid,st){let a=ATT.find(x=>x.sid===sid&&x.date===attDate);if(a)a.st=st;else ATT.push({sid,date:attDate,st});rAtt()}
-function markAll(st){const fc=$('att-c')?$('att-c').value:'all';let fl=STU;if(fc!=='all')fl=fl.filter(s=>s.cls===fc);fl.forEach(s=>{let a=ATT.find(x=>x.sid===s.id&&x.date===attDate);if(a)a.st=st;else ATT.push({sid:s.id,date:attDate,st})});toast('All marked '+st);rAtt()}
-
-/* ===== TEACHERS ===== */
-function rTch(){if(curRole!=='admin'){toast('Access denied','e');return}
- $('mc').innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px"><div><h2 style="font-size:24px;font-weight:800">Teachers</h2><p style="color:var(--m);font-size:13px;margin-top:3px">${TCH.length} Faculty Members</p></div><button class="btn bp" onclick="modal('<div class=\\'mhd\\'><h2>Add Teacher</h2><button class=\\'mcl\\' onclick=\\'cm()\\'><i class=\\'fa-solid fa-xmark\\'></i></button></div><div class=\\'mbd\\'><div class=\\'fg\\'><label class=\\'fl\\'>Name</label><input class=\\'fi\\' id=\\'tn\\' placeholder=\\'Teacher name\\'></div><div class=\\'fg\\'><label class=\\'fl\\'>Subject</label><input class=\\'fi\\' id=\\'ts\\' placeholder=\\'Subject\\'></div><div class=\\'fg\\'><label class=\\'fl\\'>Phone</label><input class=\\'fi\\' id=\\'tp\\' placeholder=\\'0300-1234567\\'></div></div><div class=\\'mft\\'><button class=\\'btn bo\\' onclick=\\'cm()\\'>Cancel</button><button class=\\'btn bp\\' onclick=\\'TCH.push({id:TCH.length+1,name:$(&quot;tn&quot;).value.trim(),sub:$(&quot;ts&quot;).value.trim(),phone:$(&quot;tp&quot;).value.trim()});cm();toast(&quot;Added&quot;);rTch()\\'>Add</button></div>')"><i class="fa-solid fa-plus"></i> Add</button></div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">${TCH.map(t=>`<div class="cd" style="padding:20px"><div style="display:flex;align-items:center;gap:14px;margin-bottom:14px"><div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--p),#34D399);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;flex-shrink:0">${t.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><div><div style="font-weight:700;font-size:14px">${t.name}</div><div style="color:var(--p);font-size:12.5px;font-weight:600">${t.sub}</div></div></div><div style="font-size:12px;color:var(--m);margin-bottom:12px"><i class="fa-solid fa-phone" style="width:16px;margin-right:4px"></i>${t.phone}</div><div style="display:flex;gap:6px"><button class="btn bo bs" onclick="modal('<div class=\\'mhd\\'><h2>Edit</h2><button class=\\'mcl\\' onclick=\\'cm()\\'><i class=\\'fa-solid fa-xmark\\'></i></button></div><div class=\\'mbd\\'><div class=\\'fg\\'><label class=\\'fl\\'>Name</label><input class=\\'fi\\' id=\\'tn\\' value=\\'${t.name}\\'></div><div class=\\'fg\\'><label class=\\'fl\\'>Subject</label><input class=\\'fi\\' id=\\'ts\\' value=\\'${t.sub}\\'></div><div class=\\'fg\\'><label class=\\'fl\\'>Phone</label><input class=\\'fi\\' id=\\'tp\\' value=\\'${t.phone}\\'></div></div><div class=\\'mft\\'><button class=\\'btn bo\\' onclick=\\'cm()\\'>Cancel</button><button class=\\'btn bp\\' onclick=\\'const t=TCH.find(x=>x.id===${t.id});t.name=$(&quot;tn&quot;).value.trim();t.sub=$(&quot;ts&quot;).value.trim();t.phone=$(&quot;tp&quot;).value.trim();cm();toast(&quot;Updated&quot;);rTch()\\'>Update</button></div>')"><i class="fa-solid fa-pen"></i> Edit</button><button class="btn bs" style="background:#FEE2E2;color:#991B1B" onclick="const i=TCH.findIndex(t=>t.id===${t.id});if(i>-1)TCH.splice(i,1);toast('Removed');rTch()"><i class="fa-solid fa-trash"></i></button></div></div>`).join('')}</div>`}
-
-/* ===== TIMETABLE ===== */
-function rTT(){$('mc').innerHTML=`<div style="margin-bottom:20px"><h2 style="font-size:24px;font-weight:800">Timetable</h2><p style="color:var(--m);font-size:13px;margin-top:3px">Weekly Schedule</p></div>
-<div class="cd" style="padding:16px;overflow-x:auto"><div class="ttg">
-<div class="ttc tth">Time</div>${TT.days.map(d=>`<div class="ttc tth">${d}</div>`).join('')}
- ${TT.times.map((t,ti)=>`<div class="ttc ttt">${t}${ti===3?'<br><span style="font-size:9px;color:var(--al)">BREAK</span>':''}</div>${TT.days.map((d,di)=>{const cell=TT.g[di][ti];const brk=ti===3;return`<div class="ttc" ${brk?'style="background:#FFF9E6;text-align:center;font-size:10px;color:var(--al);font-weight:600"':cell[0]==='-'?'style="background:#F9FBF9;color:var(--m);text-align:center;font-size:11px"':''}>${brk?'BREAK':cell[0]==='-'?'Free':`<div class="tts">${cell[0]}</div><div class="ttt2">${cell[1]}</div>`}</div>`}).join('')}`).join('')}
-</div></div>
-<p style="color:var(--m);font-size:11px;margin-top:10px"><i class="fa-solid fa-circle-info" style="margin-right:4px"></i>10:00-10:30 AM is break. Friday last periods are for Sports.</p>`}
-
-/* ===== NOTICES ===== */
-function rNtc(){const isA=curRole==='admin';$('mc').innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px"><div><h2 style="font-size:24px;font-weight:800">Notices</h2><p style="color:var(--m);font-size:13px;margin-top:3px">${NTC.length} Announcements</p></div>${isA?`<button class="btn bp" onclick="modal('<div class=\\'mhd\\'><h2>Add Notice</h2><button class=\\'mcl\\' onclick=\\'cm()\\'><i class=\\'fa-solid fa-xmark\\'></i></button></div><div class=\\'mbd\\'><div class=\\'fg\\'><label class=\\'fl\\'>Title</label><input class=\\'fi\\' id=\\'nti\\' placeholder=\\'Title\\'></div><div class=\\'fg\\'><label class=\\'fl\\'>Priority</label><select class=\\'fi\\' id=\\'npr\\'><option value=\\'low\\'>Low</option><option value=\\'medium\\'>Medium</option><option value=\\'high\\'>High</option></select></div><div class=\\'fg\\'><label class=\\'fl\\'>Details</label><textarea class=\\'fi\\' id=\\'nbd\\' rows=\\'4\\' style=\\'resize:vertical\\' placeholder=\\'Details...\\'></textarea></div></div><div class=\\'mft\\'><button class=\\'btn bo\\' onclick=\\'cm()\\'>Cancel</button><button class=\\'btn bp\\' onclick=\\'NTC.unshift({id:++NID,title:$(&quot;nti&quot;).value.trim(),date:new Date().toISOString().split(&quot;T&quot;)[0],body:$(&quot;nbd&quot;).value.trim(),pri:$(&quot;npr&quot;).value});cm();toast(&quot;Added&quot;);rNtc()\\'>Add</button></div>')"><i class="fa-solid fa-plus"></i> Add</button>`:''}</div>
-<div style="display:flex;flex-direction:column;gap:12px">${NTC.map(n=>`<div class="cd" style="padding:18px 22px;border-left:4px solid ${n.pri==='high'?'var(--d)':n.pri==='medium'?'var(--al)':'var(--p)'}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap"><div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h3 style="font-size:15px;font-weight:700">${n.title}</h3><span class="bg bg-${n.pri==='high'?'u':n.pri==='medium'?'r':'p'}">${n.pri.charAt(0).toUpperCase()+n.pri.slice(1)}</span></div><p style="font-size:13px;color:var(--m);margin-top:6px;line-height:1.5">${n.body}</p><p style="font-size:11px;color:var(--m);margin-top:8px;opacity:.7"><i class="fa-regular fa-calendar"></i> ${n.date}</p></div>${isA?`<button class="btn bs" style="background:#FEE2E2;color:#991B1B;flex-shrink:0" onclick="const i=NTC.findIndex(n=>n.id===${n.id});if(i>-1)NTC.splice(i,1);toast('Removed');rNtc()"><i class="fa-solid fa-trash"></i></button>`:''}</div></div>`).join('')}</div>`}
-
-/* ===== INIT ===== */
-window.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>$('ldr').classList.add('h'),500);setTimeout(()=>$('ldr').style.display='none',900)});
-</script>
-</body>
-</html>
+ 
