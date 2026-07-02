@@ -3,292 +3,1027 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPS School System</title>
+<title>SPS — School Management System</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{primary:{50:'#F0FDFA',100:'#CCFBF1',200:'#99F6E4',300:'#5EEAD4',400:'#2DD4BF',500:'#14B8A6',600:'#0D9488',700:'#0F766E',800:'#115E59',900:'#134E4A'},accent:{400:'#FBBF24',500:'#F59E0B',600:'#D97706'},dark:{800:'#1E293B',900:'#0F172A'}}}}}
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ============ FIREBASE SDK ============ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+// =============================================
+// YE LINE KO APNI CONFIG SE REPLACE KARO
+// Step 3 mein jo mila tha wahi daalo yahan
+// =============================================
+const firebaseConfig = {
+  apiKey: "AIzaSyAP5AkY5YMzMPuqf21-NmL6IIZZkzcE1CA",
+  authDomain: "sps-school-management-96f68.firebaseapp.com",
+  projectId: "sps-school-management-96f68",
+  storageBucket: "sps-school-management-96f68.firebasestorage.app",
+  messagingSenderId: "57272480045",
+  appId: "1:57272480045:web:403763647ee171f2f263a4"
+};
+// =============================================
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+
 <style>
-:root{--p:#047857;--pd:#065F46;--a:#B45309;--al:#D97706;--d:#DC2626;--sb:#0A1F1A;--bg:#F1F5F0;--c:#fff;--t:#1A2E1A;--m:#5F7A5F;--b:#D1DDD1;--sw:250px}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--t);overflow-x:hidden}
-.ld{position:fixed;inset:0;background:var(--sb);display:flex;align-items:center;justify-content:center;z-index:200;transition:opacity .5s}.ld.h{opacity:0;pointer-events:none}.lr{width:50px;height:50px;border:4px solid rgba(255,255,255,.1);border-top-color:#34D399;border-radius:50%;animation:sp .7s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
-.hnav{position:fixed;top:0;left:0;right:0;z-index:20;background:rgba(10,31,26,.92);backdrop-filter:blur(12px);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06)}
-.lgb{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#047857,#34D399);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px}
-.lgt{color:#fff;font-weight:800;font-size:18px}.lgt span{color:#34D399}
-.hnav-r{display:flex;gap:8px;align-items:center}.hnav-r a{color:rgba(255,255,255,.6);text-decoration:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;transition:all .2s}.hnav-r a:hover{color:#fff;background:rgba(255,255,255,.08)}
-.hnb{background:var(--p);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}.hnb:hover{background:#065F46}
-.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:80px 24px}
-.hero-bg{position:absolute;inset:0;background:url('https://picsum.photos/seed/schlbldg99/1400/800') center/cover}
-.hero-ov{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,31,26,.93),rgba(4,120,87,.85),rgba(10,31,26,.9))}
-.hero-c{position:relative;z-index:1;max-width:700px}
-.hero-c h1{font-size:clamp(36px,6vw,62px);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-1px}
-.hero-c h1 em{font-style:normal;color:#34D399}
-.hero-c p{color:rgba(255,255,255,.6);font-size:clamp(15px,2vw,18px);margin-top:18px;line-height:1.7}
-.hero-b{margin-top:32px;display:flex;gap:14px;flex-wrap:wrap}
-.hb1{background:var(--p);color:#fff;border:none;padding:14px 28px;border-radius:12px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:all .25s}.hb1:hover{background:#065F46;transform:translateY(-2px);box-shadow:0 8px 24px rgba(4,120,87,.4)}
-.hb2{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.25);padding:14px 28px;border-radius:12px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:all .25s}.hb2:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.05)}
-.hsts{display:grid;grid-template-columns:repeat(4,1fr);position:relative;z-index:1;margin-top:80px}
-.hst{background:rgba(255,255,255,.06);backdrop-filter:blur(8px);padding:28px 20px;text-align:center;border-right:1px solid rgba(255,255,255,.08)}.hst:last-child{border-right:none}
-.hst .n{font-size:32px;font-weight:900;color:#34D399}.hst .l{font-size:11px;color:rgba(255,255,255,.5);font-weight:500;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
-.hsc{padding:80px 24px;max-width:1200px;margin:0 auto}
-.hsct{text-align:center;margin-bottom:50px}.hsct h2{font-size:30px;font-weight:900}.hsct p{color:var(--m);font-size:15px;margin-top:8px;max-width:500px;margin-left:auto;margin-right:auto}
-.hab{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
-.hab-img{border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.12)}.hab-img img{width:100%;height:400px;object-fit:cover;display:block}
-.hab-c h3{font-size:22px;font-weight:800;margin-bottom:16px;color:var(--p)}.hab-c p{color:var(--m);font-size:14px;line-height:1.8;margin-bottom:12px}
-.hfg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.hfc{border-radius:16px;overflow:hidden;position:relative;height:260px;cursor:pointer;transition:transform .3s}.hfc:hover{transform:translateY(-4px)}
-.hfc img{width:100%;height:100%;object-fit:cover;transition:transform .4s}.hfc:hover img{transform:scale(1.05)}
-.hfc-o{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,transparent 60%);padding:20px;display:flex;flex-direction:column;justify-content:flex-end}
-.hfc-o h4{color:#fff;font-size:17px;font-weight:700}.hfc-o p{color:rgba(255,255,255,.7);font-size:12px;margin-top:4px}
-.hgal{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.hgal div{border-radius:12px;overflow:hidden;height:200px}.hgal img{width:100%;height:100%;object-fit:cover;transition:transform .3s}.hgal div:hover img{transform:scale(1.08)}
-.hft{background:var(--sb);color:rgba(255,255,255,.4);padding:40px 24px;text-align:center;font-size:13px}
-#ls{display:none;min-height:100vh;flex-direction:row;background:var(--sb)}
-.ll{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;color:#fff;position:relative}
-.ll::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(52,211,153,.1) 0%,transparent 60%)}
-.ll h2{font-size:28px;font-weight:800;color:#fff;position:relative;z-index:1}.ll p{color:rgba(255,255,255,.4);font-size:13px;margin-top:6px;position:relative;z-index:1}
-.ll-f{margin-top:36px;position:relative;z-index:1;display:flex;flex-direction:column;gap:14px}
-.ll-f div{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.5);font-size:13px}.ll-f i{color:#34D399;width:18px;text-align:center}
-.lrr{flex:1;display:flex;align-items:center;justify-content:center;padding:48px;background:#fff}
-.lbx{width:100%;max-width:400px}.lbx h2{font-size:24px;font-weight:800;margin-bottom:4px}.lbx .ls{color:var(--m);font-size:13px;margin-bottom:28px}
-.rt{display:flex;gap:0;margin-bottom:24px;background:#F1F5F0;border-radius:10px;padding:3px}
-.rt button{flex:1;padding:10px;text-align:center;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--m);border-radius:8px;cursor:pointer;transition:all .2s}
-.rt button.on{background:var(--p);color:#fff;box-shadow:0 2px 8px rgba(4,120,87,.3)}
-.fg{margin-bottom:14px}.fl{display:block;font-size:12.5px;font-weight:600;color:var(--m);margin-bottom:5px}
-.fi{width:100%;padding:10px 14px;border:1.5px solid var(--b);border-radius:10px;font-family:inherit;font-size:13.5px;background:#fff;outline:none;transition:all .2s}
-.fi:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(4,120,87,.1)}
-select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M6 8L1 3h10z' fill='%235F7A5F'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.le{color:var(--d);font-size:12px;font-weight:500;margin-bottom:10px;display:none}
-.vl{display:block;text-align:center;margin-top:20px;color:var(--p);font-size:13px;font-weight:600;cursor:pointer}.vl:hover{text-decoration:underline}
-#ap{display:none}
-#sb{position:fixed;left:0;top:0;bottom:0;width:var(--sw);background:var(--sb);color:#fff;z-index:40;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.sb-h{padding:16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px}
-.sb-r{padding:8px 16px;font-size:10px;font-weight:600;color:var(--al);text-transform:uppercase;letter-spacing:.8px;background:rgba(255,255,255,.03)}
-.sb-n{flex:1;padding:8px;overflow-y:auto;display:flex;flex-direction:column;gap:1px}
-.nb{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:none;background:transparent;color:rgba(255,255,255,.5);font-family:inherit;font-size:13px;font-weight:500;border-radius:8px;cursor:pointer;transition:all .15s;text-align:left}
-.nb:hover{background:rgba(255,255,255,.05);color:#fff}.nb.on{background:var(--p);color:#fff;font-weight:600}
-.nb i{width:18px;text-align:center;font-size:13px}
-.sb-ft{padding:10px 16px;border-top:1px solid rgba(255,255,255,.06)}
-.sb-ft button{display:flex;align-items:center;gap:8px;width:100%;padding:8px 0;border:none;background:transparent;color:rgba(255,255,255,.35);font-family:inherit;font-size:12px;cursor:pointer}.sb-ft button:hover{color:#FCA5A5}
-#mhd{display:none;position:fixed;top:0;left:0;right:0;height:56px;background:var(--sb);z-index:30;align-items:center;padding:0 14px;gap:10px}
-#mhd .hmb{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:6px}
-#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35;backdrop-filter:blur(2px)}#ov.sh{display:block}
-#mw{margin-left:var(--sw);min-height:100vh;transition:margin .3s}#mc{padding:24px;max-width:1240px}
-.cd{background:var(--c);border-radius:14px;border:1px solid var(--b);box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.sc{padding:18px 20px;display:flex;align-items:flex-start;gap:14px}
-.si{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.sl{font-size:12px;color:var(--m);font-weight:500}.sv{font-size:24px;font-weight:800;line-height:1.1;margin-top:3px}.ss{font-size:11px;margin-top:4px;font-weight:500}
-.bg{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600}
-.bgp{background:#D1FAE5;color:#065F46}.bgu{background:#FEE2E2;color:#991B1B}.bgr{background:#FEF3C7;color:#92400E}
-.dt{width:100%;border-collapse:collapse;font-size:13px}
-.dt th{text-align:left;padding:10px 12px;background:#F6F9F6;color:var(--m);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid var(--b)}
-.dt td{padding:10px 12px;border-bottom:1px solid #EEF2EE;vertical-align:middle}.dt tr:hover td{background:#FAFCFA}
-.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border:none;border-radius:9px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
-.btnp{background:var(--p);color:#fff}.btnp:hover{background:var(--pd);transform:translateY(-1px);box-shadow:0 4px 12px rgba(4,120,87,.3)}
-.btna{background:var(--al);color:#fff}.btno{background:transparent;color:var(--t);border:1.5px solid var(--b)}.btno:hover{border-color:var(--p);color:var(--p)}
-.btnd{background:var(--d);color:#fff}.btnw{background:#25D366;color:#fff}.btnw:hover{background:#128C7E}
-.btns{padding:6px 12px;font-size:12px;border-radius:7px}.btnf{width:100%;justify-content:center}
-.tbr{display:flex;gap:0;border-bottom:2px solid var(--b);margin-bottom:20px;overflow-x:auto}
-.tbr button{padding:9px 16px;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--m);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap}
-.tbr button:hover{color:var(--t)}.tbr button.on{color:var(--p);border-bottom-color:var(--p)}
-.cw{position:relative;width:100%;height:220px}.cbb{padding:16px 18px}.cbb h3{font-size:14px;font-weight:700;margin-bottom:12px}
-.mb{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:flex;align-items:center;justify-content:center;padding:12px;backdrop-filter:blur(3px)}
-.mx{background:#fff;border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mi .25s ease}
-@keyframes mi{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.mhd{padding:16px 20px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between}
-.mhd h2{font-size:16px;font-weight:700}.mcl{background:none;border:none;font-size:17px;color:var(--m);cursor:pointer;padding:3px}
-.mbd{padding:20px}.mft{padding:12px 20px;border-top:1px solid var(--b);display:flex;justify-content:flex-end;gap:8px}
-.tst{position:fixed;bottom:20px;right:20px;z-index:60;padding:12px 18px;border-radius:10px;color:#fff;font-weight:600;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.15);transform:translateY(18px);opacity:0;transition:all .3s}
-.tst.sh{transform:translateY(0);opacity:1}.tok{background:var(--p)}.ter{background:var(--d)}.twa{background:var(--al)}
-.fin{animation:fi .3s ease}@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.vp{background:#fff;border:2px solid #1a1a1a;border-radius:4px;padding:24px;max-width:640px;margin:0 auto;font-family:'Courier New',Courier,monospace;font-size:12px;line-height:1.5}
-.vp .vh{text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:10px;margin-bottom:10px}.vp .vh h2{font-size:18px;font-weight:900;letter-spacing:1px}
-.vp .vm{display:flex;justify-content:space-between;flex-wrap:wrap;margin-bottom:8px;padding-bottom:7px;border-bottom:1px dashed #999;font-size:11.5px}
-.vp .vs{background:#f7f7f7;padding:7px 10px;margin-bottom:10px}.vp .vs div{display:flex}.vp .vs span:first-child{width:120px;font-weight:700;flex-shrink:0}
-.vp table{width:100%;border-collapse:collapse;margin-bottom:8px}.vp table th{background:#1a1a1a;color:#fff;padding:6px 9px;text-align:left;font-size:11px}
-.vp table td{padding:6px 9px;border-bottom:1px solid #ddd}.vp table td:last-child{text-align:right}.vp .tr{background:#f0f0f0;font-weight:700}
-.vp .vbk{background:#FFF9E6;border:1px solid #E6D68A;padding:7px 10px;margin:8px 0;font-size:11.5px}
-.vp .vsg{display:flex;justify-content:space-between;margin-top:40px}.vp .vsg div{text-align:center;width:130px}.vp .vsg .sl2{border-top:1px solid #1a1a1a;padding-top:3px;margin-top:24px;font-size:11.5px}
-.tt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.ttg{display:grid;grid-template-columns:80px repeat(5,minmax(100px,1fr));gap:1px;background:var(--b);border-radius:10px;overflow:hidden;font-size:12px;min-width:600px}
-.ttc{background:#fff;padding:8px 6px;min-height:42px}.tth{background:var(--pd);color:#fff;font-weight:700;text-align:center;padding:10px 6px;font-size:11px}
-.ttt{background:#F6F9F6;font-weight:600;color:var(--m);display:flex;align-items:center;justify-content:center;font-size:10px;line-height:1.3}
-.tts{font-weight:600;font-size:11px;line-height:1.2}.ttt2{font-size:9.5px;color:var(--m);margin-top:2px}
-::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#C1D1C1;border-radius:3px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#F1F5F9;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+.login-bg{position:fixed;inset:0;background:linear-gradient(135deg,#0F172A 0%,#1E293B 50%,#0F172A 100%);overflow:hidden;z-index:0}
+.shape{position:absolute;border-radius:50%;opacity:.07;animation:shapeFloat 25s infinite ease-in-out}
+.shape:nth-child(1){width:400px;height:400px;background:#0D9488;top:-100px;left:-100px;animation-duration:22s}
+.shape:nth-child(2){width:300px;height:300px;background:#F59E0B;bottom:-80px;right:-80px;animation-duration:28s;animation-delay:-5s}
+.shape:nth-child(3){width:200px;height:200px;background:#0D9488;top:50%;right:20%;animation-duration:18s;animation-delay:-10s;border-radius:30%}
+.shape:nth-child(4){width:250px;height:250px;background:#F59E0B;top:20%;left:10%;animation-duration:30s;animation-delay:-3s}
+.shape:nth-child(5){width:150px;height:150px;background:#14B8A6;bottom:30%;left:40%;animation-duration:20s;animation-delay:-8s;border-radius:20%}
+@keyframes shapeFloat{0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}25%{transform:translate(30px,-40px) rotate(90deg) scale(1.1)}50%{transform:translate(-20px,30px) rotate(180deg) scale(.95)}75%{transform:translate(40px,20px) rotate(270deg) scale(1.05)}}
+#sidebar{transition:width .3s cubic-bezier(.4,0,.2,1),transform .3s cubic-bezier(.4,0,.2,1)}
+#sidebar .nav-text{transition:opacity .2s,transform .2s}
+#sidebar.collapsed .nav-text{opacity:0;transform:translateX(-10px);pointer-events:none;width:0;overflow:hidden}
+#sidebar.collapsed{width:72px!important}
+#sidebar.collapsed .sidebar-header-text,#sidebar.collapsed .user-info-text{opacity:0;width:0;overflow:hidden}
+.nav-item{position:relative;transition:all .2s}
+.nav-item::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:0;background:#0D9488;border-radius:0 3px 3px 0;transition:height .2s}
+.nav-item.active::before{height:60%}
+.nav-item.active{background:rgba(13,148,136,.15);color:#2DD4BF}
+.nav-item:hover:not(.active){background:rgba(255,255,255,.05)}
+#main-content{animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+#modal-overlay{transition:opacity .25s}#modal-overlay.hidden{opacity:0;pointer-events:none}
+#modal-box{transition:transform .25s,opacity .25s}#modal-overlay.hidden #modal-box{transform:scale(.95) translateY(10px);opacity:0}
+.toast{animation:toastIn .3s ease,toastOut .3s ease 2.7s forwards}
+@keyframes toastIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes toastOut{to{transform:translateX(100%);opacity:0}}
+.tt-cell{font-size:.75rem;padding:6px 4px;border-radius:6px;text-align:center;font-weight:600;line-height:1.2}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#0D9488;box-shadow:0 0 0 3px rgba(13,148,136,.15)}
+.data-row:hover{background:#F8FAFC}
+.att-radio{appearance:none;width:20px;height:20px;border:2px solid #CBD5E1;border-radius:50%;cursor:pointer;transition:all .15s;position:relative}
+.att-radio:checked{border-color:#0D9488;background:#0D9488}
+.att-radio:checked::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:white;border-radius:50%}
+.att-radio.late:checked{border-color:#F59E0B;background:#F59E0B}
+.att-radio.absent:checked{border-color:#EF4444;background:#EF4444}
+#sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:30}
 @media(max-width:768px){
-.hnav{padding:0 16px}.hnav-r a{display:none}.hnav-r .hnb{padding:8px 14px;font-size:12px}
-.hsts{grid-template-columns:repeat(2,1fr);gap:1px}.hst{padding:20px 12px}.hst .n{font-size:24px}
-.hsc{padding:50px 16px}.hsct h2{font-size:24px}
-.hab{grid-template-columns:1fr;gap:28px}.hab-img img{height:250px}
-.hfg{grid-template-columns:1fr 1fr}.hfc{height:200px}
-.hgal{grid-template-columns:repeat(2,1fr)}
-#ls{flex-direction:column}.ll{padding:28px 18px;min-height:auto}.ll h2{font-size:24px}.ll-f{display:none}.lrr{padding:28px 18px}
-#sb{transform:translateX(-100%)}#sb.op{transform:translateX(0)}
-#mhd{display:flex}
-#mw{margin-left:0;padding-top:56px}#mc{padding:14px}.sv{font-size:19px}.cw{height:180px}
-.hm{display:none!important}.smo{display:flex!important}
-.vp{padding:14px;font-size:10px}.vp .vs span:first-child{width:90px}.vp .vm{flex-direction:column;gap:2px}.vp .vsg{flex-direction:column;gap:20px;align-items:center}
-.ttg{grid-template-columns:64px repeat(5,minmax(80px,1fr));min-width:480px;font-size:11px}.ttc{padding:5px 4px;min-height:36px}.tts{font-size:10px}.ttt2{font-size:9px}
+  #sidebar{transform:translateX(-100%);z-index:40;position:fixed!important}
+  #sidebar.mobile-open{transform:translateX(0)}
+  #sidebar-overlay.show{display:block}
+  #sidebar.collapsed{width:260px!important}
+  #sidebar.collapsed .nav-text,#sidebar.collapsed .sidebar-header-text,#sidebar.collapsed .user-info-text{opacity:1;width:auto}
 }
-@media(min-width:769px){.smo{display:none!important}}
+/* Loading overlay */
+#loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.95);z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .3s}
+#loading-overlay.hide{opacity:0;pointer-events:none}
+.loader{width:40px;height:40px;border:3px solid #E2E8F0;border-top-color:#0D9488;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media print{#sidebar,#topbar,#sidebar-overlay{display:none!important}#main-area{margin-left:0!important}#main-content{padding:0!important}}
 </style>
 </head>
 <body>
-<div class="ld" id="ldr"><div style="text-align:center"><div class="lr"></div><p style="color:#34D399;margin-top:14px;font-weight:600;font-size:13px">Loading SPS System...</p></div></div>
 
-<div id="hp" style="display:none">
-<nav class="hnav"><div style="display:flex;align-items:center;gap:10px"><div class="lgb">SPS</div><div class="lgt">SPS <span>School</span></div></div>
-<div class="hnav-r"><a href="#about">About</a><a href="#facilities">Facilities</a><a href="#gallery">Gallery</a><button class="hnb" onclick="goLogin()">Login Portal</button></div></nav>
-<section class="hero"><div class="hero-bg"></div><div class="hero-ov"></div>
-<div class="hero-c"><h1>Shaping Future <em>Leaders</em> of Pakistan</h1>
-<p>Established in 1995, SPS School is one of Lahore's premier institutions offering academic excellence and holistic development from Class 6 to Matric.</p>
-<div class="hero-b"><button class="hb1" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Discover More</button><button class="hb2" onclick="goLogin()">Student Portal</button></div></div>
-<div class="hsts"><div class="hst"><div class="n">500+</div><div class="l">Students</div></div><div class="hst"><div class="n">35+</div><div class="l">Teachers</div></div><div class="hst"><div class="n">30+</div><div class="l">Years</div></div><div class="hst"><div class="n">98%</div><div class="l">Pass Rate</div></div></div></section>
-<section class="hsc" id="about"><div class="hsct"><h2>About Our School</h2><p>A legacy of three decades in nurturing young minds.</p></div>
-<div class="hab"><div class="hab-img"><img src="https://picsum.photos/seed/spscampus7/700/500" alt="Campus"></div>
-<div class="hab-c"><h3>Why Choose SPS?</h3><p>SPS School is affiliated with BISE Lahore. Our curriculum meets national standards while fostering critical thinking and creativity.</p><p>Our experienced faculty, modern facilities, and supportive environment ensure every student reaches their full potential.</p><p>With separate campuses for boys and girls, well-equipped labs, a vast library, and excellent sports facilities — SPS provides a complete educational experience.</p></div></div></section>
-<section class="hsc" id="facilities" style="background:#F6F9F6;border-radius:24px;max-width:100%;padding-left:0;padding-right:0"><div style="max-width:1200px;margin:0 auto;padding:80px 24px">
-<div class="hsct"><h2>Our Facilities</h2><p>State-of-the-art infrastructure for every aspect of learning.</p></div>
-<div class="hfg">
-<div class="hfc"><img src="https://picsum.photos/seed/scilab22/500/400" alt="Lab"><div class="hfc-o"><h4>Science Labs</h4><p>Physics, Chemistry & Biology with modern equipment</p></div></div>
-<div class="hfc"><img src="https://picsum.photos/seed/complab33/500/400" alt="Computer"><div class="hfc-o"><h4>Computer Lab</h4><p>40+ systems with high-speed internet</p></div></div>
-<div class="hfc"><img src="https://picsum.photos/seed/slibrary44/500/400" alt="Library"><div class="hfc-o"><h4>Library</h4><p>5,000+ books and digital resources</p></div></div>
-<div class="hfc"><img src="https://picsum.photos/seed/ssport55/500/400" alt="Sports"><div class="hfc-o"><h4>Sports Complex</h4><p>Cricket, football, basketball courts</p></div></div>
-<div class="hfc"><img src="https://picsum.photos/seed/stransport66/500/400" alt="Transport"><div class="hfc-o"><h4>Transport Fleet</h4><p>Safe transport covering all Lahore areas</p></div></div>
-<div class="hfc"><img src="https://picsum.photos/seed/smosque77/500/400" alt="Mosque"><div class="hfc-o"><h4>Mosque & Hifiz</h4><p>On-campus mosque with Quran Hifiz classes</p></div></div>
-</div></div></section>
-<section class="hsc" id="gallery"><div class="hsct"><h2>Campus Gallery</h2><p>A glimpse into life at SPS School.</p></div>
-<div class="hgal"><div><img src="https://picsum.photos/seed/spg1/400/300" alt="G1"></div><div><img src="https://picsum.photos/seed/spg2/400/300" alt="G2"></div><div><img src="https://picsum.photos/seed/spg3/400/300" alt="G3"></div><div><img src="https://picsum.photos/seed/spg4/400/300" alt="G4"></div></div></section>
-<footer class="hft"><div style="max-width:1200px;margin:0 auto">
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;text-align:left;margin-bottom:32px">
-<div><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><div class="lgb">SPS</div><div style="color:#fff;font-weight:800;font-size:16px">SPS <span style="color:#34D399">School</span></div></div><p style="font-size:13px;line-height:1.7">Main Boulevard, Gulberg III, Lahore. Affiliated with BISE Lahore.</p></div>
-<div><h4 style="color:#fff;font-size:14px;font-weight:700;margin-bottom:12px">Quick Links</h4><div style="display:flex;flex-direction:column;gap:8px"><a href="#about" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:13px">About Us</a><a href="#facilities" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:13px">Facilities</a><a href="javascript:goLogin()" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:13px">Student Portal</a></div></div>
-<div><h4 style="color:#fff;font-size:14px;font-weight:700;margin-bottom:12px">Contact</h4><div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:rgba(255,255,255,.5)"><div><i class="fa-solid fa-phone" style="width:16px;color:#34D399"></i> 042-35761234</div><div><i class="fa-solid fa-envelope" style="width:16px;color:#34D399"></i> info@sps.edu.pk</div><div><i class="fa-solid fa-clock" style="width:16px;color:#34D399"></i> Mon-Sat: 8AM - 2PM</div></div></div>
-</div><div style="border-top:1px solid rgba(255,255,255,.08);padding-top:20px">&copy; 2025 SPS School System. All Rights Reserved.</div></div></footer>
+<!-- Loading Overlay -->
+<div id="loading-overlay"><div class="loader"></div><p class="text-sm text-slate-500 font-medium" id="loading-text">Connecting to Firebase...</p></div>
+
+<!-- ==================== LOGIN SCREEN ==================== -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center p-4" style="display:none">
+  <div class="login-bg">
+    <div class="shape"></div><div class="shape"></div><div class="shape"></div><div class="shape"></div><div class="shape"></div>
+  </div>
+  <div class="relative z-10 w-full max-w-md">
+    <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-600 mb-4 shadow-lg shadow-primary-600/30">
+          <span class="text-2xl font-extrabold text-white">S</span>
+        </div>
+        <h1 class="text-3xl font-extrabold text-white tracking-tight">SPS</h1>
+        <p class="text-slate-400 text-sm mt-1">School Management System</p>
+        <p class="text-primary-400 text-[10px] mt-1 font-semibold tracking-wider uppercase"><i class="fas fa-database mr-1"></i>Firebase Connected</p>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Username</label>
+          <div class="relative">
+            <i class="fas fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input id="login-user" type="text" placeholder="Enter username" class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder-slate-500 text-sm focus:border-primary-400">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+          <div class="relative">
+            <i class="fas fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+            <input id="login-pass" type="password" placeholder="Enter password" class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder-slate-500 text-sm focus:border-primary-400" onkeydown="if(event.key==='Enter')doLogin()">
+          </div>
+        </div>
+        <div id="login-error" class="text-red-400 text-sm hidden"><i class="fas fa-exclamation-circle mr-1"></i><span></span></div>
+        <button onclick="doLogin()" class="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm transition-all hover:shadow-lg hover:shadow-primary-600/25 active:scale-[.98]">Sign In</button>
+      </div>
+      <div class="mt-6 pt-5 border-t border-white/10">
+        <p class="text-slate-500 text-xs text-center mb-3">Demo Credentials</p>
+        <div class="grid grid-cols-3 gap-2 text-xs">
+          <button onclick="fillLogin('admin','admin123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors text-center">
+            <i class="fas fa-user-shield block text-base mb-1 text-primary-400"></i>Admin
+          </button>
+          <button onclick="fillLogin('rajesh.kumar','teacher123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors text-center">
+            <i class="fas fa-chalkboard-teacher block text-base mb-1 text-accent-400"></i>Teacher
+          </button>
+          <button onclick="fillLogin('aarav.sharma','student123')" class="py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors text-center">
+            <i class="fas fa-user-graduate block text-base mb-1 text-emerald-400"></i>Student
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div id="ls">
-<div class="ll"><div style="display:flex;align-items:center;gap:10px;margin-bottom:40px;position:relative;z-index:1"><div class="lgb">SPS</div><div class="lgt">SPS <span>School</span></div></div>
-<h2>Welcome Back</h2><p>Sign in to access your portal</p>
-<div class="ll-f"><div><i class="fa-solid fa-check-circle"></i> Complete Student Management</div><div><i class="fa-solid fa-check-circle"></i> Fee Vouchers with WhatsApp</div><div><i class="fa-solid fa-check-circle"></i> Digital Results & Reports</div><div><i class="fa-solid fa-check-circle"></i> Attendance Tracking</div><div><i class="fa-solid fa-check-circle"></i> Teacher & Admin Portals</div></div></div>
-<div class="lrr"><div class="lbx">
-<h2>Sign In</h2><p class="ls">Access your role-based portal</p>
-<div class="le" id="le">Invalid credentials. Try again.</div>
-<div class="rt" id="rtabs"><button class="on" onclick="setR('admin',this)">Admin</button><button onclick="setR('teacher',this)">Teacher</button><button onclick="setR('student',this)">Student</button></div>
-<div class="fg"><label class="fl" id="lbu">Username</label><input class="fi" id="iu" placeholder="Enter username"></div>
-<div class="fg"><label class="fl">Password</label><input class="fi" id="ip" type="password" placeholder="Enter password"></div>
-<button class="btn btnp btnf" style="margin-top:6px" onclick="doLogin()">Sign In</button>
-<a class="vl" onclick="goHome()">Back to Website</a>
-</div></div></div>
+<!-- ==================== APP SHELL ==================== -->
+<div id="app-shell" class="hidden min-h-screen">
+  <div id="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+  <aside id="sidebar" class="fixed top-0 left-0 h-full w-[260px] bg-dark-900 flex flex-col z-40">
+    <div class="p-5 flex items-center gap-3 border-b border-white/10">
+      <div class="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary-600/20">
+        <span class="text-lg font-extrabold text-white">S</span>
+      </div>
+      <div class="sidebar-header-text transition-opacity">
+        <h2 class="text-white font-bold text-lg leading-tight">SPS</h2>
+        <p class="text-slate-500 text-[10px] uppercase tracking-widest">Management</p>
+      </div>
+      <button onclick="toggleSidebar()" class="ml-auto text-slate-500 hover:text-white transition-colors hidden md:block"><i class="fas fa-angles-left text-xs" id="collapse-icon"></i></button>
+    </div>
+    <nav id="sidebar-nav" class="flex-1 py-4 px-3 space-y-1 overflow-y-auto"></nav>
+    <div class="p-4 border-t border-white/10">
+      <div class="flex items-center gap-3">
+        <div id="sidebar-avatar" class="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0"></div>
+        <div class="user-info-text transition-opacity min-w-0">
+          <p id="sidebar-name" class="text-white text-sm font-medium truncate"></p>
+          <p id="sidebar-role" class="text-slate-500 text-[11px] capitalize"></p>
+        </div>
+        <button onclick="doLogout()" class="ml-auto text-slate-500 hover:text-red-400 transition-colors flex-shrink-0" title="Logout"><i class="fas fa-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div id="main-area" class="transition-all duration-300" style="margin-left:260px">
+    <header id="topbar" class="sticky top-0 z-20 h-16 bg-white/80 backdrop-blur-lg border-b border-slate-200/80 flex items-center px-6 gap-4">
+      <button onclick="toggleMobileSidebar()" class="md:hidden text-slate-600 hover:text-slate-900"><i class="fas fa-bars text-lg"></i></button>
+      <h2 id="page-title" class="text-lg font-bold text-slate-800"></h2>
+      <div class="ml-auto flex items-center gap-3">
+        <span id="topbar-date" class="text-xs text-slate-400 hidden sm:block"></span>
+        <div id="topbar-avatar" class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center text-xs font-bold"></div>
+      </div>
+    </header>
+    <main id="main-content" class="p-6"></main>
+  </div>
+</div>
 
-<div id="ap" style="display:none">
-<div id="mhd"><button class="hmb" onclick="togSB()"><i class="fa-solid fa-bars"></i></button><div class="lgt" style="font-size:15px">SPS <span>School</span></div></div>
-<div id="ov" onclick="togSB()"></div>
-<aside id="sb"><div class="sb-h"><div class="lgb">SPS</div><div class="lgt" style="font-size:15px">SPS <span>School</span></div></div>
-<div class="sb-r" id="srole">ADMIN PANEL</div>
-<nav class="sb-n" id="snav"></nav>
-<div class="sb-ft"><button onclick="goLogin()"><i class="fa-solid fa-gear"></i> Change Account</button><button onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button></div>
-</aside>
-<div id="mw"><div id="mc"></div></div></div>
-<div id="mroot"></div>
+<!-- ==================== MODAL ==================== -->
+<div id="modal-overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+  <div id="modal-box" class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"></div>
+</div>
+
+<!-- ==================== TOAST CONTAINER ==================== -->
+<div id="toast-container" class="fixed top-4 right-4 z-[60] space-y-2"></div>
 
 <script>
-const STU=[{id:1,name:"Ahmed Raza Khan",roll:601,cls:"6-A",father:"Raza Hussain Khan",contact:"0300-1234567",g:"M"},{id:2,name:"Fatima Zahra",roll:602,cls:"6-A",father:"Zahoor Ahmed",contact:"0312-9876543",g:"F"},{id:3,name:"Muhammad Hamza",roll:603,cls:"6-B",father:"Imtiaz Ahmed",contact:"0333-5551234",g:"M"},{id:4,name:"Ayesha Siddiqui",roll:604,cls:"6-B",father:"Tariq Siddiqui",contact:"0345-6667890",g:"F"},{id:5,name:"Huda Nawaz",roll:605,cls:"6-B",father:"Nawaz Ahmad",contact:"0321-1112233",g:"F"},{id:6,name:"Usman Ali",roll:701,cls:"7-A",father:"Ali Akbar",contact:"0301-2345678",g:"M"},{id:7,name:"Zainab Malik",roll:702,cls:"7-A",father:"Malik Farooq",contact:"0321-3456789",g:"F"},{id:8,name:"Hassan Raza",roll:703,cls:"7-B",father:"Raza Haider",contact:"0334-4567890",g:"M"},{id:9,name:"Maryam Noor",roll:704,cls:"7-B",father:"Noor Muhammad",contact:"0302-5678901",g:"F"},{id:10,name:"Ehtisham Ali",roll:705,cls:"7-B",father:"Ali Sher",contact:"0316-7778899",g:"M"},{id:11,name:"Bilal Ahmed",roll:801,cls:"8-A",father:"Ahmed Khan",contact:"0315-6789012",g:"M"},{id:12,name:"Khadija Bibi",roll:802,cls:"8-A",father:"Bakhtawar Khan",contact:"0336-7890123",g:"F"},{id:13,name:"Abdullah Shah",roll:803,cls:"8-B",father:"Shah Hussain",contact:"0303-8901234",g:"M"},{id:14,name:"Sana Tariq",roll:804,cls:"8-B",father:"Tariq Mehmood",contact:"0347-9012345",g:"F"},{id:15,name:"Zubair Ahmed",roll:805,cls:"8-B",father:"Ahmed Nabi",contact:"0308-2223344",g:"M"},{id:16,name:"Imran Hussain",roll:901,cls:"9-A",father:"Hussain Ahmed",contact:"0304-0123456",g:"M"},{id:17,name:"Nadia Pervez",roll:902,cls:"9-A",father:"Pervez Akhtar",contact:"0318-1234567",g:"F"},{id:18,name:"Tariq Mahmood",roll:903,cls:"9-B",father:"Mahmood Hassan",contact:"0338-2345678",g:"M"},{id:19,name:"Hina Rizvi",roll:904,cls:"9-B",father:"Rizvi Ahmed",contact:"0305-3456789",g:"F"},{id:20,name:"Saad Malik",roll:905,cls:"9-B",father:"Malik Asif",contact:"0319-4445566",g:"M"},{id:21,name:"Farhan Ali",roll:1001,cls:"10-A",father:"Ali Nawaz",contact:"0322-4567890",g:"M"},{id:22,name:"Asma Javed",roll:1002,cls:"10-A",father:"Javed Iqbal",contact:"0349-5678901",g:"F"},{id:23,name:"Kamran Yousaf",roll:1003,cls:"10-B",father:"Yousaf Khan",contact:"0306-6789012",g:"M"},{id:24,name:"Rabia Khan",roll:1004,cls:"10-B",father:"Khan Muhammad",contact:"0311-7890123",g:"F"}];
-const TCH=[{id:1,name:"Qari Muhammad Iqbal",sub:"Islamiat",phone:"0301-1122334",emp:"T-001"},{id:2,name:"Sana Fatima",sub:"English",phone:"0312-2233445",emp:"T-002"},{id:3,name:"Faisal Mehmood",sub:"Mathematics",phone:"0333-3344556",emp:"T-003"},{id:4,name:"Dr. Khawar Hayat",sub:"Science",phone:"0345-4455667",emp:"T-004"},{id:5,name:"Nasreen Akhtar",sub:"Urdu",phone:"0321-5566778",emp:"T-005"},{id:6,name:"Tahira Bibi",sub:"Pak Studies",phone:"0302-6677889",emp:"T-006"},{id:7,name:"Imtiaz Ahmad",sub:"Computer",phone:"0334-7788990",emp:"T-007"},{id:8,name:"Shahid Raza",sub:"Mathematics",phone:"0308-8899001",emp:"T-008"},{id:9,name:"Farah Deeba",sub:"English",phone:"0316-9900112",emp:"T-009"},{id:10,name:"Azhar Hussain",sub:"Science",phone:"0304-0011223",emp:"T-010"}];
-const FS={"6":{t:2000,e:400,l:200,s:200,lb:0},"7":{t:2500,e:500,l:250,s:250,lb:0},"8":{t:3000,e:600,l:300,s:300,lb:200},"9":{t:3500,e:600,l:300,s:300,lb:300},"10":{t:4000,e:700,l:400,s:400,lb:400}};
-const SUBS=["English","Urdu","Mathematics","Science","Islamiat","Pak Studies"],CML="July 2025";
-let FR=[],RD=[],ATT=[],NTC=[],NID=5,nxtId=25,curRole='admin',curUser=null,aC={},feeTab='status',resCls='6-A',attDate='';
-STU.forEach(s=>{const cn=s.cls.split("-")[0],f=FS[cn],tot=f.t+f.e+f.l+f.s+f.lb,r=Math.random();let st,pd;if(r<.55){st='paid';pd=`2025-07-${String(Math.floor(Math.random()*10)+1).padStart(2,'0')}`}else if(r<.75){st='partial';pd=null}else{st='unpaid';pd=null}FR.push({sid:s.id,mo:CML,st,pd,amt:tot,paid:st==='partial'?Math.floor(tot*.5):(st==='paid'?tot:0)})});
-STU.forEach(s=>{const m={};SUBS.forEach(sub=>{m[sub]=Math.floor(Math.random()*40)+55});RD.push({sid:s.id,m})});
-const today=new Date().toISOString().split('T')[0];attDate=today;
-STU.forEach(s=>{const r=Math.random();ATT.push({sid:s.id,date:today,st:r<.8?'present':r<.9?'late':'absent'})});
-NTC=[{id:1,title:"Summer Vacation Notice",date:"2025-06-15",body:"School closed from 16th June to 14th July 2025. Office open 9AM-12PM.",pri:"high"},{id:2,title:"Mid-Term Exam Schedule",date:"2025-06-10",body:"Mid-term exams commence 25th June 2025. Date sheets distributed.",pri:"high"},{id:3,title:"Parent-Teacher Meeting",date:"2025-07-01",body:"PTM on 5th July 2025 from 9 AM to 1 PM. Collect report cards.",pri:"medium"},{id:4,title:"Independence Day Celebration",date:"2025-07-28",body:"Green/white dress on 14th August. Special assembly.",pri:"medium"},{id:5,title:"Fee Reminder July 2025",date:"2025-07-05",body:"Deposit July fee before 10th to avoid late fee Rs. 200.",pri:"low"}];
-const CREDS={admin:{u:"admin",p:"admin123",name:"Malik Tahir Mehmood",role:"Admin"},teacher:{u:"teacher",p:"teacher123",name:"Sana Fatima",role:"Teacher"},student:{u:"student",p:"student123",name:"Ahmed Raza Khan",role:"Student"}};
-const TT={times:["08:00-08:40","08:40-09:20","09:20-10:00","10:00-10:30","10:30-11:10","11:10-11:50","11:50-12:30"],days:["Monday","Tuesday","Wednesday","Thursday","Friday"],g:[[["English","Sana Fatima"],["Mathematics","Faisal M."],["Urdu","Nasreen Akhtar"],["BREAK","-"],["Science","Dr. Khawar"],["Islamiat","Qari M. Iqbal"],["Pak Studies","Tahira Bibi"]],[["Mathematics","Faisal M."],["English","Sana Fatima"],["Science","Dr. Khawar"],["BREAK","-"],["Urdu","Nasreen Akhtar"],["Computer","Imtiaz Ahmad"],["Islamiat","Qari M. Iqbal"]],[["Science","Dr. Khawar"],["Urdu","Nasreen Akhtar"],["English","Farah Deeba"],["BREAK","-"],["Mathematics","Shahid Raza"],["Pak Studies","Tahira Bibi"],["Computer","Imtiaz Ahmad"]],[["Urdu","Nasreen Akhtar"],["Science","Azhar Hussain"],["Mathematics","Faisal M."],["BREAK","-"],["English","Sana Fatima"],["Islamiat","Qari M. Iqbal"],["Computer","Imtiaz Ahmad"]],[["English","Farah Deeba"],["Mathematics","Shahid Raza"],["Islamiat","Qari M. Iqbal"],["BREAK","-"],["Pak Studies","Tahira Bibi"],["Sports","-"],["Activity","-"]]]};
+// ==================== UTILITIES ====================
+const $ = id => document.getElementById(id);
+const genId = () => '_' + Math.random().toString(36).substr(2, 9);
+const today = () => new Date().toISOString().split('T')[0];
+const formatDate = d => { try{return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}catch(e){return d} };
+const subjectColors = {MATH:'bg-teal-100 text-teal-800',SCI:'bg-blue-100 text-blue-800',ENG:'bg-indigo-100 text-indigo-800',HIN:'bg-amber-100 text-amber-800',SST:'bg-emerald-100 text-emerald-800'};
+function getGrade(marks,max){const p=((marks/max)*100);if(p>=90)return'A+';if(p>=80)return'A';if(p>=70)return'B+';if(p>=60)return'B';if(p>=50)return'C';if(p>=40)return'D';return'F'}
+function getInitials(name){return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
 
-const $=id=>document.getElementById(id);
-const fR=n=>'Rs. '+Number(n).toLocaleString('en-PK');
-function ntw(n){const o=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],t=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];if(!n)return'Zero';function c(n){if(n<20)return o[n];if(n<100)return t[Math.floor(n/10)]+(n%10?' '+o[n%10]:'');if(n<1000)return o[Math.floor(n/100)]+' Hundred'+(n%100?' and '+c(n%100):'');if(n<100000)return c(Math.floor(n/1000))+' Thousand'+(n%1000?' '+c(n%1000):'');if(n<10000000)return c(Math.floor(n/100000))+' Lakh'+(n%100000?' '+c(n%100000):'');return c(Math.floor(n/10000000))+' Crore'+(n%10000000?' '+c(n%10000000):'')}return c(n)+' Rupees Only'}
-function gTot(s){const cn=s.cls.split("-")[0],f=FS[cn];return f.t+f.e+f.l+f.s+f.lb}
-function gFR(sid){return FR.find(f=>f.sid===sid&&f.mo===CML)}
-function gCls(){return[...new Set(STU.map(s=>s.cls))].sort()}
-function gGr(p){if(p>=90)return{g:'A+',c:'#059669'};if(p>=80)return{g:'A',c:'#059669'};if(p>=70)return{g:'B',c:'#2563EB'};if(p>=60)return{g:'C',c:'#D97706'};if(p>=50)return{g:'D',c:'#D97706'};return{g:'F',c:'#DC2626'}}
-function toast(m,t='ok'){const e=document.createElement('div');e.className=`tst t${t==='ok'?'ok':t==='error'?'er':'wa'}`;e.textContent=m;document.body.appendChild(e);requestAnimationFrame(()=>e.classList.add('sh'));setTimeout(()=>{e.classList.remove('sh');setTimeout(()=>e.remove(),300)},3000)}
-function modal(h){$('mroot').innerHTML=`<div class="mb" onclick="if(event.target===this)cm()"><div class="mx">${h}</div></div>`}
-function cm(){$('mroot').innerHTML=''}
-function togSB(){$('sb').classList.toggle('op');$('ov').classList.toggle('sh')}
-function goHome(){$('ls').style.display='none';$('ap').style.display='none';$('hp').style.display='block';window.scrollTo(0,0)}
-function goLogin(){$('hp').style.display='none';$('ap').style.display='none';$('ls').style.display='flex';$('iu').value='';$('ip').value='';$('le').style.display='none';window.scrollTo(0,0)}
-let selRole='admin';
-function setR(r,btn){selRole=r;document.querySelectorAll('#rtabs button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');$('lbu').textContent=r==='student'?'Roll Number':'Username';$('iu').placeholder=r==='student'?'e.g. 601':'Enter username'}
-function doLogin(){const u=$('iu').value.trim(),p=$('ip').value,cr=CREDS[selRole];if(cr&&u===cr.u&&p===cr.p){curRole=selRole;curUser=cr;$('ls').style.display='none';$('hp').style.display='none';$('ap').style.display='block';buildNav();nav('dashboard');window.scrollTo(0,0)}else{$('le').style.display='block'}}
-function doLogout(){curUser=null;$('ap').style.display='none';$('hp').style.display='block';window.scrollTo(0,0)}
-function buildNav(){const I={admin:[['dashboard','fa-chart-pie','Dashboard'],['students','fa-users','Students'],['fees','fa-money-bill-wave','Fee Management'],['results','fa-graduation-cap','Results'],['attendance','fa-clipboard-check','Attendance'],['teachers','fa-chalkboard-user','Teachers'],['timetable','fa-calendar-days','Timetable'],['notices','fa-bullhorn','Notices']],teacher:[['dashboard','fa-chart-pie','Dashboard'],['students','fa-users','Students'],['results','fa-graduation-cap','Results'],['attendance','fa-clipboard-check','Attendance'],['timetable','fa-calendar-days','Timetable'],['notices','fa-bullhorn','Notices']],student:[['dashboard','fa-chart-pie','Dashboard'],['fees','fa-money-bill-wave','My Fee'],['results','fa-graduation-cap','My Results'],['attendance','fa-clipboard-check','My Attendance'],['timetable','fa-calendar-days','Timetable'],['notices','fa-bullhorn','Notices']]};$('srole').textContent=curRole.toUpperCase()+' PANEL';$('snav').innerHTML=I[curRole].map(i=>`<button class="nb${i[0]==='dashboard'?' on':''}" data-v="${i[0]}" onclick="nav('${i[0]}')"><i class="fa-solid ${i[1]}"></i>${i[2]}</button>`).join('')}
-function nav(v){Object.values(aC).forEach(c=>{try{c.destroy()}catch(e){}});aC={};document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.v===v));$('sb').classList.remove('op');$('ov').classList.remove('sh');const mc=$('mc');mc.classList.remove('fin');void mc.offsetWidth;mc.classList.add('fin');({dashboard:rDash,students:rStu,fees:rFee,results:rRes,attendance:rAtt,teachers:rTch,timetable:rTT,notices:rNtc})[v]()}
+// ==================== FIREBASE STORE ====================
+// Ye poora localStorage ko replace karta hai
+// Har function async hai kyunki Firestore network call karta hai
 
-function rDash(){const ts=STU.length,pc=FR.filter(f=>f.st==='paid').length,uc=FR.filter(f=>f.st==='unpaid').length,tc=FR.filter(f=>f.st==='paid').reduce((a,f)=>a+f.amt,0),tp=FR.filter(f=>f.st!=='paid').reduce((a,f)=>a+f.amt-f.paid,0);const cc={};STU.forEach(s=>{cc[s.cls]=(cc[s.cls]||0)+1});const cl=Object.keys(cc).sort(),cd=cl.map(c=>cc[c]);const ca={};STU.forEach(s=>{const r=RD.find(x=>x.sid===s.id);if(!r)return;const avg=SUBS.reduce((a,sub)=>a+r.m[sub],0)/SUBS.length;const cn=s.cls.split("-")[0];if(!ca[cn])ca[cn]=[];ca[cn].push(avg)});
-if(curRole==='student'){const me=STU.find(s=>s.name===curUser.name);if(!me)return;const fr=gFR(me.id),rd=RD.find(r=>r.sid===me.id),total=rd?SUBS.reduce((a,sub)=>a+rd.m[sub],0):0,pct=rd?Math.round(total/SUBS.length):0,gr=gGr(pct);const myA=ATT.filter(a=>a.sid===me.id),ap=myA.filter(a=>a.st==='present').length,aP=myA.length?Math.round(ap/myA.length*100):0;
- $('mc').innerHTML=`<div style="margin-bottom:22px"><h2 style="font-size:22px;font-weight:800">Welcome, ${me.name}</h2><p style="color:var(--m);font-size:13px">Class ${me.cls} | Roll: ${me.roll} | ${me.father}</p></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px"><div class="cd sc"><div class="si" style="background:#D1FAE5;color:#065F46"><i class="fa-solid fa-chart-line"></i></div><div><div class="sl">Percentage</div><div class="sv" style="color:${gr.c}">${pct}%</div><div class="ss" style="color:${gr.c}">Grade ${gr.g}</div></div></div><div class="cd sc"><div class="si" style="background:${fr&&fr.st==='paid'?'#D1FAE5':'#FEE2E2'};color:${fr&&fr.st==='paid'?'#065F46':'#991B1B'}"><i class="fa-solid fa-money-bill"></i></div><div><div class="sl">Fee</div><div class="sv" style="font-size:14px">${fr?fr.st.charAt(0).toUpperCase()+fr.st.slice(1):'N/A'}</div><div class="ss">${fr?fR(fr.amt):''}</div></div></div><div class="cd sc"><div class="si" style="background:#E0E7FF;color:#3730A3"><i class="fa-solid fa-clipboard-check"></i></div><div><div class="sl">Attendance</div><div class="sv" style="font-size:14px">${aP}%</div><div class="ss">Today: ${ATT.find(a=>a.sid===me.id)?.st||'N/A'}</div></div></div><div class="cd sc"><div class="si" style="background:#FEF3C7;color:#92400E"><i class="fa-solid fa-file-invoice"></i></div><div><div class="sl">Chalan</div><div class="sv" style="font-size:14px">${fr&&fr.st!=='paid'?'Pending':'Paid'}</div><div class="ss"><a href="javascript:nav('fees')" style="color:var(--p);text-decoration:none;font-size:11px">View Voucher</a></div></div></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr);gap:14px"><div class="cd cbb"><h3>My Marks</h3><div class="cw"><canvas id="c1"></canvas></div></div><div class="cd cbb"><h3>Notices</h3><div style="display:flex;flex-direction:column;gap:8px">${NTC.slice(0,4).map(n=>`<div style="padding:8px 10px;background:#F6F9F6;border-radius:8px;border-left:3px solid ${n.pri==='high'?'var(--d)':n.pri==='medium'?'var(--al)':'var(--p)'}"><div style="font-weight:600;font-size:12.5px">${n.title}</div><div style="font-size:10.5px;color:var(--m)">${n.date}</div></div>`).join('')}</div></div></div>`;
-if(rd){Chart.defaults.font.family="'Outfit',sans-serif";Chart.defaults.color='#5F7A5F';aC.c1=new Chart($('c1'),{type:'bar',data:{labels:SUBS,datasets:[{data:SUBS.map(s=>rd.m[s]),backgroundColor:['#047857','#059669','#10B981','#34D399','#6EE7B7','#A7F3D0'],borderRadius:6,borderSkipped:false,barPercentage:.6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},border:{display:false},ticks:{font:{size:10}}},y:{max:100,grid:{color:'#E8F0E8',drawTicks:false},border:{display:false},ticks:{font:{size:10},padding:6}}}}})}return}
- $('mc').innerHTML=`<div style="margin-bottom:22px"><h2 style="font-size:22px;font-weight:800">Dashboard</h2><p style="color:var(--m);font-size:13px">${CML} — Overview</p></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:22px"><div class="cd sc"><div class="si" style="background:#D1FAE5;color:#065F46"><i class="fa-solid fa-users"></i></div><div><div class="sl">Students</div><div class="sv">${ts}</div><div class="ss" style="color:var(--p)">${cl.length} classes</div></div></div><div class="cd sc"><div class="si" style="background:#D1FAE5;color:#065F46"><i class="fa-solid fa-circle-check"></i></div><div><div class="sl">Collected</div><div class="sv" style="font-size:17px">${fR(tc)}</div><div class="ss" style="color:var(--p)">${pc} paid</div></div></div><div class="cd sc"><div class="si" style="background:#FEE2E2;color:#991B1B"><i class="fa-solid fa-clock"></i></div><div><div class="sl">Pending</div><div class="sv" style="font-size:17px">${fR(tp)}</div><div class="ss" style="color:var(--d)">${uc} unpaid</div></div></div><div class="cd sc"><div class="si" style="background:#FEF3C7;color:#92400E"><i class="fa-solid fa-trophy"></i></div><div><div class="sl">Avg %</div><div class="sv">${Math.round(Object.values(ca).map(a=>a.reduce((x,y)=>x+y,0)/a.length).reduce((a,b)=>a+b,0)/Object.values(ca).length)}%</div><div class="ss" style="color:var(--al)">Mid-Term</div></div></div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:22px"><div class="cd cbb"><h3>Students Per Class</h3><div class="cw"><canvas id="c1"></canvas></div></div><div class="cd cbb"><h3>Fee Status</h3><div class="cw"><canvas id="c2"></canvas></div></div><div class="cd cbb"><h3>Fee Trend</h3><div class="cw"><canvas id="c3"></canvas></div></div><div class="cd cbb"><h3>Class Average %</h3><div class="cw"><canvas id="c4"></canvas></div></div></div><div class="cd" style="padding:0;overflow:hidden"><div style="padding:14px 18px;border-bottom:1px solid var(--b)"><h3 style="font-size:14px;font-weight:700">Recent Payments</h3></div><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Student</th><th>Class</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead><tbody>${FR.filter(f=>f.st==='paid').slice(0,6).map(f=>{const s=STU.find(x=>x.id===f.sid);return`<tr><td style="font-weight:600">${s.name}</td><td>${s.cls}</td><td>${fR(f.amt)}</td><td>${f.pd}</td><td><span class="bg bgp">Paid</span></td></tr>`}).join('')}</tbody></table></div></div>`;
-Chart.defaults.font.family="'Outfit',sans-serif";Chart.defaults.color='#5F7A5F';
-const bc=['#047857','#059669','#10B981','#34D399','#6EE7B7','#A7F3D0','#047857','#059669','#10B981','#34D399'];
-aC.c1=new Chart($('c1'),{type:'bar',data:{labels:cl,datasets:[{data:cd,backgroundColor:bc.slice(0,cl.length),borderRadius:7,borderSkipped:false,barPercentage:.6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#022C22',cornerRadius:8,padding:10}},scales:{x:{grid:{display:false},border:{display:false},ticks:{font:{size:10,weight:'500'}}},y:{grid:{color:'#E8F0E8',drawTicks:false},border:{display:false},ticks:{font:{size:10},stepSize:1,padding:6}}}}});
-const pd2=FR.filter(f=>f.st==='paid').length,ud2=FR.filter(f=>f.st==='unpaid').length,pt2=FR.filter(f=>f.st==='partial').length;
-aC.c2=new Chart($('c2'),{type:'doughnut',data:{labels:['Paid','Unpaid','Partial'],datasets:[{data:[pd2,ud2,pt2],backgroundColor:['#047857','#DC2626','#D97706'],borderWidth:0,cutout:'68%'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:12,usePointStyle:true,pointStyle:'circle',font:{size:10,weight:'500'}}},tooltip:{backgroundColor:'#022C22',cornerRadius:8,padding:10}}}});
-aC.c3=new Chart($('c3'),{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul'],datasets:[{data:[420000,465000,448000,510000,490000,470000,tc],borderColor:'#047857',backgroundColor:'rgba(4,120,87,.08)',fill:true,tension:.4,pointBackgroundColor:'#047857',pointBorderWidth:0,pointRadius:3,pointHoverRadius:6,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#022C22',cornerRadius:8,padding:10,callbacks:{label:c=>fR(c.parsed.y)}}},scales:{x:{grid:{display:false},border:{display:false},ticks:{font:{size:10,weight:'500'}}},y:{grid:{color:'#E8F0E8',drawTicks:false},border:{display:false},ticks:{font:{size:10},callback:v=>(v/1000)+'K',padding:6}}}}});
-const al=Object.keys(ca).sort().map(c=>'Class '+c),ad=Object.keys(ca).sort().map(c=>Math.round(ca[c].reduce((a,b)=>a+b,0)/ca[c].length)),ac=ad.map(v=>v>=80?'#047857':v>=65?'#D97706':'#DC2626');
-aC.c4=new Chart($('c4'),{type:'bar',data:{labels:al,datasets:[{data:ad,backgroundColor:ac,borderRadius:6,borderSkipped:false,barPercentage:.5}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#022C22',cornerRadius:8,padding:10,callbacks:{label:c=>c.parsed.x+'%'}}},scales:{x:{grid:{color:'#E8F0E8',drawTicks:false},border:{display:false},max:100,ticks:{font:{size:10},callback:v=>v+'%',padding:6}},y:{grid:{display:false},border:{display:false},ticks:{font:{size:11,weight:'600'}}}}}})}
+const FStore = {
+  // ---- READ ----
+  async getCollection(colName) {
+    try {
+      const snap = await db.collection(colName).get();
+      return snap.docs.map(d => ({id: d.id, ...d.data()}));
+    } catch(e) {
+      console.error(`Error reading ${colName}:`, e);
+      toast(`Failed to load ${colName}`, 'error');
+      return [];
+    }
+  },
 
-let sF='all',sS='';
-function rStu(){const cls=gCls();let fl=STU;if(sF!=='all')fl=fl.filter(s=>s.cls===sF);if(sS)fl=fl.filter(s=>s.name.toLowerCase().includes(sS.toLowerCase())||String(s.roll).includes(sS));$('mc').innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px"><div><h2 style="font-size:22px;font-weight:800">Students</h2><p style="color:var(--m);font-size:13px">${fl.length} of ${STU.length}</p></div>${curRole==='admin'?`<button class="btn btnp" onclick="addSM()"><i class="fa-solid fa-plus"></i> Add</button>`:''}</div><div class="cd" style="padding:12px 16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:8px"><div style="flex:1;min-width:160px"><input class="fi" placeholder="Search name or roll..." value="${sS}" oninput="sS=this.value;rStu()"></div><select class="fi" style="width:auto;min-width:120px" onchange="sF=this.value;rStu()"><option value="all" ${sF==='all'?'selected':''}>All</option>${cls.map(c=>`<option value="${c}" ${sF===c?'selected':''}>${c}</option>`).join('')}</select></div><div class="smo" style="display:flex;flex-direction:column;gap:8px">${fl.map(s=>{const fr=gFR(s.id);return`<div class="cd" style="padding:12px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-weight:700;font-size:13.5px">${s.name}</div><div style="color:var(--m);font-size:11.5px;margin-top:2px">Roll: ${s.roll} | ${s.cls} | ${s.father}</div></div><span class="bg bg${fr?(fr.st==='paid'?'p':fr.st==='partial'?'r':'u'):'u'}">${fr?fr.st.charAt(0).toUpperCase()+fr.st.slice(1):'N/A'}</span></div>${curRole==='admin'?`<div style="display:flex;gap:5px;margin-top:8px"><button class="btn btno btns" onclick="editSM(${s.id})"><i class="fa-solid fa-pen"></i></button><button class="btn btns" style="background:#FEE2E2;color:#991B1B" onclick="delS(${s.id})"><i class="fa-solid fa-trash"></i></button></div>`:''}</div>`}).join('')}</div><div class="cd hm" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Name</th><th>Roll</th><th>Class</th><th>Father</th><th>Contact</th><th>Fee</th>${curRole==='admin'?'<th>Actions</th>':''}</tr></thead><tbody>${fl.map(s=>{const fr=gFR(s.id);return`<tr><td style="font-weight:600">${s.name}</td><td>${s.roll}</td><td>${s.cls}</td><td>${s.father}</td><td style="font-size:12px">${s.contact}</td><td><span class="bg bg${fr?(fr.st==='paid'?'p':fr.st==='partial'?'r':'u'):'u'}">${fr?fr.st.charAt(0).toUpperCase()+fr.st.slice(1):'N/A'}</span></td>${curRole==='admin'?`<td><div style="display:flex;gap:4px"><button class="btn btno btns" onclick="editSM(${s.id})"><i class="fa-solid fa-pen"></i></button><button class="btn btns" style="background:#FEE2E2;color:#991B1B" onclick="delS(${s.id})"><i class="fa-solid fa-trash"></i></button></div></td>`:''}</tr>`}).join('')}</tbody></table></div></div>`}
-function addSM(){const cls=['6-A','6-B','7-A','7-B','8-A','8-B','9-A','9-B','10-A','10-B'];modal(`<div class="mhd"><h2>Add Student</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd"><div class="fg"><label class="fl">Full Name</label><input class="fi" id="mn" placeholder="e.g. Ahmed Raza Khan"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label class="fl">Roll</label><input class="fi" id="mr" type="number" placeholder="606"></div><div class="fg"><label class="fl">Class</label><select class="fi" id="mc2">${cls.map(c=>`<option>${c}</option>`).join('')}</select></div></div><div class="fg"><label class="fl">Father</label><input class="fi" id="mf" placeholder="Father name"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label class="fl">Contact</label><input class="fi" id="mct" placeholder="0300-1234567"></div><div class="fg"><label class="fl">Gender</label><select class="fi" id="mg"><option value="M">Male</option><option value="F">Female</option></select></div></div></div><div class="mft"><button class="btn btno" onclick="cm()">Cancel</button><button class="btn btnp" onclick="doAddS()">Add</button></div>`)}
-function doAddS(){const n=$('mn').value.trim(),r=parseInt($('mr').value),c=$('mc2').value,f=$('mf').value.trim();if(!n||!r||!f){toast('Fill required fields','error');return}if(STU.find(s=>s.roll===r)){toast('Roll exists','error');return}const ns={id:nxtId++,name:n,roll:r,cls:c,father:f,contact:$('mct').value.trim(),g:$('mg').value};STU.push(ns);FR.push({sid:ns.id,mo:CML,st:'unpaid',pd:null,amt:gTot(ns),paid:0});cm();toast('Student added');rStu()}
-function editSM(id){const s=STU.find(x=>x.id===id);if(!s)return;const cls=['6-A','6-B','7-A','7-B','8-A','8-B','9-A','9-B','10-A','10-B'];modal(`<div class="mhd"><h2>Edit Student</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd"><div class="fg"><label class="fl">Name</label><input class="fi" id="mn" value="${s.name}"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label class="fl">Roll</label><input class="fi" id="mr" type="number" value="${s.roll}"></div><div class="fg"><label class="fl">Class</label><select class="fi" id="mc2">${cls.map(c=>`<option ${c===s.cls?'selected':''}>${c}</option>`).join('')}</select></div></div><div class="fg"><label class="fl">Father</label><input class="fi" id="mf" value="${s.father}"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="fg"><label class="fl">Contact</label><input class="fi" id="mct" value="${s.contact}"></div><div class="fg"><label class="fl">Gender</label><select class="fi" id="mg"><option value="M" ${s.g==='M'?'selected':''}>Male</option><option value="F" ${s.g==='F'?'selected':''}>Female</option></select></div></div></div><div class="mft"><button class="btn btno" onclick="cm()">Cancel</button><button class="btn btnp" onclick="doEditS(${id})">Update</button></div>`)}
-function doEditS(id){const s=STU.find(x=>x.id===id);s.name=$('mn').value.trim()||s.name;s.roll=parseInt($('mr').value)||s.roll;s.cls=$('mc2').value;s.father=$('mf').value.trim()||s.father;s.contact=$('mct').value.trim()||s.contact;s.g=$('mg').value;cm();toast('Updated');rStu()}
-function delS(id){modal(`<div class="mhd"><h2>Confirm</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd"><p style="font-size:14px">Delete this student permanently?</p></div><div class="mft"><button class="btn btno" onclick="cm()">Cancel</button><button class="btn btnd" onclick="let i=STU.findIndex(s=>s.id===${id});if(i>-1)STU.splice(i,1);i=FR.findIndex(f=>f.sid===${id});if(i>-1)FR.splice(i,1);cm();toast('Removed');rStu()">Delete</button></div>`)}
+  async getDoc(colName, docId) {
+    try {
+      const doc = await db.collection(colName).doc(docId).get();
+      return doc.exists ? {id: doc.id, ...doc.data()} : null;
+    } catch(e) { return null; }
+  },
 
-function rFee(){const isStu=curRole==='student';$('mc').innerHTML=`<div style="margin-bottom:20px"><h2 style="font-size:22px;font-weight:800">${isStu?'My Fee':'Fee Management'}</h2><p style="color:var(--m);font-size:13px">${CML}</p></div>${isStu?'':`<div class="tbr"><button class="${feeTab==='status'?'on':''}" onclick="feeTab='status';rFee()">Status</button><button class="${feeTab==='structure'?'on':''}" onclick="feeTab='structure';rFee()">Structure</button><button class="${feeTab==='voucher'?'on':''}" onclick="feeTab='voucher';rFee()">Voucher</button></div>`}<div id="ftc"></div>`;if(isStu)rFeeStu();else if(feeTab==='status')rFeeSt();else if(feeTab==='structure')rFeeSr();else rFeeVg()}
-function rFeeStu(){const me=STU.find(s=>s.name===curUser.name);if(!me)return;const fr=gFR(me.id);if(!fr)return;$('ftc').innerHTML=`<div class="cd" style="padding:24px;max-width:500px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div><div style="font-size:12px;color:var(--m);font-weight:600">TOTAL FEE</div><div style="font-size:22px;font-weight:800">${fR(fr.amt)}</div></div><span class="bg bg${fr.st==='paid'?'p':fr.st==='partial'?'r':'u'}" style="font-size:13px;padding:5px 14px">${fr.st.charAt(0).toUpperCase()+fr.st.slice(1)}</span></div>${fr.st!=='paid'?`<button class="btn btnp" onclick="feeTab='voucher';rFee()"><i class="fa-solid fa-file-invoice"></i> View/Download Chalan</button>`:`<p style="color:var(--p);font-size:13px"><i class="fa-solid fa-check-circle"></i> Paid on ${fr.pd}</p>`}</div>`}
-function rFeeSt(){let fl=FR;const tc=fl.reduce((a,f)=>a+f.amt,0),co=fl.filter(f=>f.st==='paid').reduce((a,f)=>a+f.amt,0),pa=fl.filter(f=>f.st==='partial').reduce((a,f)=>a+f.paid,0);$('ftc').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px"><div class="cd" style="padding:12px 16px"><div style="font-size:11px;color:var(--m);font-weight:600">TOTAL</div><div style="font-size:17px;font-weight:800;margin-top:2px">${fR(tc)}</div></div><div class="cd" style="padding:12px 16px"><div style="font-size:11px;color:var(--m);font-weight:600">COLLECTED</div><div style="font-size:17px;font-weight:800;margin-top:2px;color:var(--p)">${fR(co+pa)}</div></div><div class="cd" style="padding:12px 16px"><div style="font-size:11px;color:var(--m);font-weight:600">REMAINING</div><div style="font-size:17px;font-weight:800;margin-top:2px;color:var(--d)">${fR(tc-co-pa)}</div></div></div><div class="smo" style="display:flex;flex-direction:column;gap:8px">${fl.map(f=>{const s=STU.find(x=>x.id===f.sid);if(!s)return'';return`<div class="cd" style="padding:12px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-weight:700;font-size:13px">${s.name}</div><div style="color:var(--m);font-size:11px">${s.cls} | Roll: ${s.roll}</div></div><span class="bg bg${f.st==='paid'?'p':f.st==='partial'?'r':'u'}">${f.st.charAt(0).toUpperCase()+f.st.slice(1)}</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px"><span style="font-weight:700">${fR(f.amt)}</span>${f.st!=='paid'?`<button class="btn btnp btns" onclick="mP(${f.sid})">Paid</button>`:`<span style="font-size:11px;color:var(--p)">${f.pd}</span>`}</div></div>`}).join('')}</div><div class="cd hm" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Student</th><th>Class</th><th>Fee</th><th>Paid</th><th>Status</th><th>Action</th></tr></thead><tbody>${fl.map(f=>{const s=STU.find(x=>x.id===f.sid);if(!s)return'';return`<tr><td style="font-weight:600">${s.name}</td><td>${s.cls}</td><td>${fR(f.amt)}</td><td>${fR(f.paid)}</td><td><span class="bg bg${f.st==='paid'?'p':f.st==='partial'?'r':'u'}">${f.st.charAt(0).toUpperCase()+f.st.slice(1)}</span></td><td>${f.st!=='paid'?`<button class="btn btnp btns" onclick="mP(${f.sid})">Paid</button>`:`<span style="font-size:11px;color:var(--m)">${f.pd}</span>`}</td></tr>`}).join('')}</tbody></table></div></div>`}
-function mP(sid){const f=FR.find(x=>x.sid===sid&&x.mo===CML);if(f){f.st='paid';f.pd=new Date().toISOString().split('T')[0];f.paid=f.amt}toast('Marked paid');rFee()}
-function rFeeSr(){const lv=Object.keys(FS).sort();$('ftc').innerHTML=`<div class="cd" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Class</th><th>Tuition</th><th>Exam</th><th>Library</th><th>Sports</th><th>Lab</th><th style="font-weight:800">Total</th></tr></thead><tbody>${lv.map(l=>{const s=FS[l],t=s.t+s.e+s.l+s.s+s.lb;return`<tr><td style="font-weight:700">Class ${l}</td><td>${fR(s.t)}</td><td>${fR(s.e)}</td><td>${fR(s.l)}</td><td>${fR(s.s)}</td><td>${s.lb?fR(s.lb):'-'}</td><td style="font-weight:800;color:var(--p)">${fR(t)}</td></tr>`}).join('')}</tbody></table></div></div>`}
-function rFeeVg(){const list=curRole==='student'?STU.filter(s=>s.name===curUser.name):STU;$('ftc').innerHTML=`<div class="cd" style="padding:22px;max-width:680px"><h3 style="font-size:16px;font-weight:700;margin-bottom:16px"><i class="fa-solid fa-file-invoice" style="color:var(--p);margin-right:8px"></i>Generate Fee Chalan</h3><div class="fg"><label class="fl">Search Student</label><input class="fi" id="vs" placeholder="Name or roll..." oninput="fVS(this.value)"></div><div id="vsl" style="max-height:170px;overflow-y:auto;border:1px solid var(--b);border-radius:10px;margin-bottom:14px"></div><div id="vp2"></div></div>`;fVS('')}
-function fVS(q){const el=$('vsl');if(!el)return;let fl=curRole==='student'?STU.filter(s=>s.name===curUser.name):STU;if(q)fl=fl.filter(s=>s.name.toLowerCase().includes(q.toLowerCase())||String(s.roll).includes(q));el.innerHTML=fl.length?fl.map(s=>`<div style="padding:9px 12px;border-bottom:1px solid #EEF2EE;cursor:pointer;display:flex;justify-content:space-between;transition:background .15s" onmouseover="this.style.background='#F6F9F6'" onmouseout="this.style.background=''" onclick="selVS(${s.id})"><div><span style="font-weight:600;font-size:12.5px">${s.name}</span><span style="color:var(--m);font-size:11.5px;margin-left:6px">Roll: ${s.roll}</span></div><span style="font-size:11px;color:var(--m)">${s.cls}</span></div>`).join(''):'<div style="padding:12px;text-align:center;color:var(--m);font-size:12.5px">Not found</div>'}
-function selVS(id){const s=STU.find(x=>x.id===id);if(!s)return;const cn=s.cls.split("-")[0],fs=FS[cn],tot=fs.t+fs.e+fs.l+fs.s+fs.lb,fr=gFR(s.id),vn='FEE-2025-'+String(id).padStart(4,'0'),td=new Date(),dd=`10-${String(td.getMonth()+1).padStart(2,'0')}-2025`,idt=`${String(td.getDate()).padStart(2,'0')}-${String(td.getMonth()+1).padStart(2,'0')}-2025`;$('vp2').innerHTML=`<div style="margin:12px 0 16px;padding:10px 12px;background:#F6F9F6;border-radius:10px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px"><div><strong>${s.name}</strong> | ${s.cls} | <strong>${fR(tot)}</strong></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btnw btns" onclick="sendWA(${s.id})"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button><button class="btn btnp btns" onclick="prVou(${s.id})"><i class="fa-solid fa-print"></i> Print</button><button class="btn btno btns" onclick="dlVou(${s.id})"><i class="fa-solid fa-download"></i> Download</button></div></div><div class="vp" id="vpr"><div class="vh"><h2>SPS SCHOOL SYSTEM</h2><div style="font-size:11px">Main Boulevard, Gulberg III, Lahore</div><div style="font-size:11px">Phone: 042-35761234 | info@sps.edu.pk</div></div><div class="vm"><div><strong>Voucher:</strong> ${vn}</div><div><strong>Issue:</strong> ${idt}</div><div><strong>Month:</strong> ${CML}</div></div><div class="vs"><div><span>Name:</span><span>${s.name}</span></div><div><span>Roll:</span><span>${s.roll}</span></div><div><span>Class:</span><span>${s.cls}</span></div><div><span>Father:</span><span>${s.father}</span></div></div><table><tr><th>Description</th><th>Amount (Rs.)</th></tr><tr><td>Tuition Fee</td><td>${fs.t.toLocaleString('en-PK')}</td></tr><tr><td>Examination Fee</td><td>${fs.e.toLocaleString('en-PK')}</td></tr><tr><td>Library Fee</td><td>${fs.l.toLocaleString('en-PK')}</td></tr><tr><td>Sports Fee</td><td>${fs.s.toLocaleString('en-PK')}</td></tr>${fs.lb?`<tr><td>Laboratory Fee</td><td>${fs.lb.toLocaleString('en-PK')}</td></tr>`:''}<tr class="tr"><td>TOTAL</td><td>${tot.toLocaleString('en-PK')}</td></tr></table><div style="margin:8px 0;font-style:italic;font-size:11px"><strong>Amount in Words:</strong> ${ntw(tot)}</div><div style="margin-bottom:6px"><strong>Due:</strong> ${dd} | <strong style="color:#DC2626">Late Fee After Due: Rs. 200</strong></div><div class="vbk"><strong>Bank:</strong> HBL, A/C: 1234-5678-901, Title: SPS School, Branch: Gulberg, Lahore</div>${fr&&fr.st==='paid'?`<div style="text-align:center;padding:8px;background:#D1FAE5;border:1px solid #6EE7B7;border-radius:4px;margin-top:10px;font-weight:700;color:#065F46">PAID - ${fr.pd}</div>`:''}<div class="vsg"><div><div class="sl2">Cashier</div></div><div><div class="sl2">Principal</div></div></div></div>`}
-function prVou(id){const vp=$('vpr');if(!vp){toast('Select student first','error');return}const w=window.open('','_blank','width=800,height=900');w.document.write(`<!DOCTYPE html><html><head><title>Fee Chalan - SPS</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Courier New',monospace;padding:20px}.vp{border:2px solid #1a1a1a;border-radius:4px;padding:28px;max-width:660px;margin:0 auto;font-size:12.5px;line-height:1.5}.vh{text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:12px;margin-bottom:12px}.vh h2{font-size:19px;font-weight:900;letter-spacing:1px}.vm{display:flex;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed #999;font-size:12px}.vs{background:#f7f7f7;padding:8px 12px;margin-bottom:12px}.vs div{display:flex}.vs span:first-child{width:130px;font-weight:700}table{width:100%;border-collapse:collapse;margin-bottom:10px}th{background:#1a1a1a;color:#fff;padding:7px 10px;text-align:left;font-size:11.5px}td{padding:7px 10px;border-bottom:1px solid #ddd}td:last-child{text-align:right}.tr{background:#f0f0f0;font-weight:700}.vbk{background:#FFF9E6;border:1px solid #E6D68A;padding:8px 12px;margin:10px 0}.vsg{display:flex;justify-content:space-between;margin-top:44px}.vsg div{text-align:center;width:140px}.sl2{border-top:1px solid #1a1a1a;padding-top:4px;margin-top:26px}@media print{body{padding:0}}</style></head><body>${vp.outerHTML}<script>window.onload=function(){window.print()}<\/script></body></html>`);w.document.close()}
-function dlVou(id){const vp=$('vpr');if(!vp){toast('Select student first','error');return}const html=`<!DOCTYPE html><html><head><title>Fee Chalan - SPS</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Courier New',monospace;padding:20px}.vp{border:2px solid #1a1a1a;border-radius:4px;padding:28px;max-width:660px;margin:0 auto;font-size:12.5px;line-height:1.5}.vh{text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:12px;margin-bottom:12px}.vh h2{font-size:19px;font-weight:900;letter-spacing:1px}.vm{display:flex;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed #999;font-size:12px}.vs{background:#f7f7f7;padding:8px 12px;margin-bottom:12px}.vs div{display:flex}.vs span:first-child{width:130px;font-weight:700}table{width:100%;border-collapse:collapse;margin-bottom:10px}th{background:#1a1a1a;color:#fff;padding:7px 10px;text-align:left;font-size:11.5px}td{padding:7px 10px;border-bottom:1px solid #ddd}td:last-child{text-align:right}.tr{background:#f0f0f0;font-weight:700}.vbk{background:#FFF9E6;border:1px solid #E6D68A;padding:8px 12px;margin:10px 0}.vsg{display:flex;justify-content:space-between;margin-top:44px}.vsg div{text-align:center;width:140px}.sl2{border-top:1px solid #1a1a1a;padding-top:4px;margin-top:26px}</style></head><body>${vp.outerHTML}</body></html>`;const blob=new Blob([html],{type:'text/html'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='SPS_Fee_Chalan.html';a.click();URL.revokeObjectURL(url);toast('Chalan downloaded')}
-function sendWA(id){const s=STU.find(x=>x.id===id);if(!s)return;const cn=s.cls.split("-")[0],fs=FS[cn],tot=fs.t+fs.e+fs.l+fs.s+fs.lb;let msg=`*SPS SCHOOL - FEE CHALAN*\n\nVoucher: FEE-2025-${String(id).padStart(4,'0')}\nMonth: ${CML}\nDue: 10-07-2025\n\n*Student:* ${s.name}\n*Roll:* ${s.roll}\n*Class:* ${s.cls}\n*Father:* ${s.father}\n\n*Fee Details:*\nTuition: Rs. ${fs.t.toLocaleString('en-PK')}\nExam: Rs. ${fs.e.toLocaleString('en-PK')}\nLibrary: Rs. ${fs.l.toLocaleString('en-PK')}\nSports: Rs. ${fs.s.toLocaleString('en-PK')}\n${fs.lb?'Lab: Rs. '+fs.lb.toLocaleString('en-PK')+'\n':''}\n*Total: Rs. ${tot.toLocaleString('en-PK')}*\n\n*Words:* ${ntw(tot)}\n\n*Bank:* HBL, A/C: 1234-5678-901\nTitle: SPS School System\nBranch: Gulberg, Lahore\n\n_Late Fee Rs. 200 after due_\n\n_SPS School, Gulberg III, Lahore_`;const ph=s.contact.replace(/[^0-9]/g,'');const p=ph.startsWith('0')?'92'+ph.substring(1):ph;window.open(`https://wa.me/${p}?text=${encodeURIComponent(msg)}`,'_blank');toast('Opening WhatsApp...')}
+  async queryWhere(colName, field, op, value) {
+    try {
+      const snap = await db.collection(colName).where(field, op, value).get();
+      return snap.docs.map(d => ({id: d.id, ...d.data()}));
+    } catch(e) { return []; }
+  },
 
-function rRes(){const cls=gCls();if(curRole==='student'){const me=STU.find(s=>s.name===curUser.name);if(!me)return;const rd=RD.find(r=>r.sid===me.id);if(!rd){$('mc').innerHTML='<p style="color:var(--m)">No results yet.</p>';return}const tot=SUBS.reduce((a,sub)=>a+rd.m[sub],0),pct=Math.round(tot/SUBS.length),gr=gGr(pct);$('mc').innerHTML=`<div style="margin-bottom:20px"><h2 style="font-size:22px;font-weight:800">My Results</h2><p style="color:var(--m);font-size:13px">Mid-Term 2025 | ${me.cls}</p></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px"><div class="cd" style="padding:14px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">TOTAL</div><div style="font-size:22px;font-weight:800;margin-top:4px">${tot}/${SUBS.length*100}</div></div><div class="cd" style="padding:14px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">PERCENTAGE</div><div style="font-size:22px;font-weight:800;margin-top:4px;color:${gr.c}">${pct}%</div></div><div class="cd" style="padding:14px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">GRADE</div><div style="font-size:22px;font-weight:800;margin-top:4px;color:${gr.c}">${gr.g}</div></div></div><div class="cd" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Subject</th><th>Marks</th><th>Total</th><th>Grade</th></tr></thead><tbody>${SUBS.map(sub=>{const sg=gGr(rd.m[sub]);return`<tr><td style="font-weight:600">${sub}</td><td>${rd.m[sub]}</td><td>100</td><td><span style="font-weight:800;color:${sg.c};font-size:14px">${sg.g}</span></td></tr>`}).join('')}</tbody></table></div></div>`;return}
- $('mc').innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px"><div><h2 style="font-size:22px;font-weight:800">Results</h2><p style="color:var(--m);font-size:13px">Mid-Term 2025</p></div><select class="fi" style="width:auto;min-width:120px" onchange="resCls=this.value;rRes()">${cls.map(c=>`<option value="${c}" ${c===resCls?'selected':''}>${c}</option>`).join('')}</select></div>`;const cs=STU.filter(s=>s.cls===resCls);const res=cs.map(s=>{const rd=RD.find(r=>r.sid===s.id);return rd?Math.round(SUBS.reduce((a,sub)=>a+rd.m[sub],0)/SUBS.length):0}).filter(v=>v>0);const avg=res.length?Math.round(res.reduce((a,b)=>a+b,0)/res.length):0,hi=res.length?Math.max(...res):0,pass=res.filter(v=>v>=50).length;$('mc').innerHTML+=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px"><div class="cd" style="padding:12px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">AVG</div><div style="font-size:20px;font-weight:800;margin-top:2px">${avg}%</div></div><div class="cd" style="padding:12px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">HIGHEST</div><div style="font-size:20px;font-weight:800;margin-top:2px;color:var(--p)">${hi}%</div></div><div class="cd" style="padding:12px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">PASS RATE</div><div style="font-size:20px;font-weight:800;margin-top:2px;color:${pass/cs.length>=.8?'var(--p)':'var(--d)'}">${cs.length?Math.round(pass/cs.length*100):0}%</div></div></div><div class="cd" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Student</th>${SUBS.map(s=>`<th class="hm">${s}</th>`).join('')}<th>Total</th><th>%</th><th>Grade</th>${curRole==='admin'||curRole==='teacher'?'<th>Action</th>':''}</tr></thead><tbody>${cs.map(s=>{const rd=RD.find(r=>r.sid===s.id);if(!rd)return`<tr><td style="font-weight:600">${s.name}</td><td colspan="${SUBS.length+4}" style="color:var(--m);text-align:center">N/A</td></tr>`;const tot=SUBS.reduce((a,sub)=>a+rd.m[sub],0),pct=Math.round(tot/SUBS.length),gr=gGr(pct);return`<tr><td style="font-weight:600;white-space:nowrap">${s.name}</td>${SUBS.map(sub=>`<td class="hm">${rd.m[sub]}</td>`).join('')}<td style="font-weight:700">${tot}/${SUBS.length*100}</td><td style="font-weight:700">${pct}%</td><td><span style="font-weight:800;color:${gr.c};font-size:14px">${gr.g}</span></td>${curRole==='admin'||curRole==='teacher'?`<td><button class="btn btno btns" onclick="editRes(${s.id})"><i class="fa-solid fa-pen"></i></button></td>`:''}</tr>`}).join('')}</tbody></table></div></div>`}
-function editRes(id){const s=STU.find(x=>x.id===id);if(!s)return;const rd=RD.find(r=>r.sid===id);modal(`<div class="mhd"><h2>Edit Marks — ${s.name}</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd">${SUBS.map(sub=>`<div class="fg"><label class="fl">${sub}</label><input class="fi" id="mk_${sub.replace(/\s/g,'')}" type="number" min="0" max="100" value="${rd?rd.m[sub]:0}"></div>`).join('')}</div><div class="mft"><button class="btn btno" onclick="cm()">Cancel</button><button class="btn btnp" onclick="doSaveRes(${id})">Save</button></div>`)}
-function doSaveRes(id){let rd=RD.find(r=>r.sid===id);if(!rd){rd={sid:id,m:{}};SUBS.forEach(s=>rd.m[s]=0);RD.push(rd)}SUBS.forEach(sub=>{const v=parseInt(document.getElementById('mk_'+sub.replace(/\s/g,'')).value);rd.m[sub]=isNaN(v)?0:Math.max(0,Math.min(100,v))});cm();toast('Marks saved');rRes()}
+  // ---- WRITE ----
+  async addDoc(colName, data) {
+    try {
+      const ref = await db.collection(colName).add(data);
+      return ref.id;
+    } catch(e) {
+      console.error(`Error adding to ${colName}:`, e);
+      toast('Failed to save data', 'error');
+      return null;
+    }
+  },
 
-function rAtt(){const isStu=curRole==='student';$('mc').innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px"><div><h2 style="font-size:22px;font-weight:800">${isStu?'My Attendance':'Attendance'}</h2><p style="color:var(--m);font-size:13px">${attDate}</p></div>${!isStu?`<div style="display:flex;gap:8px;flex-wrap:wrap"><input class="fi" type="date" id="atd" value="${attDate}" style="width:auto" onchange="attDate=this.value;rAtt()"><select class="fi" id="atc" style="width:auto;min-width:120px" onchange="rAtt()"><option value="all">All</option>${gCls().map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div>`:''}</div><div id="attc"></div>`;
-if(isStu){const me=STU.find(s=>s.name===curUser.name);if(!me)return;const my=ATT.filter(a=>a.sid===me.id),pr=my.filter(a=>a.st==='present').length,la=my.filter(a=>a.st==='late').length,ab=my.filter(a=>a.st==='absent').length,pct=my.length?Math.round((pr+la*.5)/my.length*100):0;$('attc').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px"><div class="cd" style="padding:14px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">PRESENT</div><div style="font-size:22px;font-weight:800;margin-top:4px;color:var(--p)">${pr}</div></div><div class="cd" style="padding:14px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">LATE</div><div style="font-size:22px;font-weight:800;margin-top:4px;color:var(--al)">${la}</div></div><div class="cd" style="padding:14px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">ABSENT</div><div style="font-size:22px;font-weight:800;margin-top:4px;color:var(--d)">${ab}</div></div><div class="cd" style="padding:14px;text-align:center"><div style="font-size:11px;color:var(--m);font-weight:600">ATT. %</div><div style="font-size:22px;font-weight:800;margin-top:4px;color:${pct>=80?'var(--p)':'var(--d)'}">${pct}%</div></div></div><div class="cd" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Date</th><th>Status</th></tr></thead><tbody>${my.length?my.map(a=>`<tr><td>${a.date}</td><td><span class="bg bg${a.st==='present'?'p':a.st==='late'?'r':'u'}">${a.st.charAt(0).toUpperCase()+a.st.slice(1)}</span></td></tr>`).join(''):'<tr><td colspan="2" style="text-align:center;color:var(--m)">No records</td></tr>'}</tbody></table></div></div>`;return}
-const fc=$('atc')?$('atc').value:'all';let fl=STU;if(fc!=='all')fl=fl.filter(s=>s.cls===fc);const pr=fl.filter(s=>{const a=ATT.find(x=>x.sid===s.id&&x.date===attDate);return a&&a.st==='present'}).length;$('attc').innerHTML=`<div class="cd" style="padding:12px 16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:14px;align-items:center"><div><span style="font-size:12px;color:var(--m);font-weight:600">Present: </span><strong style="color:var(--p)">${pr}/${fl.length}</strong></div><button class="btn btnp btns" onclick="markAll('present')"><i class="fa-solid fa-check-double"></i> All Present</button><button class="btn btnd btns" onclick="markAll('absent')"><i class="fa-solid fa-xmark"></i> All Absent</button></div><div class="smo" style="display:flex;flex-direction:column;gap:8px">${fl.map(s=>{const a=ATT.find(x=>x.sid===s.id&&x.date===attDate);const st=a?a.st:'nm';return`<div class="cd" style="padding:10px 12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><div><div style="font-weight:600;font-size:13px">${s.name}</div><div style="color:var(--m);font-size:11px">${s.cls} | Roll: ${s.roll}</div></div><div style="display:flex;gap:4px"><button class="btn btns ${st==='present'?'btnp':'btno'}" onclick="sA(${s.id},'present')"><i class="fa-solid fa-check"></i></button><button class="btn btns ${st==='late'?'btna':'btno'}" onclick="sA(${s.id},'late')"><i class="fa-solid fa-clock"></i></button><button class="btn btns ${st==='absent'?'btnd':'btno'}" onclick="sA(${s.id},'absent')"><i class="fa-solid fa-xmark"></i></button></div></div>`}).join('')}</div><div class="cd hm" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Student</th><th>Class</th><th>Roll</th><th>Status</th><th>Actions</th></tr></thead><tbody>${fl.map(s=>{const a=ATT.find(x=>x.sid===s.id&&x.date===attDate);const st=a?a.st:'nm';return`<tr><td style="font-weight:600">${s.name}</td><td>${s.cls}</td><td>${s.roll}</td><td><span class="bg ${st==='present'?'bgp':st==='late'?'bgr':st==='absent'?'bgu':''}">${st==='nm'?'Not Marked':st.charAt(0).toUpperCase()+st.slice(1)}</span></td><td><div style="display:flex;gap:4px"><button class="btn btns ${st==='present'?'btnp':'btno'}" onclick="sA(${s.id},'present')">P</button><button class="btn btns ${st==='late'?'btna':'btno'}" onclick="sA(${s.id},'late')">L</button><button class="btn btns ${st==='absent'?'btnd':'btno'}" onclick="sA(${s.id},'absent')">A</button></div></td></tr>`}).join('')}</tbody></table></div></div>`}
-function sA(sid,st){let a=ATT.find(x=>x.sid===sid&&x.date===attDate);if(a)a.st=st;else ATT.push({sid,date:attDate,st});rAtt()}
-function markAll(st){const fc=$('atc')?$('atc').value:'all';let fl=STU;if(fc!=='all')fl=fl.filter(s=>s.cls===fc);fl.forEach(s=>{let a=ATT.find(x=>x.sid===s.id&&x.date===attDate);if(a)a.st=st;else ATT.push({sid:s.id,date:attDate,st})});toast('All marked '+st);rAtt()}
+  async setDoc(colName, docId, data) {
+    try {
+      await db.collection(colName).doc(docId).set(data, {merge: true});
+      return true;
+    } catch(e) {
+      console.error(`Error updating ${colName}:`, e);
+      toast('Failed to update data', 'error');
+      return false;
+    }
+  },
 
-function rTch(){if(curRole!=='admin'&&curRole!=='teacher'){toast('Access denied','error');return}$('mc').innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px"><div><h2 style="font-size:22px;font-weight:800">Teachers</h2><p style="color:var(--m);font-size:13px">${TCH.length} Faculty</p></div>${curRole==='admin'?`<button class="btn btnp" onclick="addTchM()"><i class="fa-solid fa-plus"></i> Add</button>`:''}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">${TCH.map(t=>`<div class="cd" style="padding:20px"><div style="display:flex;align-items:center;gap:14px;margin-bottom:14px"><div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--p),#34D399);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0">${t.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><div><div style="font-weight:700;font-size:14px">${t.name}</div><div style="color:var(--p);font-size:12px;font-weight:600">${t.sub}</div></div></div><div style="font-size:12px;color:var(--m);margin-bottom:4px"><i class="fa-solid fa-id-badge" style="width:16px;margin-right:4px"></i>${t.emp}</div><div style="font-size:12px;color:var(--m);margin-bottom:14px"><i class="fa-solid fa-phone" style="width:16px;margin-right:4px"></i>${t.phone}</div><div style="display:flex;gap:6px">${curRole==='admin'?`<button class="btn btno btns" onclick="editTchM(${t.id})"><i class="fa-solid fa-pen"></i></button><button class="btn btns" style="background:#FEE2E2;color:#991B1B" onclick="delTch(${t.id})"><i class="fa-solid fa-trash"></i></button>`:''}</div></div>`).join('')}</div>`}
-function addTchM(){modal(`<div class="mhd"><h2>Add Teacher</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd"><div class="fg"><label class="fl">Full Name</label><input class="fi" id="tn" placeholder="e.g. Qari Muhammad Iqbal"></div><div class="fg"><label class="fl">Subject</label><input class="fi" id="ts" placeholder="e.g. Islamiat"></div><div class="fg"><label class="fl">Phone</label><input class="fi" id="tp" placeholder="0300-1234567"></div></div><div class="mft"><button class="btn btno" onclick="cm()">Cancel</button><button class="btn btnp" onclick="const n=$('tn').value.trim(),s=$('ts').value.trim(),p=$('tp').value.trim();if(!n||!s){toast('Fill fields','error');return}TCH.push({id:TCH.length+1,name:n,sub:s,phone:p,emp:'T-'+String(TCH.length+1).padStart(3,'0')});cm();toast('Added');rTch()">Add</button></div>`)}
-function editTchM(id){const t=TCH.find(x=>x.id===id);if(!t)return;modal(`<div class="mhd"><h2>Edit Teacher</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd"><div class="fg"><label class="fl">Name</label><input class="fi" id="tn" value="${t.name}"></div><div class="fg"><label class="fl">Subject</label><input class="fi" id="ts" value="${t.sub}"></div><div class="fg"><label class="fl">Phone</label><input class="fi" id="tp" value="${t.phone}"></div></div><div class="mft"><button class="btn btno" onclick="cm()">Cancel</button><button class="btn btnp" onclick="const t=TCH.find(x=>x.id===${id});t.name=$('tn').value.trim();t.sub=$('ts').value.trim();t.phone=$('tp').value.trim();cm();toast('Updated');rTch()">Update</button></div>`)}
-function delTch(id){modal(`<div class="mhd"><h2>Confirm</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd"><p style="font-size:14px">Remove this teacher?</p></div><div class="mft"><button class="btn btno" onclick="cm()">Cancel</button><button class="btn btnd" onclick="const i=TCH.findIndex(t=>t.id===${id});if(i>-1)TCH.splice(i,1);cm();toast('Removed');rTch()">Delete</button></div>`)}
+  async deleteDoc(colName, docId) {
+    try {
+      await db.collection(colName).doc(docId).delete();
+      return true;
+    } catch(e) {
+      toast('Failed to delete', 'error');
+      return false;
+    }
+  },
 
-function rTT(){$('mc').innerHTML=`<div style="margin-bottom:20px"><h2 style="font-size:22px;font-weight:800">Timetable</h2><p style="color:var(--m);font-size:13px">Weekly Class Schedule</p></div><div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap"><div class="cd" style="padding:8px 12px;font-size:12px;display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;background:#FFF9E6;border:1px solid #E6D68A;border-radius:3px"></div>Break</div><div class="cd" style="padding:8px 12px;font-size:12px;display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;background:#F9FBF9;border:1px solid #ddd;border-radius:3px"></div>Free</div><div class="cd" style="padding:8px 12px;font-size:12px;display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;background:#D1FAE5;border-radius:3px"></div>Class</div></div><div class="cd" style="padding:0;overflow:hidden"><div class="tt-wrap"><div class="ttg"><div class="ttc tth">Time</div>${TT.days.map(d=>`<div class="ttc tth">${d}</div>`).join('')}${TT.times.map((t,ti)=>{const isBrk=ti===3;return`<div class="ttc ttt">${t}</div>${TT.days.map((d,di)=>{const cell=TT.g[di][ti];if(isBrk)return`<div class="ttc" style="background:#FFF9E6;text-align:center;font-size:10px;color:var(--al);font-weight:600">BREAK</div>`;if(cell[0]==='-')return`<div class="ttc" style="background:#F9FBF9;color:var(--m);text-align:center;font-size:10.5px">Free</div>`;return`<div class="ttc"><div class="tts">${cell[0]}</div><div class="ttt2">${cell[1]}</div></div>`}).join('')}`}).join('')}</div></div></div><p style="color:var(--m);font-size:11.5px;margin-top:10px"><i class="fa-solid fa-circle-info" style="margin-right:4px"></i>Swipe horizontally on mobile to view full timetable. 10:00-10:30 AM break. Friday: Sports & Activities.</p>`}
+  async deleteWhere(colName, field, op, value) {
+    try {
+      const snap = await db.collection(colName).where(field, op, value).get();
+      const batch = db.batch();
+      snap.docs.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+      return snap.size;
+    } catch(e) { return 0; }
+  },
 
-function rNtc(){const isA=curRole==='admin';$('mc').innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px"><div><h2 style="font-size:22px;font-weight:800">Notices</h2><p style="color:var(--m);font-size:13px">${NTC.length} Announcements</p></div>${isA?`<button class="btn btnp" onclick="addNtcM()"><i class="fa-solid fa-plus"></i> Add</button>`:''}</div><div style="display:flex;flex-direction:column;gap:12px">${NTC.map(n=>`<div class="cd" style="padding:18px 20px;border-left:4px solid ${n.pri==='high'?'var(--d)':n.pri==='medium'?'var(--al)':'var(--p)'}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap"><div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h3 style="font-size:15px;font-weight:700">${n.title}</h3><span class="bg bg${n.pri==='high'?'u':n.pri==='medium'?'r':'p'}">${n.pri.charAt(0).toUpperCase()+n.pri.slice(1)}</span></div><p style="font-size:13px;color:var(--m);margin-top:6px;line-height:1.6">${n.body}</p><p style="font-size:11px;color:var(--m);margin-top:8px;opacity:.7"><i class="fa-regular fa-calendar"></i> ${n.date}</p></div>${isA?`<button class="btn btns" style="background:#FEE2E2;color:#991B1B;flex-shrink:0" onclick="const i=NTC.findIndex(x=>x.id===${n.id});if(i>-1)NTC.splice(i,1);toast('Removed');rNtc()"><i class="fa-solid fa-trash"></i></button>`:''}</div></div>`).join('')}</div>`}
-function addNtcM(){modal(`<div class="mhd"><h2>Add Notice</h2><button class="mcl" onclick="cm()"><i class="fa-solid fa-xmark"></i></button></div><div class="mbd"><div class="fg"><label class="fl">Title</label><input class="fi" id="nti" placeholder="Notice title"></div><div class="fg"><label class="fl">Priority</label><select class="fi" id="npr"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></div><div class="fg"><label class="fl">Details</label><textarea class="fi" id="nbd" rows="4" style="resize:vertical" placeholder="Notice details..."></textarea></div></div><div class="mft"><button class="btn btno" onclick="cm()">Cancel</button><button class="btn btnp" onclick="const t=$('nti').value.trim(),b=$('nbd').value.trim();if(!t||!b){toast('Fill fields','error');return}NTC.unshift({id:++NID,title:t,date:new Date().toISOString().split('T')[0],body:b,pri:$('npr').value});cm();toast('Notice added');rNtc()">Add</button></div>`)}
+  // ---- CHECK INIT ----
+  async isInitialized() {
+    const meta = await this.getDoc('_meta', 'init');
+    return meta && meta.done === true;
+  },
 
-/* ========== INIT — FIX: Show home page after loader ========== */
-window.addEventListener('DOMContentLoaded',function(){
-setTimeout(function(){
-    $('ldr').classList.add('h');
-    $('hp').style.display = 'block'; // YAHAN THI FIX — home page show karo
-},600);
-setTimeout(function(){
-    $('ldr').style.display = 'none';
-},1000);
-});
-</script>
-</body>
-</html>
+  async markInitialized() {
+    await db.collection('_meta').doc('init').set({done: true});
+  }
+};
+
+// ==================== LOCAL CACHE (speed ke liye) ====================
+// Firebase se ek baar load karo, phir local cache use karo
+// Write hote hi dono jagah update karo
+const Cache = {
+  _data: {},
+  set(key, val) { this._data[key] = val; },
+  get(key) { return this._data[key] || null; },
+  clear() { this._data = {}; }
+};
+
+// Helper: Firebase se load karo cache mein
+async function loadCache() {
+  const [users, subjects, classes, timetable, attendance, grades] = await Promise.all([
+    FStore.getCollection('users'),
+    FStore.getCollection('subjects'),
+    FStore.getCollection('classes'),
+    FStore.getCollection('timetable'),
+    FStore.getCollection('attendance'),
+    FStore.getCollection('grades')
+  ]);
+  Cache.set('users', users);
+  Cache.set('subjects', subjects);
+  Cache.set('classes', classes);
+  Cache.set('timetable', timetable);
+  Cache.set('attendance', attendance);
+  Cache.set('grades', grades);
+}
+
+// Helper: Cache se read karo (sync)
+function getUsers() { return Cache.get('users') || []; }
+function getSubjects() { return Cache.get('subjects') || []; }
+function getClasses() { return Cache.get('classes') || []; }
+function getTimetable() { return Cache.get('timetable') || []; }
+function getAttendance() { return Cache.get('attendance') || []; }
+function getGrades() { return Cache.get('grades') || []; }
+
+// Helper: Cache + Firebase dono mein update karo
+async function saveUser(user) {
+  const {id, ...data} = user;
+  // Remove undefined fields
+  Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
+  await FStore.setDoc('users', id, data);
+  const users = getUsers();
+  const idx = users.findIndex(u => u.id === id);
+  if (idx >= 0) users[idx] = user; else users.push(user);
+  Cache.set('users', users);
+}
+async function removeUser(id) {
+  await FStore.deleteDoc('users', id);
+  Cache.set('users', getUsers().filter(u => u.id !== id));
+}
+async function saveClass(cls) {
+  const {id, ...data} = cls;
+  Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
+  await FStore.setDoc('classes', id, data);
+  const classes = getClasses();
+  const idx = classes.findIndex(c => c.id === id);
+  if (idx >= 0) classes[idx] = cls; else classes.push(cls);
+  Cache.set('classes', classes);
+}
+async function removeClass(id) {
+  await FStore.deleteDoc('classes', id);
+  Cache.set('classes', getClasses().filter(c => c.id !== id));
+}
+async function saveAttendance(records) {
+  // Batch write for performance
+  const batch = db.batch();
+  records.forEach(r => {
+    const {id, ...data} = r;
+    Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
+    batch.set(db.collection('attendance').doc(id), data, {merge: true});
+  });
+  await batch.commit();
+  // Update cache
+  const existing = getAttendance();
+  records.forEach(r => {
+    const idx = existing.findIndex(e => e.id === r.id);
+    if (idx >= 0) existing[idx] = r; else existing.push(r);
+  });
+  Cache.set('attendance', existing);
+}
+async function saveGrades(records) {
+  const batch = db.batch();
+  records.forEach(r => {
+    const {id, ...data} = r;
+    Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
+    batch.set(db.collection('grades').doc(id), data, {merge: true});
+  });
+  await batch.commit();
+  const existing = getGrades();
+  records.forEach(r => {
+    const idx = existing.findIndex(e => e.id === r.id);
+    if (idx >= 0) existing[idx] = r; else existing.push(r);
+  });
+  Cache.set('grades', existing);
+}
+async function removeStudentData(studentId) {
+  await FStore.deleteWhere('attendance', 'studentId', '==', studentId);
+  await FStore.deleteWhere('grades', 'studentId', '==', studentId);
+  const att = getAttendance().filter(a => a.studentId !== studentId);
+  const gr = getGrades().filter(g => g.studentId !== studentId);
+  Cache.set('attendance', att);
+  Cache.set('grades', gr);
+}
+
+// ==================== SEED DATA (pehli baar run hone par) ====================
+async function seedDatabase() {
+  $('loading-text').textContent = 'Setting up database (first time)...';
+
+  const subjects = [
+    {id:'SUB001',name:'Mathematics',code:'MATH'},
+    {id:'SUB002',name:'Science',code:'SCI'},
+    {id:'SUB003',name:'English',code:'ENG'},
+    {id:'SUB004',name:'Hindi',code:'HIN'},
+    {id:'SUB005',name:'Social Studies',code:'SST'}
+  ];
+  const classes = [
+    {id:'CLS001',name:'Class 8',section:'A',classTeacherId:'USR002'},
+    {id:'CLS002',name:'Class 9',section:'A',classTeacherId:'USR003'},
+    {id:'CLS003',name:'Class 10',section:'A',classTeacherId:'USR002'}
+  ];
+
+  const studentNames = [
+    ['Aarav Sharma','Diya Patel','Arjun Reddy','Ananya Gupta','Rohan Singh','Kavya Nair'],
+    ['Vihaan Mehta','Ishika Joshi','Aditya Kumar','Sneha Iyer','Karthik Rao','Meera Pillai'],
+    ['Arjun Malhotra','Tanya Agarwal','Rishi Verma','Pooja Desai','Nikhil Chauhan','Shruti Bhatt']
+  ];
+  const genders = ['Male','Female','Male','Female','Male','Female'];
+
+  const users = [
+    {id:'USR001',username:'admin',password:'admin123',role:'admin',name:'Dr. Suresh Mishra',email:'admin@sps.edu.in',phone:'9876543210'},
+    {id:'USR002',username:'rajesh.kumar',password:'teacher123',role:'teacher',name:'Rajesh Kumar',email:'rajesh@sps.edu.in',phone:'9876543211',subjects:['SUB001','SUB002'],classIds:['CLS001','CLS003'],qualification:'M.Sc, B.Ed',joinDate:'2018-06-01'},
+    {id:'USR003',username:'priya.sharma',password:'teacher123',role:'teacher',name:'Priya Sharma',email:'priya@sps.edu.in',phone:'9876543212',subjects:['SUB003','SUB004'],classIds:['CLS001','CLS002'],qualification:'M.A, B.Ed',joinDate:'2020-06-01'}
+  ];
+  let uid = 4;
+  classes.forEach((cls, ci) => {
+    studentNames[ci].forEach((sname, si) => {
+      users.push({
+        id:'USR'+String(uid).padStart(3,'0'), username:sname.toLowerCase().replace(' ','.'), password:'student123', role:'student', name:sname,
+        classId:cls.id, rollNo:si+1, dob:`200${10-ci}-${String(3+si*2).padStart(2,'0')}`,
+        gender:genders[si], parentName:'Mr. '+sname.split(' ')[1], parentPhone:'9'+String(Math.floor(Math.random()*900000000+100000000)),
+        address:`${Math.floor(Math.random()*200+1)}, Sector ${Math.floor(Math.random()*50+1)}, New Delhi`
+      });
+      uid++;
+    });
+  });
+
+  // Timetable
+  const tt = [];
+  const subIds = subjects.map(s => s.id);
+  const days = ['Mon','Tue','Wed','Thu','Fri'];
+  classes.forEach(cls => {
+    days.forEach(day => {
+      for(let p=1; p<=6; p++){
+        const si = (p + days.indexOf(day)*3 + classes.indexOf(cls)) % subIds.length;
+        tt.push({id:genId(), classId:cls.id, day, period:p, subjectId:subIds[si]});
+      }
+    });
+  });
+
+  // Attendance (past 25 working days)
+  const att = [];
+  const students = users.filter(u => u.role === 'student');
+  let d = new Date(); d.setDate(d.getDate() - 35);
+  for(let i=0; i<25; i++){
+    d.setDate(d.getDate()+1);
+    if(d.getDay()===0 || d.getDay()===6) continue;
+    const dateStr = d.toISOString().split('T')[0];
+    students.forEach(st => {
+      const r = Math.random();
+      att.push({id:genId(), date:dateStr, classId:st.classId, studentId:st.id, status: r<.82?'present':r<.94?'absent':'late'});
+    });
+  }
+
+  // Grades
+  const grades = [];
+  ['Mid-Term','Unit Test 1'].forEach(exam => {
+    students.forEach(st => {
+      subjects.forEach(sub => {
+        const max = exam==='Mid-Term'?100:25;
+        const marks = Math.floor(Math.random()*(max*.55)+max*.4);
+        grades.push({id:genId(), studentId:st.id, classId:st.classId, subjectId:sub.id, examType:exam, marks, maxMarks:max});
+      });
+    });
+  });
+
+  // Batch write sab collections
+  $('loading-text').textContent = 'Writing data to Firestore...';
+
+  // Users ko chunks mein likho (Firestore batch limit = 500)
+  const chunkSize = 400;
+  for(let i=0; i<users.length; i+=chunkSize){
+    const batch = db.batch();
+    const chunk = users.slice(i, i+chunkSize);
+    chunk.forEach(u => {
+      const {id, ...data} = u;
+      batch.set(db.collection('users').doc(id), data);
+    });
+    await batch.commit();
+  }
+
+  // Subjects batch
+  let batch = db.batch();
+  subjects.forEach(s => { const {id,...d}=s; batch.set(db.collection('subjects').doc(id),d); });
+  await batch.commit();
+
+  // Classes batch
+  batch = db.batch();
+  classes.forEach(c => { const {id,...d}=c; batch.set(db.collection('classes').doc(id),d); });
+  await batch.commit();
+
+  // Timetable chunks
+  for(let i=0; i<tt.length; i+=chunkSize){
+    batch = db.batch();
+    tt.slice(i,i+chunkSize).forEach(t => { const {id,...d}=t; batch.set(db.collection('timetable').doc(id),d); });
+    await batch.commit();
+  }
+
+  // Attendance chunks
+  for(let i=0; i<att.length; i+=chunkSize){
+    batch = db.batch();
+    att.slice(i,i+chunkSize).forEach(a => { const {id,...d}=a; batch.set(db.collection('attendance').doc(id),d); });
+    await batch.commit();
+  }
+
+  // Grades chunks
+  for(let i=0; i<grades.length; i+=chunkSize){
+    batch = db.batch();
+    grades.slice(i,i+chunkSize).forEach(g => { const {id,...d}=g; batch.set(db.collection('grades').doc(id),d); });
+    await batch.commit();
+  }
+
+  // Local cache bhi bhar do
+  Cache.set('users', users);
+  Cache.set('subjects', subjects);
+  Cache.set('classes', classes);
+  Cache.set('timetable', tt);
+  Cache.set('attendance', att);
+  Cache.set('grades', grades);
+
+  await FStore.markInitialized();
+}
+
+// ==================== AUTH ====================
+const Auth = {
+  user: null,
+  login(u, p) {
+    const users = getUsers();
+    const found = users.find(x => x.username === u && x.password === p);
+    if (!found) return false;
+    this.user = found;
+    sessionStorage.setItem('sps_session', found.id);
+    return true;
+  },
+  logout() { this.user = null; sessionStorage.removeItem('sps_session'); },
+  restore() {
+    const sid = sessionStorage.getItem('sps_session');
+    if (!sid) return false;
+    const found = getUsers().find(x => x.id === sid);
+    if (found) { this.user = found; return true; }
+    return false;
+  },
+  refreshUser() {
+    const found = getUsers().find(x => x.id === this.user.id);
+    if (found) this.user = found;
+  }
+};
+
+// ==================== TOAST & MODAL ====================
+function toast(msg, type='success') {
+  const colors = {success:'bg-emerald-500',error:'bg-red-500',warning:'bg-amber-500',info:'bg-blue-500'};
+  const icons = {success:'fa-check-circle',error:'fa-times-circle',warning:'fa-exclamation-triangle',info:'fa-info-circle'};
+  const el = document.createElement('div');
+  el.className = `toast flex items-center gap-3 px-5 py-3 rounded-xl ${colors[type]} text-white shadow-lg text-sm font-medium`;
+  el.innerHTML = `<i class="fas ${icons[type]}"></i><span>${msg}</span>`;
+  $('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3100);
+}
+function showModal(html) { $('modal-box').innerHTML = html; $('modal-overlay').classList.remove('hidden'); }
+function hideModal() { $('modal-overlay').classList.add('hidden'); }
+function confirmAction(msg, onConfirm) {
+  showModal(`<div class="p-6 text-center">
+    <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4"><i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i></div>
+    <h3 class="text-lg font-bold text-slate-800 mb-2">Confirm Action</h3>
+    <p class="text-slate-500 text-sm mb-6">${msg}</p>
+    <div class="flex gap-3 justify-center">
+      <button onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-medium transition-colors">Cancel</button>
+      <button id="confirm-yes-btn" class="px-5 py-2.5 rounded-lg bg-red-500 text-white hover:bg-red-600 text-sm font-medium transition-colors">Confirm</button>
+    </div></div>`);
+  $('confirm-yes-btn').onclick = () => { hideModal(); onConfirm(); };
+}
+
+// ==================== CHART MANAGEMENT ====================
+let charts = [];
+function destroyCharts() { charts.forEach(c => c.destroy()); charts = []; }
+
+// ==================== SIDEBAR ====================
+const menuConfig = {
+  admin:[
+    {id:'admin-dashboard',icon:'fa-gauge-high',label:'Dashboard'},
+    {id:'admin-students',icon:'fa-user-graduate',label:'Students'},
+    {id:'admin-teachers',icon:'fa-chalkboard-teacher',label:'Teachers'},
+    {id:'admin-classes',icon:'fa-school',label:'Classes'},
+    {id:'admin-attendance',icon:'fa-clipboard-check',label:'Attendance'},
+    {id:'admin-grades',icon:'fa-chart-line',label:'Grades'},
+    {id:'admin-timetable',icon:'fa-calendar-days',label:'Timetable'}
+  ],
+  teacher:[
+    {id:'teacher-dashboard',icon:'fa-gauge-high',label:'Dashboard'},
+    {id:'teacher-schedule',icon:'fa-calendar-days',label:'My Schedule'},
+    {id:'teacher-attendance',icon:'fa-clipboard-check',label:'Mark Attendance'},
+    {id:'teacher-grades',icon:'fa-pen-to-square',label:'Enter Grades'},
+    {id:'teacher-students',icon:'fa-users',label:'My Students'}
+  ],
+  student:[
+    {id:'student-dashboard',icon:'fa-gauge-high',label:'Dashboard'},
+    {id:'student-profile',icon:'fa-user',label:'My Profile'},
+    {id:'student-attendance',icon:'fa-clipboard-check',label:'My Attendance'},
+    {id:'student-grades',icon:'fa-chart-line',label:'My Grades'},
+    {id:'student-schedule',icon:'fa-calendar-days',label:'My Schedule'}
+  ]
+};
+let currentView = '';
+function buildSidebar() {
+  const items = menuConfig[Auth.user.role] || [];
+  $('sidebar-nav').innerHTML = items.map(it => `
+    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium transition-all ${currentView===it.id?'active':''}" data-view="${it.id}">
+      <i class="fas ${it.icon} w-5 text-center flex-shrink-0"></i>
+      <span class="nav-text">${it.label}</span>
+    </button>`).join('');
+  $('sidebar-nav').querySelectorAll('.nav-item').forEach(btn => { btn.onclick = () => navigate(btn.dataset.view); });
+  $('sidebar-avatar').textContent = getInitials(Auth.user.name);
+  $('sidebar-name').textContent = Auth.user.name;
+  $('sidebar-role').textContent = Auth.user.role;
+  $('topbar-avatar').textContent = getInitials(Auth.user.name);
+  $('topbar-date').textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+function toggleSidebar() {
+  const sb = $('sidebar'); sb.classList.toggle('collapsed');
+  $('collapse-icon').classList.toggle('fa-angles-left'); $('collapse-icon').classList.toggle('fa-angles-right');
+  $('main-area').style.marginLeft = sb.classList.contains('collapsed') ? '72px' : '260px';
+}
+function toggleMobileSidebar() {
+  $('sidebar').classList.toggle('mobile-open');
+  $('sidebar-overlay').classList.toggle('show');
+}
+
+// ==================== NAVIGATION ====================
+function navigate(view) {
+  currentView = view; destroyCharts(); buildSidebar();
+  $('sidebar').classList.remove('mobile-open'); $('sidebar-overlay').classList.remove('show');
+  const titles = {'admin-dashboard':'Dashboard','admin-students':'Student Management','admin-teachers':'Teacher Management','admin-classes':'Class Management','admin-attendance':'Attendance Records','admin-grades':'Grade Records','admin-timetable':'Class Timetable','teacher-dashboard':'Dashboard','teacher-schedule':'My Schedule','teacher-attendance':'Mark Attendance','teacher-grades':'Enter Grades','teacher-students':'My Students','student-dashboard':'Dashboard','student-profile':'My Profile','student-attendance':'My Attendance','student-grades':'My Grades','student-schedule':'My Schedule'};
+  $('page-title').textContent = titles[view] || '';
+  if (Views[view]) $('main-content').innerHTML = Views[view]();
+  if (ViewHooks[view]) setTimeout(ViewHooks[view], 50);
+}
+
+// ==================== HELPERS ====================
+function statCard(icon,label,value,bgColor,sub='') {
+  return `<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+    <div class="flex items-center justify-between">
+      <div><p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${label}</p>
+      <p class="text-2xl font-extrabold text-slate-800 mt-1">${value}</p>
+      ${sub?`<p class="text-xs mt-1.5 text-slate-400">${sub}</p>`:''}</div>
+      <div class="w-12 h-12 rounded-xl ${bgColor} flex items-center justify-center"><i class="fas ${icon} text-white"></i></div>
+    </div></div>`;
+}
+function avatarCircle(name,size='w-9 h-9 text-sm') {
+  const colors = ['bg-teal-100 text-teal-700','bg-blue-100 text-blue-700','bg-amber-100 text-amber-700','bg-indigo-100 text-indigo-700','bg-rose-100 text-rose-700','bg-emerald-100 text-emerald-700'];
+  return `<div class="${size} rounded-full ${colors[name.charCodeAt(0)%colors.length]} flex items-center justify-center font-bold flex-shrink-0">${getInitials(name)}</div>`;
+}
+function classBadge(classId) {
+  const cls = getClasses().find(c => c.id === classId);
+  return cls ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-50 text-primary-700">${cls.name} - ${cls.section}</span>` : '—';
+}
+function subjectBadge(subId) {
+  const sub = getSubjects().find(s => s.id === subId);
+  return sub ? `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${subjectColors[sub.code]||''}">${sub.code}</span>` : '—';
+}
+
+// ==================== VIEWS & HOOKS ====================
+const Views = {};
+const ViewHooks = {};
+
+// ---- ADMIN DASHBOARD ----
+Views['admin-dashboard'] = () => {
+  const students = getUsers().filter(u => u.role==='student');
+  const teachers = getUsers().filter(u => u.role==='teacher');
+  const classes = getClasses();
+  const att = getAttendance();
+  const avgAtt = att.length ? Math.round(att.filter(a=>a.status==='present').length/att.length*100) : 0;
+  return `<div class="space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      ${statCard('fa-user-graduate','Total Students',students.length,'bg-teal-500',classes.length+' classes')}
+      ${statCard('fa-chalkboard-teacher','Total Teachers',teachers.length,'bg-blue-500','Active staff')}
+      ${statCard('fa-school','Total Classes',classes.length,'bg-indigo-500','All sections')}
+      ${statCard('fa-clipboard-check','Avg Attendance',avgAtt+'%','bg-amber-500','This month')}
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Students per Class</h3><canvas id="chart-class-dist" height="220"></canvas></div>
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Recent Attendance Trend</h3><canvas id="chart-att-trend" height="220"></canvas></div>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Recently Enrolled Students</h3>
+      <div class="space-y-3">${students.slice(-5).reverse().map(s=>`<div class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">${avatarCircle(s.name)}<div class="flex-1 min-w-0"><p class="text-sm font-semibold text-slate-800 truncate">${s.name}</p><p class="text-xs text-slate-400">Roll No: ${s.rollNo}</p></div>${classBadge(s.classId)}</div>`).join('')}</div>
+    </div></div>`;
+};
+ViewHooks['admin-dashboard'] = () => {
+  const students = getUsers().filter(u=>u.role==='student'); const classes = getClasses();
+  const ctx1 = $('chart-class-dist');
+  if(ctx1) charts.push(new Chart(ctx1,{type:'doughnut',data:{labels:classes.map(c=>c.name+' '+c.section),datasets:[{data:classes.map(c=>students.filter(s=>s.classId===c.id).length),backgroundColor:['#0D9488','#3B82F6','#6366F1'],borderWidth:0,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyle:'circle',font:{size:12,family:'Plus Jakarta Sans'}}}}}}));
+  const att = getAttendance(); const dates = [...new Set(att.map(a=>a.date))].sort().slice(-10);
+  const ctx2 = $('chart-att-trend');
+  if(ctx2){const rates=dates.map(d=>{const da=att.filter(a=>a.date===d);return da.length?Math.round(da.filter(a=>a.status==='present').length/da.length*100):0});charts.push(new Chart(ctx2,{type:'bar',data:{labels:dates.map(d=>{const dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}),datasets:[{label:'Attendance %',data:rates,backgroundColor:'#0D9488',borderRadius:6,maxBarThickness:32}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%',font:{size:11}},grid:{color:'#F1F5F9'}},x:{grid:{display:false},ticks:{font:{size:10}}}},plugins:{legend:{display:false}}}}));}
+};
+
+// ---- ADMIN STUDENTS ----
+Views['admin-students'] = () => {
+  const students = getUsers().filter(u=>u.role==='student');
+  return `<div class="space-y-4">
+    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+      <div class="relative w-full sm:w-72"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input id="student-search" type="text" placeholder="Search students..." class="w-full pl-9 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm" oninput="filterStudents()"></div>
+      <button onclick="showStudentForm()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm"><i class="fas fa-plus"></i>Add Student</button>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><div class="overflow-x-auto"><table class="w-full">
+      <thead><tr class="border-b border-slate-100 bg-slate-50/50">
+        <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>
+        <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th>
+        <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Class</th>
+        <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Parent</th>
+        <th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Phone</th>
+        <th class="px-5 py-3.5 text-right text-[11px] font-semibold text-slate-500 uppercase">Actions</th>
+      </tr></thead><tbody id="students-tbody" class="divide-y divide-slate-50">${renderStudentRows(students)}</tbody>
+    </table></div></div></div>`;
+};
+function renderStudentRows(students) {
+  return students.map(s=>`<tr class="data-row"><td class="px-5 py-3.5"><div class="flex items-center gap-3">${avatarCircle(s.name)}<span class="text-sm font-medium text-slate-800">${s.name}</span></div></td>
+    <td class="px-5 py-3.5 text-sm text-slate-600">${s.rollNo}</td><td class="px-5 py-3.5">${classBadge(s.classId)}</td>
+    <td class="px-5 py-3.5 text-sm text-slate-600">${s.parentName||'—'}</td><td class="px-5 py-3.5 text-sm text-slate-600">${s.parentPhone||'—'}</td>
+    <td class="px-5 py-3.5 text-right"><div class="flex items-center justify-end gap-1">
+      <button onclick="showStudentForm('${s.id}')" class="w-8 h-8 rounded-lg hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-pen-to-square text-xs"></i></button>
+      <button onclick="deleteStudent('${s.id}')" class="w-8 h-8 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-trash text-xs"></i></button>
+    </div></td></tr>`).join('');
+}
+function filterStudents() {
+  const q = $('student-search').value.toLowerCase();
+  const filtered = getUsers().filter(u=>u.role==='student').filter(s=>s.name.toLowerCase().includes(q)||String(s.rollNo).includes(q));
+  $('students-tbody').innerHTML = renderStudentRows(filtered);
+}
+function showStudentForm(editId) {
+  const classes = getClasses(); let s = editId ? getUsers().find(u=>u.id===editId) : null;
+  showModal(`<div class="p-6"><h3 class="text-lg font-bold text-slate-800 mb-5">${s?'Edit Student':'Add New Student'}</h3>
+    <form id="student-form" class="space-y-4" onsubmit="saveStudent(event,'${editId||''}')">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label><input name="name" value="${s?.name||''}" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select name="classId" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm">${classes.map(c=>`<option value="${c.id}" ${s?.classId===c.id?'selected':''}>${c.name} - ${c.section}</option>`).join('')}</select></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Roll Number</label><input name="rollNo" type="number" value="${s?.rollNo||''}" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Date of Birth</label><input name="dob" type="date" value="${s?.dob||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Gender</label><select name="gender" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"><option value="Male" ${s?.gender==='Male'?'selected':''}>Male</option><option value="Female" ${s?.gender==='Female'?'selected':''}>Female</option></select></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Parent Name</label><input name="parentName" value="${s?.parentName||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Parent Phone</label><input name="parentPhone" value="${s?.parentPhone||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Address</label><textarea name="address" rows="2" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm">${s?.address||''}</textarea></div>
+        ${!s?`<div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Username</label><input name="username" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm" placeholder="e.g. john.doe"></div>`:''}
+      </div>
+      <div class="flex gap-3 justify-end pt-2"><button type="button" onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">Cancel</button>
+      <button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors">${s?'Update':'Add'} Student</button></div>
+    </form></div>`);
+}
+async function saveStudent(e, editId) {
+  e.preventDefault(); const fd = new FormData(e.target); const data = Object.fromEntries(fd);
+  if (editId) {
+    const users = getUsers(); const idx = users.findIndex(u=>u.id===editId);
+    if(idx>=0) { Object.assign(users[idx], data); users[idx].rollNo = parseInt(data.rollNo); await saveUser(users[idx]); }
+    toast('Student updated successfully');
+  } else {
+    const newUser = {id:genId(), username:data.username, password:'student123', role:'student', name:data.name, classId:data.classId, rollNo:parseInt(data.rollNo), dob:data.dob, gender:data.gender, parentName:data.parentName, parentPhone:data.parentPhone, address:data.address};
+    await saveUser(newUser);
+    toast('Student added successfully');
+  }
+  hideModal(); navigate('admin-students');
+}
+async function deleteStudent(id) {
+  confirmAction('Are you sure you want to delete this student? This cannot be undone.', async () => {
+    await removeUser(id); await removeStudentData(id);
+    toast('Student deleted', 'warning'); navigate('admin-students');
+  });
+}
+
+// ---- ADMIN TEACHERS ----
+Views['admin-teachers'] = () => {
+  const teachers = getUsers().filter(u=>u.role==='teacher');
+  return `<div class="space-y-4"><div class="flex justify-end">
+    <button onclick="showTeacherForm()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm"><i class="fas fa-plus"></i>Add Teacher</button></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      ${teachers.map(t=>`<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+        <div class="flex items-start gap-4">${avatarCircle(t.name,'w-12 h-12 text-base')}
+          <div class="flex-1 min-w-0"><h4 class="text-sm font-bold text-slate-800 truncate">${t.name}</h4><p class="text-xs text-slate-400 mt-0.5">${t.qualification||'—'}</p>
+            <div class="flex flex-wrap gap-1.5 mt-3">${(t.subjects||[]).map(sid=>subjectBadge(sid)).join('')}</div>
+            <div class="flex flex-wrap gap-1.5 mt-2">${(t.classIds||[]).map(cid=>classBadge(cid)).join('')}</div>
+            <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <p class="text-xs text-slate-400"><i class="fas fa-phone mr-1"></i>${t.phone||'—'}</p>
+              <div class="flex gap-1"><button onclick="showTeacherForm('${t.id}')" class="w-7 h-7 rounded hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-pen text-[10px]"></i></button>
+              <button onclick="deleteTeacher('${t.id}')" class="w-7 h-7 rounded hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-trash text-[10px]"></i></button></div>
+            </div></div></div></div>`).join('')}
+    </div></div>`;
+};
+function showTeacherForm(editId) {
+  const subjects=getSubjects(); const classes=getClasses(); let t=editId?getUsers().find(u=>u.id===editId):null;
+  showModal(`<div class="p-6"><h3 class="text-lg font-bold text-slate-800 mb-5">${t?'Edit Teacher':'Add New Teacher'}</h3>
+    <form class="space-y-4" onsubmit="saveTeacher(event,'${editId||''}')">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label><input name="name" value="${t?.name||''}" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        ${!t?`<div><label class="block text-xs font-semibold text-slate-600 mb-1">Username</label><input name="username" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Password</label><input name="password" value="teacher123" required class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>`:''}
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Subjects</label><div class="flex flex-wrap gap-2">${subjects.map(s=>`<label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 text-sm ${(t?.subjects||[]).includes(s.id)?'bg-primary-50 border-primary-300':''}"><input type="checkbox" name="subjects" value="${s.id}" ${(t?.subjects||[]).includes(s.id)?'checked':''} class="accent-primary-600"><span class="text-slate-700">${s.name}</span></label>`).join('')}</div></div>
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Assigned Classes</label><div class="flex flex-wrap gap-2">${classes.map(c=>`<label class="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 text-sm ${(t?.classIds||[]).includes(c.id)?'bg-primary-50 border-primary-300':''}"><input type="checkbox" name="classIds" value="${c.id}" ${(t?.classIds||[]).includes(c.id)?'checked':''} class="accent-primary-600"><span class="text-slate-700">${c.name} - ${c.section}</span></label>`).join('')}</div></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Phone</label><input name="phone" value="${t?.phone||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">Email</label><input name="email" value="${t?.email||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+        <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Qualification</label><input name="qualification" value="${t?.qualification||''}" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+      </div>
+      <div class="flex gap-3 justify-end pt-2"><button type="button" onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">Cancel</button>
+      <button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors">${t?'Update':'Add'} Teacher</button></div>
+    </form></div>`);
+}
+async function saveTeacher(e, editId) {
+  e.preventDefault(); const fd=new FormData(e.target);
+  const data = {name:fd.get('name'),phone:fd.get('phone'),email:fd.get('email'),qualification:fd.get('qualification'),subjects:fd.getAll('subjects'),classIds:fd.getAll('classIds')};
+  if(editId){const users=getUsers();const idx=users.findIndex(u=>u.id===editId);if(idx>=0){Object.assign(users[idx],data);await saveUser(users[idx])}toast('Teacher updated successfully');}
+  else{await saveUser({id:genId(),username:fd.get('username'),password:fd.get('password'),role:'teacher',...data});toast('Teacher added successfully');}
+  hideModal(); navigate('admin-teachers');
+}
+async function deleteTeacher(id) {
+  confirmAction('Delete this teacher?', async()=>{await removeUser(id);toast('Teacher deleted','warning');navigate('admin-teachers');});
+}
+
+// ---- ADMIN CLASSES ----
+Views['admin-classes'] = () => {
+  const classes=getClasses(); const students=getUsers().filter(u=>u.role==='student');
+  return `<div class="space-y-4"><div class="flex justify-end">
+    <button onclick="showClassForm()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm"><i class="fas fa-plus"></i>Add Class</button></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      ${classes.map(c=>{const teacher=getUsers().find(u=>u.id===c.classTeacherId);const count=students.filter(s=>s.classId===c.id).length;
+        return `<div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-4"><div><h4 class="text-base font-bold text-slate-800">${c.name}</h4><p class="text-xs text-slate-400">Section: ${c.section}</p></div>
+            <div class="flex gap-1"><button onclick="showClassForm('${c.id}')" class="w-7 h-7 rounded hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-pen text-[10px]"></i></button>
+            <button onclick="deleteClass('${c.id}')" class="w-7 h-7 rounded hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-trash text-[10px]"></i></button></div></div>
+          <div class="flex items-center gap-3 text-sm text-slate-600"><div class="flex-1"><p class="text-xs text-slate-400 mb-1">Class Teacher</p><p class="font-medium">${teacher?teacher.name:'Not Assigned'}</p></div>
+            <div class="text-right"><p class="text-xs text-slate-400 mb-1">Students</p><p class="text-2xl font-extrabold text-primary-600">${count}</p></div></div></div>`;}).join('')}
+    </div></div>`;
+};
+function showClassForm(editId) {
+  const classes=getClasses(); const teachers=getUsers().filter(u=>u.role==='teacher');
+  let c=editId?classes.find(cl=>cl.id===editId):null;
+  showModal(`<div class="p-6"><h3 class="text-lg font-bold text-slate-800 mb-5">${c?'Edit Class':'Add New Class'}</h3>
+    <form onsubmit="saveClass(event,'${editId||''}')" class="space-y-4"><div class="grid grid-cols-2 gap-4">
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class Name</label><input name="name" value="${c?.name||''}" required placeholder="e.g. Class 8" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+      <div><label class="block text-xs font-semibold text-slate-600 mb-1">Section</label><input name="section" value="${c?.section||''}" required placeholder="e.g. A" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"></div>
+      <div class="col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">Class Teacher</label><select name="classTeacherId" class="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm"><option value="">-- Not Assigned --</option>${teachers.map(t=>`<option value="${t.id}" ${c?.classTeacherId===t.id?'selected':''}>${t.name}</option>`).join('')}</select></div>
+    </div><div class="flex gap-3 justify-end pt-2"><button type="button" onclick="hideModal()" class="px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">Cancel</button>
+    <button type="submit" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors">${c?'Update':'Add'} Class</button></div></form></div>`);
+}
+async function saveClass(e,editId) {
+  e.preventDefault(); const fd=new FormData(e.target); const data=Object.fromEntries(fd);
+  if(editId){const classes=getClasses();const idx=classes.findIndex(c=>c.id===editId);if(idx>=0){Object.assign(classes[idx],data);await saveClass(classes[idx])}toast('Class updated successfully');}
+  else{await saveClass({id:genId(),...data});toast('Class added successfully');}
+  hideModal(); navigate('admin-classes');
+}
+async function deleteClass(id) {
+  confirmAction('Delete this class?', async()=>{await removeClass(id);toast('Class deleted','warning');navigate('admin-classes');});
+}
+
+// ---- ADMIN ATTENDANCE VIEW ----
+Views['admin-attendance'] = () => {
+  const classes=getClasses(); const att=getAttendance(); const dates=[...new Set(att.map(a=>a.date))].sort().reverse().slice(0,10);
+  return `<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end">
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="att-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminAtt()">${classes.map(c=>`<option value="${c.id}">${c.name} - ${c.section}</option>`).join('')}</select></div>
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Date</label><input id="att-date" type="date" value="${dates[0]||today()}" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminAtt()"></div>
+  </div><div id="att-admin-table" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['admin-attendance'] = () => loadAdminAtt();
+function loadAdminAtt() {
+  const clsId=$('att-cls')?.value;const date=$('att-date')?.value;if(!clsId)return;
+  const att=getAttendance();const students=getUsers().filter(u=>u.role==='student'&&u.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
+  const dayAtt=att.filter(a=>a.classId===clsId&&a.date===date);
+  const sb=s=>{const c={present:'bg-emerald-100 text-emerald-700',absent:'bg-red-100 text-red-700',late:'bg-amber-100 text-amber-700'};return `<span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${c[s]||'bg-slate-100 text-slate-600'} capitalize">${s||'Not Marked'}</span>`};
+  $('att-admin-table').innerHTML=`<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Status</th></tr></thead><tbody class="divide-y divide-slate-50">
+  ${students.map(s=>{const rec=dayAtt.find(a=>a.studentId===s.id);return `<tr class="data-row"><td class="px-5 py-3 text-sm text-slate-500">${s.rollNo}</td><td class="px-5 py-3"><div class="flex items-center gap-3">${avatarCircle(s.name)}<span class="text-sm font-medium text-slate-800">${s.name}</span></div></td><td class="px-5 py-3">${sb(rec?.status)}</td></tr>`}).join('')}
+  ${students.length===0?'<tr><td colspan="3" class="px-5 py-8 text-center text-slate-400 text-sm">No students found</td></tr>':''}
+  </tbody></table></div>`;
+}
+
+// ---- ADMIN GRADES VIEW ----
+Views['admin-grades'] = () => {
+  const classes=getClasses();
+  return `<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end">
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="grade-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminGrades()">${classes.map(c=>`<option value="${c.id}">${c.name} - ${c.section}</option>`).join('')}</select></div>
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Exam</label><select id="grade-exam" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadAdminGrades()"><option>Mid-Term</option><option>Unit Test 1</option></select></div>
+  </div><div id="grade-admin-table" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['admin-grades'] = () => loadAdminGrades();
+function loadAdminGrades() {
+  const clsId=$('grade-cls')?.value;const exam=$('grade-exam')?.value;if(!clsId)return;
+  const grades=getGrades();const subjects=getSubjects();const students=getUsers().filter(u=>u.role==='student'&&u.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
+  $('grade-admin-table').innerHTML=`<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>${subjects.map(s=>`<th class="px-4 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">${s.code}</th>`).join('')}<th class="px-4 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">%</th></tr></thead><tbody class="divide-y divide-slate-50">
+  ${students.map(st=>{let total=0,maxT=0;const cells=subjects.map(sub=>{const g=grades.find(x=>x.studentId===st.id&&x.subjectId===sub.id&&x.examType===exam);const m=g?.marks||0;const mx=g?.maxMarks||100;total+=m;maxT+=mx;const pct=mx?Math.round(m/mx*100):0;return `<td class="px-4 py-3 text-center text-sm font-medium ${pct>=80?'text-emerald-600':pct>=60?'text-amber-600':'text-red-500'}">${g?m:'—'}</td>`;}).join('');const pct=maxT?Math.round(total/maxT*100):0;return `<tr class="data-row"><td class="px-4 py-3"><div class="flex items-center gap-2">${avatarCircle(st.name,'w-7 h-7 text-[10px]')}<span class="text-sm font-medium text-slate-800">${st.name}</span></div></td>${cells}<td class="px-4 py-3 text-center text-sm font-bold ${pct>=60?'text-primary-600':'text-red-500'}">${pct}%</td></tr>`;}).join('')}
+  </tbody></table></div>`;
+}
+
+// ---- ADMIN TIMETABLE VIEW ----
+Views['admin-timetable'] = () => {
+  const classes=getClasses();
+  return `<div class="space-y-4"><div><label class="block text-xs font-semibold text-slate-600 mb-1">Select Class</label><select id="tt-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTimetable()">${classes.map(c=>`<option value="${c.id}">${c.name} - ${c.section}</option>`).join('')}</select></div>
+  <div id="tt-grid" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['admin-timetable'] = () => loadTimetable();
+function loadTimetable() {
+  const clsId=$('tt-cls')?.value;if(!clsId)return;
+  const tt=getTimetable();const subjects=getSubjects();const days=['Mon','Tue','Wed','Thu','Fri'];
+  let html='<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase w-20">Day</th>';
+  for(let p=1;p<=6;p++)html+=`<th class="px-3 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">P${p}</th>`;
+  html+='</tr></thead><tbody class="divide-y divide-slate-50">';
+  days.forEach(day=>{html+=`<tr class="data-row"><td class="px-4 py-3 text-sm font-semibold text-slate-700">${day}</td>`;
+    for(let p=1;p<=6;p++){const entry=tt.find(t=>t.classId===clsId&&t.day===day&&t.period===p);const sub=entry?subjects.find(s=>s.id===entry.subjectId):null;
+      html+=`<td class="px-2 py-2 text-center">${sub?`<div class="tt-cell ${subjectColors[sub.code]||'bg-slate-100 text-slate-600'}">${sub.code}</div>`:'<span class="text-slate-300">—</span>'}</td>`;}
+    html+='</tr>';});
+  html+='</tbody></table></div>';$('tt-grid').innerHTML=html;
+}
+
+// ---- TEACHER DASHBOARD ----
+Views['teacher-dashboard'] = () => {
+  const u=Auth.user;const classes=getClasses();const subjects=getSubjects();
+  const myClasses=(u.classIds||[]).map(id=>classes.find(c=>c.id===id)).filter(Boolean);
+  const myStudents=getUsers().filter(s=>s.role==='student'&&(u.classIds||[]).includes(s.classId));
+  const tt=getTimetable();const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const todayName=dayNames[new Date().getDay()];
+  const todayPeriods=tt.filter(t=>(u.classIds||[]).includes(t.classId)&&t.day===todayName).sort((a,b)=>a.period-b.period);
+  const myGrades=getGrades().filter(g=>(u.subjects||[]).includes(g.subjectId)&&(u.classIds||[]).includes(g.classId)&&g.examType==='Mid-Term');
+  const avgPerf=myGrades.length?Math.round(myGrades.reduce((s,g)=>s+(g.marks/g.maxMarks*100),0)/myGrades.length):0;
+  return `<div class="space-y-6"><div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    ${statCard('fa-school','My Classes',myClasses.length,'bg-teal-500')}
+    ${statCard('fa-users','Total Students',myStudents.length,'bg-blue-500')}
+    ${statCard('fa-clock',"Today's Periods",todayPeriods.length,'bg-indigo-500')}
+    ${statCard('fa-chart-simple','Avg Performance',avgPerf+'%','bg-amber-500','Mid-Term')}
+  </div><div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Class-wise Avg Performance</h3><canvas id="chart-tchr-perf" height="220"></canvas></div>
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100"><h3 class="text-sm font-bold text-slate-800 mb-4">Today's Schedule</h3>
+      <div class="space-y-3">${todayPeriods.length===0?'<p class="text-slate-400 text-sm text-center py-8">No classes today</p>':''}
+      ${todayPeriods.map(tp=>{const sub=subjects.find(s=>s.id===tp.subjectId);const cls=classes.find(c=>c.id===tp.classId);return `<div class="flex items-center gap-4 p-3 rounded-lg bg-slate-50"><div class="text-center w-12"><p class="text-lg font-extrabold text-primary-600">P${tp.period}</p></div><div class="flex-1"><p class="text-sm font-semibold text-slate-800">${sub?.name||'—'}</p><p class="text-xs text-slate-400">${cls?.name||''} - ${cls?.section||''}</p></div>${sub?`<span class="tt-cell ${subjectColors[sub.code]||''}">${sub.code}</span>`:''}</div>`;}).join('')}</div>
+    </div></div></div>`;
+};
+ViewHooks['teacher-dashboard'] = () => {
+  const u=Auth.user;const classes=getClasses();const grades=getGrades();const ctx=$('chart-tchr-perf');if(!ctx)return;
+  const data=(u.classIds||[]).map(cid=>{const cls=classes.find(c=>c.id===cid);const cg=grades.filter(g=>g.classId===cid&&(u.subjects||[]).includes(g.subjectId)&&g.examType==='Mid-Term');return{label:cls?cls.name+' '+cls.section:cid,value:cg.length?Math.round(cg.reduce((s,g)=>s+(g.marks/g.maxMarks*100),0)/cg.length):0}});
+  charts.push(new Chart(ctx,{type:'bar',data:{labels:data.map(d=>d.label),datasets:[{label:'Average %',data:data.map(d=>d.value),backgroundColor:'#0D9488',borderRadius:6,maxBarThickness:48}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#F1F5F9'}},x:{grid:{display:false}}},plugins:{legend:{display:false}}}}));
+};
+
+// ---- TEACHER SCHEDULE ----
+Views['teacher-schedule'] = () => {
+  const u=Auth.user;const tt=getTimetable();const subjects=getSubjects();const classes=getClasses();const days=['Mon','Tue','Wed','Thu','Fri'];
+  const myTT=tt.filter(t=>(u.classIds||[]).includes(t.classId));
+  let html='<div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"><div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase w-20">Day</th>';
+  for(let p=1;p<=6;p++)html+=`<th class="px-3 py-3 text-center text-[11px] font-semibold text-slate-500 uppercase">P${p}</th>`;
+  html+='</tr></thead><tbody class="divide-y divide-slate-50">';
+  days.forEach(day=>{html+=`<tr class="data-row"><td class="px-4 py-3 text-sm font-semibold text-slate-700">${day}</td>`;
+    for(let p=1;p<=6;p++){const entry=myTT.find(t=>t.day===day&&t.period===p);const sub=entry?subjects.find(s=>s.id===entry.subjectId):null;const cls=entry?classes.find(c=>c.id===entry.classId):null;
+      html+=`<td class="px-2 py-2 text-center">${sub?`<div class="tt-cell ${subjectColors[sub.code]||''}">${sub.code}<br><span class="font-normal opacity-75">${cls?.name?.replace('Class ','')||''}</span></div>`:'<span class="text-slate-300">—</span>'}</td>`;}
+    html+='</tr>';});html+='</tbody></table></div></div>';return html;
+};
+
+// ---- TEACHER MARK ATTENDANCE ----
+Views['teacher-attendance'] = () => {
+  const u=Auth.user;const classes=getClasses();
+  return `<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end">
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="t-att-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherAtt()">${(u.classIds||[]).map(cid=>{const c=classes.find(x=>x.id===cid);return c?`<option value="${c.id}">${c.name} - ${c.section}</option>`:''}).join('')}</select></div>
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Date</label><input id="t-att-date" type="date" value="${today()}" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherAtt()"></div>
+  </div><div id="t-att-form" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['teacher-attendance'] = () => loadTeacherAtt();
+function loadTeacherAtt() {
+  const clsId=$('t-att-cls')?.value;const date=$('t-att-date')?.value;if(!clsId)return;
+  const att=getAttendance();const students=getUsers().filter(u=>u.role==='student'&&u.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
+  const existing=att.filter(a=>a.classId===clsId&&a.date===date);
+  let html=`<div class="p-4 border-b border-slate-100"><p class="text-sm text-slate-500">${existing.length?'Update attendance:':'Mark attendance for each student'}</p></div><div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th><th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Present</th><th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Absent</th><th class="px-5 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">Late</th></tr></thead><tbody class="divide-y divide-slate-50">`;
+  students.forEach(s=>{const rec=existing.find(a=>a.studentId===s.id);const st=rec?.status||'present';
+    html+=`<tr class="data-row"><td class="px-5 py-3 text-sm text-slate-500">${s.rollNo}</td><td class="px-5 py-3"><div class="flex items-center gap-3">${avatarCircle(s.name)}<span class="text-sm font-medium text-slate-800">${s.name}</span></div></td>
+    <td class="px-5 py-3 text-center"><input type="radio" name="att-${s.id}" value="present" ${st==='present'?'checked':''} class="att-radio"></td>
+    <td class="px-5 py-3 text-center"><input type="radio" name="att-${s.id}" value="absent" ${st==='absent'?'checked':''} class="att-radio absent"></td>
+    <td class="px-5 py-3 text-center"><input type="radio" name="att-${s.id}" value="late" ${st==='late'?'checked':''} class="att-radio late"></td></tr>`;});
+  html+=`</tbody></table></div><div class="p-4 border-t border-slate-100 flex justify-end"><button onclick="saveTeacherAtt()" class="px-6 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors"><i class="fas fa-save mr-2"></i>Save Attendance</button></div>`;
+  $('t-att-form').innerHTML=html;
+}
+async function saveTeacherAtt() {
+  const clsId=$('t-att-cls')?.value;const date=$('t-att-date')?.value;if(!clsId||!date)return;
+  const students=getUsers().filter(u=>u.role==='student'&&u.classId===clsId);
+  const records=students.map(s=>{const val=document.querySelector(`input[name="att-${s.id}"]:checked`)?.value||'present';
+    const existing=getAttendance().find(a=>a.classId===clsId&&a.date===date&&a.studentId===s.id);
+    return existing?{...existing,status:val}:{id:genId(),date,classId:clsId,studentId:s.id,status:val};});
+  await saveAttendance(records);toast('Attendance saved to Firebase');loadTeacherAtt();
+}
+
+// ---- TEACHER ENTER GRADES ----
+Views['teacher-grades'] = () => {
+  const u=Auth.user;const classes=getClasses();
+  return `<div class="space-y-4"><div class="flex flex-wrap gap-3 items-end">
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Class</label><select id="t-gr-cls" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherGrades()">${(u.classIds||[]).map(cid=>{const c=classes.find(x=>x.id===cid);return c?`<option value="${c.id}">${c.name} - ${c.section}</option>`:''}).join('')}</select></div>
+    <div><label class="block text-xs font-semibold text-slate-600 mb-1">Exam</label><select id="t-gr-exam" class="px-3 py-2.5 rounded-lg border border-slate-200 text-sm" onchange="loadTeacherGrades()"><option>Mid-Term</option><option>Unit Test 1</option></select></div>
+  </div><div id="t-gr-form" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['teacher-grades'] = () => loadTeacherGrades();
+function loadTeacherGrades() {
+  const clsId=$('t-gr-cls')?.value;const exam=$('t-gr-exam')?.value;if(!clsId)return;
+  const u=Auth.user;const subjects=getSubjects().filter(s=>(u.subjects||[]).includes(s.id));
+  const students=getUsers().filter(s=>s.role==='student'&&s.classId===clsId).sort((a,b)=>a.rollNo-b.rollNo);
+  const maxM=exam?.includes('Unit')?25:100;
+  let html=`<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-4 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th>${subjects.map(s=>`<th class="px-4 py-3.5 text-center text-[11px] font-semibold text-slate-500 uppercase">${s.code}<br><span class="font-normal text-slate-400">(Max: ${maxM})</span></th>`).join('')}</tr></thead><tbody class="divide-y divide-slate-50">`;
+  students.forEach(st=>{html+=`<tr class="data-row"><td class="px-4 py-3"><div class="flex items-center gap-2">${avatarCircle(st.name,'w-7 h-7 text-[10px]')}<span class="text-sm font-medium text-slate-800">${st.name}</span></div></td>`;
+    subjects.forEach(sub=>{const g=getGrades().find(x=>x.studentId===st.id&&x.subjectId===sub.id&&x.examType===exam);
+      html+=`<td class="px-4 py-2 text-center"><input type="number" min="0" max="${maxM}" value="${g?.marks||''}" data-student="${st.id}" data-subject="${sub.id}" class="w-16 px-2 py-1.5 rounded border border-slate-200 text-sm text-center font-medium"></td>`;});
+    html+='</tr>';});
+  html+=`</tbody></table></div><div class="p-4 border-t border-slate-100 flex justify-end"><button onclick="saveTeacherGrades('${exam}',${maxM})" class="px-6 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors"><i class="fas fa-save mr-2"></i>Save Grades</button></div>`;
+  $('t-gr-form').innerHTML=html;
+}
+async function saveTeacherGrades(exam,maxM) {
+  const clsId=$('t-gr-cls')?.value;if(!clsId)return;
+  const inputs=$('t-gr-form').querySelectorAll('input[type="number"]');const records=[];
+  inputs.forEach(inp=>{const sid=inp.dataset.student;const subId=inp.dataset.subject;const marks=parseInt(inp.value);if(isNaN(marks))return;
+    const existing=getGrades().find(x=>x.studentId===sid&&x.subjectId===subId&&x.examType===exam&&x.classId===clsId);
+    if(existing)records.push({...existing,marks});else records.push({id:genId(),studentId:sid,classId:clsId,subjectId:subId,examType:exam,marks,maxMarks:maxM});});
+  if(records.length)await saveGrades(records);toast('Grades saved to Firebase');
+}
+
+// ---- TEACHER MY STUDENTS ----
+Views['teacher-students'] = () => {
+  const u=Auth.user;const classes=getClasses();const myClassIds=u.classIds||[];
+  return `<div class="space-y-4"><div class="flex gap-2 flex-wrap">${myClassIds.map((cid,i)=>{const c=classes.find(x=>x.id===cid);return c?`<button onclick="showTeacherStudents('${cid}')" class="tch-cls-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${i===0?'bg-primary-600 text-white':'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}" data-cid="${cid}">${c.name} - ${c.section}</button>`:''}).join('')}</div>
+  <div id="tch-students-list" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"></div></div>`;
+};
+ViewHooks['teacher-students'] = () => { const cid=(Auth.user.classIds||[])[0]; if(cid) showTeacherStudents(cid); };
+function showTeacherStudents(cid) {
+  document.querySelectorAll('.tch-cls-tab').forEach(b=>{b.className=b.dataset.cid===cid?'tch-cls-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-primary-600 text-white':'tch-cls-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'});
+  const students=getUsers().filter(u=>u.role==='student'&&u.classId===cid).sort((a,b)=>a.rollNo-b.rollNo);
+  $('tch-students-list').innerHTML=`<div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-slate-100 bg-slate-50/50"><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Roll</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Student</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-500 uppercase">Gender</th><th class="px-5 py-3.5 text-left text-[11px] font-semibold
