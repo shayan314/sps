@@ -2,16 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SPS School Management</title>
+    <title>SPS System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
-<body class="bg-slate-100">
+<body>
 
-    <div id="loader" class="fixed inset-0 bg-white flex flex-col items-center justify-center">
-        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-teal-600"></div>
-        <p id="load-text" class="mt-4 text-slate-600">Initializing...</p>
+    <div id="loader" style="position:fixed; top:0; left:0; width:100%; height:100%; background:white; display:flex; justify-content:center; align-items:center; z-index:9999;">
+        <p>Loading system...</p>
+    </div>
+
+    <div id="app" style="display:none; padding: 20px;">
+        <h1 class="text-xl font-bold">System Loaded Successfully</h1>
+        <div id="content"></div>
     </div>
 
     <script>
@@ -25,36 +29,18 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        async function seedData() {
-            const status = document.getElementById('load-text');
-            status.textContent = "Creating Demo Students and Teachers...";
-
-            // Demo Data
-            const subjects = [{id:'SUB001',name:'Mathematics',code:'MATH'}, {id:'SUB002',name:'Science',code:'SCI'}];
-            const users = [
-                {id:'USR001',username:'admin',password:'admin123',role:'admin',name:'Dr. Muhammad Ashraf'},
-                {id:'USR002',username:'ahmed.khan',password:'student123',role:'student',name:'Ahmed Khan',classId:'CLS001',rollNo:1}
-            ];
-
-            const batch = db.batch();
-            subjects.forEach(s => batch.set(db.collection('subjects').doc(s.id), s));
-            users.forEach(u => batch.set(db.collection('users').doc(u.id), u));
-            await batch.commit();
-            
-            await db.collection('_meta').doc('init').set({done: true});
-        }
-
         async function init() {
             try {
-                const doc = await db.collection('_meta').doc('init').get();
-                if (!doc.exists) {
-                    await seedData();
-                }
-                document.getElementById('loader').classList.add('hidden');
-                console.log("System Ready with Data.");
+                // Test connectivity
+                await db.collection('_meta').doc('init').get();
+                
+                // Show App, Hide Loader
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                document.getElementById('content').innerHTML = "<p>Data connection successful!</p>";
+                
             } catch (error) {
-                document.getElementById('load-text').textContent = "Error loading data!";
-                console.error(error);
+                document.body.innerHTML = "<h1>Error</h1><p>" + error.message + "</p>";
             }
         }
 
